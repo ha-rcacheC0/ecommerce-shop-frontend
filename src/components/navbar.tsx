@@ -3,6 +3,7 @@ import {
   SignInButton,
   SignedIn,
   UserButton,
+  SignUpButton,
 } from "@clerk/clerk-react";
 
 export const Navbar = () => {
@@ -64,7 +65,7 @@ export const Navbar = () => {
           <a href="/" className="btn btn-link ">
             <img
               className="w-40"
-              src="/imgs/crew-logo"
+              src="/imgs/crew-logo.png"
               alt="company logo"
             ></img>
           </a>
@@ -108,6 +109,9 @@ export const Navbar = () => {
             <SignInButton>
               <button className="btn btn-success">Sign In</button>
             </SignInButton>
+            <SignUpButton>
+              <button className="btn btn-primary">Create Account</button>
+            </SignUpButton>
           </SignedOut>
           <SignedIn>
             <UserButton />
