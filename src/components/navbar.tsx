@@ -5,6 +5,7 @@ import {
   UserButton,
   SignUpButton,
 } from "@clerk/clerk-react";
+import { Link } from "@tanstack/react-router";
 
 export const Navbar = () => {
   const MenuButton = () => {
@@ -39,47 +40,47 @@ export const Navbar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a href="/products">Fireworks</a>
+                <Link to={"/products"}>Fireworks</Link>
                 <ul className="p-2">
                   <li>
-                    <a href="/products/shows">Shows</a>
+                    <Link to={"/products/shows"}>Shows</Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="/events">Events</a>
+                <a to={"/events"}>Events</a>
                 <ul className="p-2">
                   <li>
-                    <a href="/events/new-years">New Years</a>
+                    <Link to={"/events/new-years"}>New Years</Link>
                   </li>
                   <li>
-                    <a href="/events/fourth-july">Fourth of July</a>
+                    <Link to={"/events/fourth-july"}>Fourth of July</Link>
                   </li>
                   <li>
-                    <a href="/events/gender-reveal">Gender Reveal</a>
+                    <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
                   </li>
                 </ul>
               </li>
             </ul>
           </div>
-          <a href="/" className="btn btn-link ">
+          <Link to={"/"} className="btn btn-link ">
             <img
               className="w-40"
               src="/imgs/crew-logo.png"
               alt="company logo"
             ></img>
-          </a>
+          </Link>
         </div>
         <div className="navbar-center hidden md:flex flex-1 justify-center">
           <ul tabIndex={0} className="menu menu-horizontal  mt-3 px-1">
             <li>
               <details>
                 <summary>
-                  <a href="/products">Fireworks</a>
+                  <Link to={"/products"}>Fireworks</Link>
                 </summary>
                 <ul className="p-2">
                   <li>
-                    <a href="/products/shows">Shows</a>
+                    <Link to={"/products/shows"}>Shows</Link>
                   </li>
                 </ul>
               </details>
@@ -87,17 +88,17 @@ export const Navbar = () => {
             <li>
               <details>
                 <summary>
-                  <a href="/events">Events</a>
+                  <Link to={"/events"}>Events</Link>
                 </summary>
                 <ul className="p-2">
                   <li>
-                    <a href="/events/new-years">New Years</a>
+                    <Link to={"/events/new-years"}>New Years</Link>
                   </li>
                   <li>
-                    <a href="/events/fourth-july">Fourth of July</a>
+                    <Link to={"/events/fourth-july"}>Fourth of July</Link>
                   </li>
                   <li>
-                    <a href="/events/gender-reveal">Gender Reveal</a>
+                    <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
                   </li>
                 </ul>
               </details>
