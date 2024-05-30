@@ -74,7 +74,6 @@ export const Footer = () => {
           </div>
         </nav>
       </footer>
-      ;
     </>
   );
 };
