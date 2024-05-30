@@ -2,5 +2,6 @@ export type TProduct = {
   key: string;
   title: string;
   description: string;
-  price: string;
+  casePrice: string;
+  image: string;
 };

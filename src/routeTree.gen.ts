@@ -15,6 +15,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as EventsRouteImport } from './routes/events/route'
+import { Route as EventsNewYearsImport } from './routes/events/new-years'
+import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
 
 // Create Virtual Routes
 
@@ -42,6 +44,16 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const EventsNewYearsRoute = EventsNewYearsImport.update({
+  path: '/new-years',
+  getParentRoute: () => EventsRouteRoute,
+} as any)
+
+const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
+  path: '/$productId',
+  getParentRoute: () => ProductsRouteRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -75,6 +87,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
+    '/products/$productId': {
+      id: '/products/$productId'
+      path: '/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ProductsProductIdRouteImport
+      parentRoute: typeof ProductsRouteImport
+    }
+    '/events/new-years': {
+      id: '/events/new-years'
+      path: '/new-years'
+      fullPath: '/events/new-years'
+      preLoaderRoute: typeof EventsNewYearsImport
+      parentRoute: typeof EventsRouteImport
+    }
   }
 }
 
@@ -82,8 +108,10 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  EventsRouteRoute,
-  ProductsRouteRoute,
+  EventsRouteRoute: EventsRouteRoute.addChildren({ EventsNewYearsRoute }),
+  ProductsRouteRoute: ProductsRouteRoute.addChildren({
+    ProductsProductIdRouteRoute,
+  }),
   AboutLazyRoute,
 })
 
@@ -105,13 +133,27 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "index.lazy.tsx"
     },
     "/events": {
-      "filePath": "events/route.tsx"
+      "filePath": "events/route.tsx",
+      "children": [
+        "/events/new-years"
+      ]
     },
     "/products": {
-      "filePath": "products/route.tsx"
+      "filePath": "products/route.tsx",
+      "children": [
+        "/products/$productId"
+      ]
     },
     "/about": {
       "filePath": "about.lazy.tsx"
+    },
+    "/products/$productId": {
+      "filePath": "products/$productId/route.tsx",
+      "parent": "/products"
+    },
+    "/events/new-years": {
+      "filePath": "events/new-years.tsx",
+      "parent": "/events"
     }
   }
 }

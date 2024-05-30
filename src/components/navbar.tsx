@@ -48,7 +48,7 @@ export const Navbar = () => {
                 </ul>
               </li>
               <li>
-                <a to={"/events"}>Events</a>
+                <Link to={"/events"}>Events</Link>
                 <ul className="p-2">
                   <li>
                     <Link to={"/events/new-years"}>New Years</Link>
