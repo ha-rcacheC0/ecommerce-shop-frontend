@@ -3,7 +3,7 @@ import { TProduct } from "../types";
 export const ProductCard = ({ product }: { product: TProduct }) => {
   console.log("Image for " + product.title, product.image);
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
         <img src={product.image} alt={`image for ${product.title}`} />
       </figure>

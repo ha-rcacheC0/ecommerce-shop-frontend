@@ -1,87 +1,67 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TProduct } from "../../types";
+
 import { ProductCard } from "../../components/product-card";
 
 import { getAllProductsQueryOptions } from "../../api/productsQueries";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { TProduct } from "../../types";
+import { useState } from "react";
 
-const page = 1;
-const limit = 25;
 export const Route = createFileRoute("/products")({
   component: () => <Products />,
   loader: ({ context: { queryClient } }) => {
-    queryClient.ensureQueryData(getAllProductsQueryOptions({ page, limit }));
+    queryClient.ensureQueryData(
+      getAllProductsQueryOptions({ page: 1, pageSize: 25 })
+    );
   },
 });
 
 function Products() {
-  const sq = useSuspenseQuery(getAllProductsQueryOptions({ page, limit }));
-  const products = sq.data;
-  console.log(products);
-  const tempProducts: TProduct[] = [
-    {
-      key: "4157",
-      title: "Fireworks 1",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "4153",
-      title: "Fireworks 2",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "4155",
-      title: "Fireworks 3",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "4154",
-      title: "Fireworks 4",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "41576",
-      title: "Fireworks 1",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "41553",
-      title: "Fireworks 2",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "4165",
-      title: "Fireworks 3",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-    {
-      key: "4158",
-      title: "Fireworks 4",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Et quia vero, recusandae asperiores maiores officiis!",
-      price: "$420.69",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
+  const {
+    isPending,
+    isError,
+    error,
+    data: products,
+    isFetching,
+    isPlaceholderData,
+  } = useQuery(getAllProductsQueryOptions({ page, pageSize }));
 
   return (
-    <div className="flex  flex-wrap gap-4 p-6 h-svh justify-center bg-primary">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
+    <>
+      {isPending ? (
+        <div>Loading...</div>
+      ) : isError ? (
+        <div>Error: {error.message}</div>
+      ) : (
+        <div className="flex flex-wrap gap-4 p-6 h-[900px] overflow-y-auto justify-center bg-primary">
+          {products.contents.map((product: TProduct) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
+      <span>Current Page: {page}</span>
+      <button
+        className="btn btn-square btn-outline"
+        onClick={() => setPage((old) => Math.max(old - 1, 0))}
+        disabled={page === 1}
+      >
+        Previous Page
+      </button>{" "}
+      <button
+        className="btn btn-square btn-outline"
+        onClick={() => {
+          if (!isPlaceholderData && products.hasMore) {
+            setPage((old) => old + 1);
+          }
+        }}
+        // Disable the Next Page button until we know a next page is available
+        disabled={isPlaceholderData || !products?.hasMore}
+      >
+        Next Page
+      </button>
+      {isFetching ? <span> Loading...</span> : null}{" "}
+    </>
   );
 }

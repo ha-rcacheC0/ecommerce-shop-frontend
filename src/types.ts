@@ -1,5 +1,5 @@
 export type TProduct = {
-  key: string;
+  id: string;
   title: string;
   description: string;
   casePrice: string;

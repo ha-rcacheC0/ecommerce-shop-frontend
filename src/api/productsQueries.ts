@@ -3,13 +3,13 @@ import { getAllProductsQuery } from "./products";
 
 export const getAllProductsQueryOptions = ({
   page,
-  limit,
+  pageSize,
 }: {
   page: number;
-  limit: number;
+  pageSize: number;
 }) =>
   queryOptions({
     queryKey: ["products", page],
-    queryFn: () => getAllProductsQuery({ page, limit }),
+    queryFn: () => getAllProductsQuery({ page, pageSize }),
     placeholderData: keepPreviousData,
   });

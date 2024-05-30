@@ -15,7 +15,7 @@ export const queryClient = new QueryClient();
 const router = createRouter({
   routeTree,
   defaultPreload: "intent",
-  context: { queryClient, theme: undefined! },
+  context: { theme: undefined!, queryClient },
 });
 
 // Import your publishable key
@@ -33,19 +33,17 @@ declare module "@tanstack/react-router" {
 
 function App() {
   const theme = useThemeProvider();
-  return (
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      <RouterProvider router={router} context={{ theme }} />
-    </ClerkProvider>
-  );
+  return <RouterProvider router={router} context={{ theme }} />;
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </ClerkProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

@@ -4,12 +4,12 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/products";
 
 export const getAllProductsQuery = async ({
   page,
-  limit,
+  pageSize,
 }: {
   page: number;
-  limit: number;
+  pageSize: number;
 }) => {
-  return await fetch(`${BASE_URL}?page=${page}&limit=${limit}`, {}).then(
+  return await fetch(`${BASE_URL}?page=${page}&pageSize=${pageSize}`, {}).then(
     (response) => response.json()
   );
 };
