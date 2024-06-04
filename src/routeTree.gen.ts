@@ -17,7 +17,10 @@ import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as EventsRouteImport } from './routes/events/route'
+import { Route as ProductsShowsImport } from './routes/products/shows'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
+import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
+import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
 
 // Create Virtual Routes
@@ -57,8 +60,23 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ProductsShowsRoute = ProductsShowsImport.update({
+  path: '/shows',
+  getParentRoute: () => ProductsRouteRoute,
+} as any)
+
 const EventsNewYearsRoute = EventsNewYearsImport.update({
   path: '/new-years',
+  getParentRoute: () => EventsRouteRoute,
+} as any)
+
+const EventsGenderRevealRoute = EventsGenderRevealImport.update({
+  path: '/gender-reveal',
+  getParentRoute: () => EventsRouteRoute,
+} as any)
+
+const EventsFourthJulyRoute = EventsFourthJulyImport.update({
+  path: '/fourth-july',
   getParentRoute: () => EventsRouteRoute,
 } as any)
 
@@ -120,12 +138,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsProductIdRouteImport
       parentRoute: typeof ProductsRouteImport
     }
+    '/events/fourth-july': {
+      id: '/events/fourth-july'
+      path: '/fourth-july'
+      fullPath: '/events/fourth-july'
+      preLoaderRoute: typeof EventsFourthJulyImport
+      parentRoute: typeof EventsRouteImport
+    }
+    '/events/gender-reveal': {
+      id: '/events/gender-reveal'
+      path: '/gender-reveal'
+      fullPath: '/events/gender-reveal'
+      preLoaderRoute: typeof EventsGenderRevealImport
+      parentRoute: typeof EventsRouteImport
+    }
     '/events/new-years': {
       id: '/events/new-years'
       path: '/new-years'
       fullPath: '/events/new-years'
       preLoaderRoute: typeof EventsNewYearsImport
       parentRoute: typeof EventsRouteImport
+    }
+    '/products/shows': {
+      id: '/products/shows'
+      path: '/shows'
+      fullPath: '/products/shows'
+      preLoaderRoute: typeof ProductsShowsImport
+      parentRoute: typeof ProductsRouteImport
     }
   }
 }
@@ -134,9 +173,14 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren({
   IndexLazyRoute,
-  EventsRouteRoute: EventsRouteRoute.addChildren({ EventsNewYearsRoute }),
+  EventsRouteRoute: EventsRouteRoute.addChildren({
+    EventsFourthJulyRoute,
+    EventsGenderRevealRoute,
+    EventsNewYearsRoute,
+  }),
   ProductsRouteRoute: ProductsRouteRoute.addChildren({
     ProductsProductIdRouteRoute,
+    ProductsShowsRoute,
   }),
   LoginRoute,
   RegisterRoute,
@@ -165,13 +209,16 @@ export const routeTree = rootRoute.addChildren({
     "/events": {
       "filePath": "events/route.tsx",
       "children": [
+        "/events/fourth-july",
+        "/events/gender-reveal",
         "/events/new-years"
       ]
     },
     "/products": {
       "filePath": "products/route.tsx",
       "children": [
-        "/products/$productId"
+        "/products/$productId",
+        "/products/shows"
       ]
     },
     "/login": {
@@ -187,9 +234,21 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "products/$productId/route.tsx",
       "parent": "/products"
     },
+    "/events/fourth-july": {
+      "filePath": "events/fourth-july.tsx",
+      "parent": "/events"
+    },
+    "/events/gender-reveal": {
+      "filePath": "events/gender-reveal.tsx",
+      "parent": "/events"
+    },
     "/events/new-years": {
       "filePath": "events/new-years.tsx",
       "parent": "/events"
+    },
+    "/products/shows": {
+      "filePath": "products/shows.tsx",
+      "parent": "/products"
     }
   }
 }

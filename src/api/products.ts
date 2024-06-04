@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/products";
 
 export const getAllProductsQuery = async ({

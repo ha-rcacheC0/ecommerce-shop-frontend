@@ -6,7 +6,6 @@ import { useState } from "react";
 import { ErrorMessage } from "./component-parts/ErrorMessage";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  validateUsernameInput,
   validatePasswordInput,
   validateEmailInput,
 } from "../utils/validationUtils";
