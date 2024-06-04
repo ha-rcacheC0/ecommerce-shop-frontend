@@ -1,10 +1,3 @@
-import {
-  SignedOut,
-  SignInButton,
-  SignedIn,
-  UserButton,
-  SignUpButton,
-} from "@clerk/clerk-react";
 import { Link } from "@tanstack/react-router";
 
 export const Navbar = () => {
@@ -48,7 +41,7 @@ export const Navbar = () => {
                 </ul>
               </li>
               <li>
-                <a to={"/events"}>Events</a>
+                <Link to={"/events"}>Events</Link>
                 <ul className="p-2">
                   <li>
                     <Link to={"/events/new-years"}>New Years</Link>
@@ -105,19 +98,7 @@ export const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end flex gap-2 flex-1 ">
-          <SignedOut>
-            <SignInButton>
-              <button className="btn btn-success">Sign In</button>
-            </SignInButton>
-            <SignUpButton>
-              <button className="btn btn-primary">Create Account</button>
-            </SignUpButton>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
+        <div className="navbar-end flex gap-2 flex-1 "></div>
       </div>
     </>
   );
