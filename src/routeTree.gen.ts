@@ -13,6 +13,8 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
 import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
@@ -29,6 +31,16 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const RegisterRoute = RegisterImport.update({
+  path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginRoute = LoginImport.update({
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ProductsRouteRoute = ProductsRouteImport.update({
   path: '/products',
@@ -80,6 +92,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRoute
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -112,6 +138,8 @@ export const routeTree = rootRoute.addChildren({
   ProductsRouteRoute: ProductsRouteRoute.addChildren({
     ProductsProductIdRouteRoute,
   }),
+  LoginRoute,
+  RegisterRoute,
   AboutLazyRoute,
 })
 
@@ -126,6 +154,8 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/events",
         "/products",
+        "/login",
+        "/register",
         "/about"
       ]
     },
@@ -143,6 +173,12 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/products/$productId"
       ]
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/register": {
+      "filePath": "register.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"

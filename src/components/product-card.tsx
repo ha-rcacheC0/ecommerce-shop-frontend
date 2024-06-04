@@ -1,7 +1,10 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TProduct } from "../types";
+import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
-  console.log("Image for " + product.title, product.image);
+  console.log(product.package);
+  const packageString = product.package.join(", ");
   return (
     <div className="card w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
@@ -14,7 +17,15 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
         </h2>
         <p>{product.description}</p>
         <div className="card-actions justify-end">
-          <button className="btn btn-primary">Buy Now</button>
+          <div className="mr-auto flex flex-col gap-3">
+            <div className="badge badge-accent "> SKU {product.id}</div>
+            <div className="badge badge-accent mr-auto">
+              Packaged: {packageString}
+            </div>
+          </div>
+          <button className="btn btn-primary">
+            Add To Cart <FontAwesomeIcon icon={faCartPlus} />
+          </button>
         </div>
       </div>
     </div>

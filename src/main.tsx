@@ -10,6 +10,7 @@ import {
   ThemeProvider,
   useThemeProvider,
 } from "./providers/theme.provider.tsx";
+import { AuthProvider } from "./providers/auth.provider.tsx";
 export const queryClient = new QueryClient();
 
 const router = createRouter({
@@ -39,11 +40,11 @@ function App() {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <AuthProvider>
         <ThemeProvider>
           <App />
         </ThemeProvider>
-      </ClerkProvider>
+      </AuthProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );
