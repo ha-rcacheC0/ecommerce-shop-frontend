@@ -85,7 +85,6 @@ const PageButtons = ({
   hasMore: boolean;
   setPageAmount: Dispatch<SetStateAction<number>>;
 }) => {
-  setPageAmount(25);
   return (
     <div className="join flex justify-center items-center p-6">
       <button
