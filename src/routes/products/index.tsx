@@ -130,7 +130,7 @@ const Products = () => {
   );
 };
 
-export const Route = createFileRoute("/products")({
+export const Route = createFileRoute("/products/")({
   component: () => <Products />,
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(

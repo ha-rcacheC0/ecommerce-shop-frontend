@@ -11,3 +11,8 @@ export const getAllProductsQuery = async ({
     (response) => response.json()
   );
 };
+export const getOneProductQuery = async ({ id }: { id: number }) => {
+  return await fetch(`${BASE_URL}/${id}`, {}).then((response) =>
+    response.json()
+  );
+};

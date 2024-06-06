@@ -15,8 +15,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as ProductsRouteImport } from './routes/products/route'
 import { Route as EventsRouteImport } from './routes/events/route'
+import { Route as ProductsIndexImport } from './routes/products/index'
 import { Route as ProductsShowsImport } from './routes/products/shows'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
 import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
@@ -45,11 +45,6 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const ProductsRouteRoute = ProductsRouteImport.update({
-  path: '/products',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EventsRouteRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRoute,
@@ -60,9 +55,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ProductsIndexRoute = ProductsIndexImport.update({
+  path: '/products/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ProductsShowsRoute = ProductsShowsImport.update({
-  path: '/shows',
-  getParentRoute: () => ProductsRouteRoute,
+  path: '/products/shows',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const EventsNewYearsRoute = EventsNewYearsImport.update({
@@ -81,8 +81,8 @@ const EventsFourthJulyRoute = EventsFourthJulyImport.update({
 } as any)
 
 const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
-  path: '/$productId',
-  getParentRoute: () => ProductsRouteRoute,
+  path: '/products/$productId',
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -101,13 +101,6 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/products': {
-      id: '/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -133,10 +126,10 @@ declare module '@tanstack/react-router' {
     }
     '/products/$productId': {
       id: '/products/$productId'
-      path: '/$productId'
+      path: '/products/$productId'
       fullPath: '/products/$productId'
       preLoaderRoute: typeof ProductsProductIdRouteImport
-      parentRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRoute
     }
     '/events/fourth-july': {
       id: '/events/fourth-july'
@@ -161,10 +154,17 @@ declare module '@tanstack/react-router' {
     }
     '/products/shows': {
       id: '/products/shows'
-      path: '/shows'
+      path: '/products/shows'
       fullPath: '/products/shows'
       preLoaderRoute: typeof ProductsShowsImport
-      parentRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/products/': {
+      id: '/products/'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsIndexImport
+      parentRoute: typeof rootRoute
     }
   }
 }
@@ -178,13 +178,12 @@ export const routeTree = rootRoute.addChildren({
     EventsGenderRevealRoute,
     EventsNewYearsRoute,
   }),
-  ProductsRouteRoute: ProductsRouteRoute.addChildren({
-    ProductsProductIdRouteRoute,
-    ProductsShowsRoute,
-  }),
   LoginRoute,
   RegisterRoute,
   AboutLazyRoute,
+  ProductsProductIdRouteRoute,
+  ProductsShowsRoute,
+  ProductsIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -197,10 +196,12 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
-        "/products",
         "/login",
         "/register",
-        "/about"
+        "/about",
+        "/products/$productId",
+        "/products/shows",
+        "/products/"
       ]
     },
     "/": {
@@ -214,13 +215,6 @@ export const routeTree = rootRoute.addChildren({
         "/events/new-years"
       ]
     },
-    "/products": {
-      "filePath": "products/route.tsx",
-      "children": [
-        "/products/$productId",
-        "/products/shows"
-      ]
-    },
     "/login": {
       "filePath": "login.tsx"
     },
@@ -231,8 +225,7 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "about.lazy.tsx"
     },
     "/products/$productId": {
-      "filePath": "products/$productId/route.tsx",
-      "parent": "/products"
+      "filePath": "products/$productId/route.tsx"
     },
     "/events/fourth-july": {
       "filePath": "events/fourth-july.tsx",
@@ -247,8 +240,10 @@ export const routeTree = rootRoute.addChildren({
       "parent": "/events"
     },
     "/products/shows": {
-      "filePath": "products/shows.tsx",
-      "parent": "/products"
+      "filePath": "products/shows.tsx"
+    },
+    "/products/": {
+      "filePath": "products/index.tsx"
     }
   }
 }

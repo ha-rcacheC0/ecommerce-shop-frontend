@@ -1,5 +1,5 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { getAllProductsQuery } from "./products";
+import { getAllProductsQuery, getOneProductQuery } from "./products";
 
 export const getAllProductsQueryOptions = ({
   page,
@@ -12,4 +12,9 @@ export const getAllProductsQueryOptions = ({
     queryKey: ["products", page],
     queryFn: () => getAllProductsQuery({ page, pageSize }),
     placeholderData: keepPreviousData,
+  });
+export const getOneProductQueryOptions = ({ id }: { id: number }) =>
+  queryOptions({
+    queryKey: ["product", id],
+    queryFn: () => getOneProductQuery({ id }),
   });
