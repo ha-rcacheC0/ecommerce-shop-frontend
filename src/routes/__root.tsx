@@ -5,8 +5,10 @@ import { Footer } from "../components/footer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeContextType } from "../providers/theme.provider";
 import { QueryClient } from "@tanstack/react-query";
+import { AuthContextType } from "../providers/auth.provider";
 
 interface RouterContext {
+  auth: AuthContextType;
   theme: ThemeContextType;
   queryClient: QueryClient;
 }

@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   return (
     <>
-      <div className="flex w-4/5 flex-col bg-white text-center p-6 mx-auto rounded-lg">
+      <div className="flex w-4/5 flex-col  text-center p-6 mx-auto rounded-lg">
         <h1 className="text-7xl text-primary-content">
           Crew Fireworks
           <br />
@@ -23,7 +23,7 @@ function Index() {
           <a className="btn btn-primary " href="/user/register">
             Create Account
           </a>
-          <a className="btn btn-success" href="/user/login">
+          <a className="btn btn-secondary" href="/user/login">
             Sign In
           </a>
         </div>

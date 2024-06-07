@@ -6,9 +6,11 @@ import { Link } from "@tanstack/react-router";
 export const ProductCard = ({ product }: { product: TProduct }) => {
   const packageString = product.package.join(", ");
   return (
-    <div className="card w-96 bg-base-100 shadow-xl max-h-96">
+    <div className="card  w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
-        <img src={product.image} alt={`image for ${product.title}`} />
+        <Link to={"/products/$productId"} params={{ productId: product.id }}>
+          <img src={product.image} alt={`image for ${product.title}`} />
+        </Link>
       </figure>
       <div className="card-body">
         <Link

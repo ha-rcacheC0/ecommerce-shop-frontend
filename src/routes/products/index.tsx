@@ -28,7 +28,7 @@ const PageButtons = ({
   setPageAmount: Dispatch<SetStateAction<number>>;
 }) => {
   return (
-    <div className="flex justify-center">
+    <div className="flex max-md:flex-col justify-center p-3">
       <div className="join flex justify-center items-center p-6">
         <button
           className="btn btn-square btn-outline join-item"

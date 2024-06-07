@@ -20,7 +20,7 @@ const SingleProductPage = () => {
   console.log(product.data);
   if (product.isFetching)
     return (
-      <div className="container p-10 h-svh flex mx-auto gap-4 justify-around">
+      <div className="container p-10 h-svh flex mx-auto gap-4 justify-around ">
         <div className="skeleton w-[620px] h-[620px] "></div>
 
         <div className="flex flex-col gap-4 w-1/3">
@@ -43,7 +43,7 @@ const SingleProductPage = () => {
     );
   const packageString = product.data.package.join(", ");
   return (
-    <div className="container p-10 h-svh flex mx-auto gap-4 justify-around">
+    <div className="container p-10 h-svh flex mx-auto gap-4 justify-around ">
       <div className=" w-[620px] h-[620px] ">
         <img src={product.data.image} alt={product.data.title} />
       </div>
@@ -90,7 +90,7 @@ const SingleProductPage = () => {
 
         <div className="flex gap-4 w-full justify-center pt-8">
           <button className="btn btn-wide btn-primary">Add to Cart</button>
-          <button className="btn btn-wide btn-success">Buy Now</button>
+          <button className="btn btn-wide btn-secondary">Buy Now</button>
         </div>
       </div>
     </div>

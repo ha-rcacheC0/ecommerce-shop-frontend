@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { TextInput } from "./component-parts/TextInput";
 import { useState } from "react";
 import { ErrorMessage } from "./component-parts/ErrorMessage";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import {
   validatePasswordInput,
   validateEmailInput,
@@ -39,7 +39,7 @@ export const RegisterUser = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSuccess: (_data) => {
       setIsSubmitted(false);
-      navigate({ to: "/login" });
+      navigate({ to: "/user/login" });
     },
     onError: (error) => {
       // Handle error state, e.g., show error message from server
@@ -89,7 +89,7 @@ export const RegisterUser = () => {
           show={isSubmitted && !emailValidState.success}
         />
         <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex items-center gap-2 text-primary-content">
             Password
             <input
               type={!showPassword ? "password" : "text"}
@@ -110,7 +110,7 @@ export const RegisterUser = () => {
         />
 
         <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input input-bordered flex items-center gap-2 text-primary-content">
             Confirm Password
             <input
               type={!showPassword ? "password" : "text"}
@@ -136,6 +136,9 @@ export const RegisterUser = () => {
         >
           {"Register"} <FontAwesomeIcon icon={faRightToBracket} />{" "}
         </button>
+        <Link to={"/user/login"} className="text-primary-content underline">
+          Login to your Account
+        </Link>
       </form>
     </div>
   );
