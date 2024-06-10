@@ -1,12 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { userInfoQueryOptions } from "../../../api/users/userQueryOptions.api";
 import { useQuery } from "@tanstack/react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightLong, faX } from "@fortawesome/free-solid-svg-icons";
+import { ProfileCard } from "../../../components/ProfileCard";
+import Cart from "../../../components/cart";
 
 export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { queryClient, auth } }) => {
+    console.log("Loader");
     await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
   },
-  component: () => ProfilePage,
+  component: () => <ProfilePage />,
 });
 
 // Create Profile Page
@@ -16,57 +21,43 @@ const ProfilePage = () => {
     data: userProfile,
     isLoading,
     isError,
+    error,
   } = useQuery(userInfoQueryOptions(auth.user!.token!));
-  if (isLoading || isError) return <>Loading Profile ...</>;
+  const items = [
+    { name: "Product 1", sku: "12345", price: 29.99 },
+    { name: "Product 2", sku: "67890", price: 59.99 },
+  ];
+
+  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+  const shipping = 5.99;
+  const grandTotal = subtotal + shipping;
+
+  if (isLoading) return <>Loading Profile ...</>;
+  if (isError)
+    return (
+      <>
+        <div role="alert" className="alert alert-error">
+          <FontAwesomeIcon icon={faX} /> Error Loading Profile {error.message}
+        </div>
+      </>
+    );
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-      <h2 className="text-2xl font-bold">Profile</h2>
-      <div className="space-y-2">
-        <div>
-          <span className="font-semibold">First Name:</span>{" "}
-          {userProfile?.firstName ?? ""}
-        </div>
-        <div>
-          <span className="font-semibold">Last Name:</span>{" "}
-          {userProfile?.lastName}
-        </div>
-        <div>
-          <span className="font-semibold">Email:</span>{" "}
-          {auth.user?.userInfo?.email}
-        </div>
-        <div>
-          <span className="font-semibold">Date of Birth:</span>{" "}
-          {userProfile?.dateOfBirth?.toLocaleDateString()}
-        </div>
-        <div>
-          <span className="font-semibold">Phone Number:</span>{" "}
-          {userProfile?.phoneNumber}
-        </div>
-        <div>
-          <span className="font-semibold">Billing Address:</span>{" "}
-          {userProfile?.billingAddress?.street1},{" "}
-          {userProfile?.billingAddress?.city},{" "}
-          {userProfile?.billingAddress?.state},{" "}
-          {userProfile?.billingAddress?.postalCode}
-        </div>
-        <div>
-          <span className="font-semibold">Shipping Address:</span>{" "}
-          {userProfile?.shippingAddress?.street1},{" "}
-          {userProfile?.shippingAddress?.city},{" "}
-          {userProfile?.shippingAddress?.state},{" "}
-          {userProfile?.shippingAddress?.postalCode}
-        </div>
-        <div>
-          <span className="font-semibold">Can Contact:</span>{" "}
-          {userProfile?.canContact ? "Yes" : "No"}
-        </div>
+    <div className="flex justify-center space-x-4 py-4">
+      <ProfileCard
+        userProfile={userProfile!}
+        userEmail={auth.user!.userInfo!.email!}
+      />
+      <div className="space-y-3">
+        <Cart
+          items={items}
+          subtotal={subtotal}
+          shipping={shipping}
+          grandTotal={grandTotal}
+        />
+        <Link to="/profile/cart" className="btn btn-wide btn-accent">
+          Go To Cart <FontAwesomeIcon icon={faRightLong} />
+        </Link>
       </div>
     </div>
   );
 };
-
-// Create Edit Page Link
-
-// Cart Window View
-
-//
