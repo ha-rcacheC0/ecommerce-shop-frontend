@@ -83,15 +83,35 @@ const UserProfileSchema = z.object({
   canContact: z.boolean().optional(),
   userId: z.string(),
 });
+const TUserSchema = z.object({
+  id: z.string(),
+  role: z.enum(["USER", "MANAGER", "ADMIN"]),
+  email: z.string().email(),
+  lastLogin: z.date(),
+});
 
-export type TProduct = {
-  id: string;
-  title: string;
-  description: string;
-  casePrice: string;
-  image: string;
-  package: number[];
-};
+const TProductSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  description: z.string(),
+  casePrice: z.number(),
+  unitPrice: z.number(),
+  Categories: z.object({ id: z.string(), name: z.string() }),
+  Brands: z.object({ id: z.string(), name: z.string() }),
+  ColorStrings: z
+    .object({ id: z.string(), name: z.string() })
+    .array()
+    .optional(),
+  effects: z.object({ id: z.string(), name: z.string() }).array().optional(),
+  image: z.string(),
+  package: z.number().array(),
+});
+const TCartSchema = z.object({
+  id: z.string(),
+  userId: z.string().optional(),
+  products: TProductSchema.array(),
+  user: TUserSchema,
+});
 
 export const SignInRequestSchema = z.object({
   email: z.string(),
@@ -111,7 +131,7 @@ export const SignInResponseSchema = z.object({
       email: z.string(),
       role: z.enum(["USER", "MANAGER", "ADMIN"]),
       lastLogin: z.string().datetime(),
-      Cart: z.object({ id: z.string(), userId: z.string() }),
+      Cart: TCartSchema,
     })
     .optional(),
   message: z.string().optional(), // Assuming the message might be included in the response
@@ -122,10 +142,12 @@ type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 type User = z.infer<typeof SignInResponseSchema>;
 type UserProfile = z.infer<typeof UserProfileSchema>;
+type TProduct = z.infer<typeof TProductSchema>;
 export type {
   SignInRequest,
   SignInResponse,
   UserCreateRequest,
   User,
   UserProfile,
+  TProduct,
 };

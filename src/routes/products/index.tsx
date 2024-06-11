@@ -2,13 +2,13 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { ProductCard } from "../../components/product-card";
 
-import { getAllProductsQueryOptions } from "../../api/productsQueries";
+import { getAllProductsQueryOptions } from "../../api/products/productsQueries";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { TProduct } from "../../types";
 import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { getAllProductsQuery } from "../../api/products";
+import { getAllProductsQuery } from "../../api/products/products";
 
 const PageButtons = ({
   isFetching,

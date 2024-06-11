@@ -54,7 +54,7 @@ const ProfilePage = () => {
           shipping={shipping}
           grandTotal={grandTotal}
         />
-        <Link to="/profile/cart" className="btn btn-wide btn-accent">
+        <Link to="/profile/cart" className="btn btn-block btn-accent">
           Go To Cart <FontAwesomeIcon icon={faRightLong} />
         </Link>
       </div>
