@@ -24,7 +24,7 @@ import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
-import { Route as AuthProfileCartIndexImport } from './routes/_auth/profile/cart/index'
+import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
 
 // Create Virtual Routes
 
@@ -98,10 +98,12 @@ const AuthProfileEditRoute = AuthProfileEditImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthProfileCartIndexRoute = AuthProfileCartIndexImport.update({
-  path: '/profile/cart/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
+  {
+    path: '/profile/cart/$cartId/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -198,11 +200,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileIndexImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/profile/cart/': {
-      id: '/_auth/profile/cart/'
-      path: '/profile/cart'
-      fullPath: '/profile/cart'
-      preLoaderRoute: typeof AuthProfileCartIndexImport
+    '/_auth/profile/cart/$cartId/': {
+      id: '/_auth/profile/cart/$cartId/'
+      path: '/profile/cart/$cartId'
+      fullPath: '/profile/cart/$cartId'
+      preLoaderRoute: typeof AuthProfileCartCartIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -225,7 +227,7 @@ export const routeTree = rootRoute.addChildren({
   ProductsIndexRoute,
   AuthProfileEditRoute,
   AuthProfileIndexRoute,
-  AuthProfileCartIndexRoute,
+  AuthProfileCartCartIdIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -246,7 +248,7 @@ export const routeTree = rootRoute.addChildren({
         "/products/",
         "/_auth/profile/edit",
         "/_auth/profile/",
-        "/_auth/profile/cart/"
+        "/_auth/profile/cart/$cartId/"
       ]
     },
     "/": {
@@ -296,8 +298,8 @@ export const routeTree = rootRoute.addChildren({
     "/_auth/profile/": {
       "filePath": "_auth/profile/index.tsx"
     },
-    "/_auth/profile/cart/": {
-      "filePath": "_auth/profile/cart/index.tsx"
+    "/_auth/profile/cart/$cartId/": {
+      "filePath": "_auth/profile/cart/$cartId/index.tsx"
     }
   }
 }

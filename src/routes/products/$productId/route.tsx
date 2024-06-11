@@ -16,8 +16,12 @@ const SingleProductPage = () => {
   const userCartId = user?.userInfo?.Cart.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
-    () => {},
-    () => {}
+    () => {
+      console.log("success");
+    },
+    () => {
+      console.log("error");
+    }
   );
 
   if (product.isFetching)
@@ -102,7 +106,7 @@ const SingleProductPage = () => {
             >
               Add to Cart
             </button>
-            <button className="btn btn-wide btn-secondary">Buy Now</button>
+            {/* <button className="btn btn-wide btn-secondary">Buy Now</button> */}
           </div>
         ) : (
           <div></div>

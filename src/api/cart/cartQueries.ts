@@ -22,7 +22,8 @@ export const useAddItemToCartMutation = (
       productId: number;
       cartId: string;
     }) => addProductToCart({ productId, cartId }),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Success", data);
       queryClient.invalidateQueries({ queryKey: ["cart", cartId] });
       onSuccessCallback();
     },

@@ -87,15 +87,15 @@ const TUserSchema = z.object({
   id: z.string(),
   role: z.enum(["USER", "MANAGER", "ADMIN"]),
   email: z.string().email(),
-  lastLogin: z.date(),
+  lastLogin: z.string().datetime(),
 });
 
-const TProductSchema = z.object({
+export const TProductSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
-  casePrice: z.number(),
-  unitPrice: z.number(),
+  casePrice: z.coerce.number(),
+  unitPrice: z.number().nullable(),
   Categories: z.object({ id: z.string(), name: z.string() }),
   Brands: z.object({ id: z.string(), name: z.string() }),
   ColorStrings: z
@@ -110,7 +110,7 @@ const TCartSchema = z.object({
   id: z.string(),
   userId: z.string().optional(),
   products: TProductSchema.array(),
-  user: TUserSchema,
+  User: TUserSchema,
 });
 
 export const SignInRequestSchema = z.object({
@@ -143,6 +143,7 @@ type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 type User = z.infer<typeof SignInResponseSchema>;
 type UserProfile = z.infer<typeof UserProfileSchema>;
 type TProduct = z.infer<typeof TProductSchema>;
+type TCart = z.infer<typeof TCartSchema>;
 export type {
   SignInRequest,
   SignInResponse,
@@ -150,4 +151,5 @@ export type {
   User,
   UserProfile,
   TProduct,
+  TCart,
 };

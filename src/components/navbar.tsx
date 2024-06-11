@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
-import { faCartShopping, faRightLong } from "@fortawesome/free-solid-svg-icons";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Navbar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  console.log(auth);
   const handleLogout = () => {
     auth.logout();
     navigate({ to: "/" });
@@ -117,7 +118,11 @@ export const Navbar = () => {
               >
                 Profile
               </Link>
-              <Link to="/profile/cart" className="btn btn-accent">
+              <Link
+                to={"/profile/cart/$cartId"}
+                params={{ cartId: auth.user!.userInfo!.Cart.id! }}
+                className="btn btn-accent"
+              >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
               <div
