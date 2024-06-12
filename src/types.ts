@@ -102,14 +102,24 @@ export const TProductSchema = z.object({
     .object({ id: z.string(), name: z.string() })
     .array()
     .optional(),
-  effects: z.object({ id: z.string(), name: z.string() }).array().optional(),
+  EffectStrings: z
+    .object({ id: z.string(), name: z.string() })
+    .array()
+    .optional(),
   image: z.string(),
   package: z.number().array(),
+});
+
+const CartProductSchema = z.object({
+  id: z.string(),
+  quantity: z.number(),
+  cartId: z.string(),
+  Product: TProductSchema,
 });
 const TCartSchema = z.object({
   id: z.string(),
   userId: z.string().optional(),
-  products: TProductSchema.array(),
+  CartProducts: CartProductSchema.array(),
   User: TUserSchema,
 });
 
@@ -143,6 +153,7 @@ type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 type User = z.infer<typeof SignInResponseSchema>;
 type UserProfile = z.infer<typeof UserProfileSchema>;
 type TProduct = z.infer<typeof TProductSchema>;
+type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
 export type {
   SignInRequest,
@@ -151,5 +162,6 @@ export type {
   User,
   UserProfile,
   TProduct,
+  TCartProduct,
   TCart,
 };

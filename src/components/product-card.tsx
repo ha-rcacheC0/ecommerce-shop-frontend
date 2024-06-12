@@ -3,10 +3,17 @@ import { TProduct } from "../types";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
+import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
   const packageString = product.package.join(", ");
-  const { authState } = useAuth();
+  const { authState, user } = useAuth();
+  const userCartId = user?.userInfo?.Cart.id;
+  const addItem = useAddItemToCartMutation(
+    userCartId!,
+    () => {},
+    () => {}
+  );
   return (
     <div className="card  w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
@@ -35,7 +42,15 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
             </div>
           </div>
           {authState === "authenticated" ? (
-            <button className="btn btn-primary">
+            <button
+              className="btn btn-primary"
+              onClick={() =>
+                addItem.mutate({
+                  productId: +product.id,
+                  cartId: userCartId!,
+                })
+              }
+            >
               Add To Cart <FontAwesomeIcon icon={faCartPlus} />
             </button>
           ) : (

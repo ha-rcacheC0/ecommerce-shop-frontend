@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export const Navbar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
-  console.log(auth);
   const handleLogout = () => {
     auth.logout();
     navigate({ to: "/" });

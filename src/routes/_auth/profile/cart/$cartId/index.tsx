@@ -13,10 +13,11 @@ export const Route = createFileRoute("/_auth/profile/cart/$cartId/")({
 function CartPage() {
   const { cartId } = Route.useParams();
   const products = useQuery(cartItemsQueryOptions(cartId));
+  console.log(products.data?.CartProducts);
 
   return (
     <div className="p-8 w-3/5 mx-auto">
-      <Cart products={products.data!.products} />
+      <Cart products={products.data!.CartProducts} />
     </div>
   );
 }

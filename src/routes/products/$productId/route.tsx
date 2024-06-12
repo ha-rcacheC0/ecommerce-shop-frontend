@@ -16,12 +16,8 @@ const SingleProductPage = () => {
   const userCartId = user?.userInfo?.Cart.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
-    () => {
-      console.log("success");
-    },
-    () => {
-      console.log("error");
-    }
+    () => {},
+    () => {}
   );
 
   if (product.isFetching)
@@ -85,7 +81,7 @@ const SingleProductPage = () => {
           <div className="w-1/2">
             <h2 className="text-2xl underline ">Effects</h2>
             <ul>
-              {product.data?.effects?.map(
+              {product.data?.EffectStrings?.map(
                 (effect: { name: string; id: string }) => (
                   <li key={effect.id}>{effect.name}</li>
                 )
