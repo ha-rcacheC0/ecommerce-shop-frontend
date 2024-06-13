@@ -1,7 +1,7 @@
 import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { flushSync } from "react-dom";
 import { signInUser } from "../api/users/auth.api";
@@ -33,6 +33,7 @@ export const Login = () => {
     mutationFn: (body: SignInRequest) => signInUser(body),
     onSuccess: (data) => {
       if (!data.token && !data.userInfo) {
+        console.log("am I here?");
         throw new Error(data.message);
       } else {
         flushSync(() => {
@@ -117,7 +118,11 @@ export const Login = () => {
         >
           {"Login"} <FontAwesomeIcon icon={faRightToBracket} />{" "}
         </button>
+        <Link to={"/user/register"} className="text-primary-content underline">
+          Create a New Account
+        </Link>
       </form>
     </div>
   );
+  4;
 };

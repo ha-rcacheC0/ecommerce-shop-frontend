@@ -13,15 +13,18 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as RegisterImport } from './routes/register'
-import { Route as LoginImport } from './routes/login'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as ProductsIndexImport } from './routes/products/index'
+import { Route as UserRegisterImport } from './routes/user/register'
+import { Route as UserLoginImport } from './routes/user/login'
 import { Route as ProductsShowsImport } from './routes/products/shows'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
 import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
 import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
+import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
+import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
+import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
 
 // Create Virtual Routes
 
@@ -35,16 +38,6 @@ const AboutLazyRoute = AboutLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
-const RegisterRoute = RegisterImport.update({
-  path: '/register',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LoginRoute = LoginImport.update({
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const EventsRouteRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRoute,
@@ -57,6 +50,16 @@ const IndexLazyRoute = IndexLazyImport.update({
 
 const ProductsIndexRoute = ProductsIndexImport.update({
   path: '/products/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UserRegisterRoute = UserRegisterImport.update({
+  path: '/user/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const UserLoginRoute = UserLoginImport.update({
+  path: '/user/login',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -85,6 +88,23 @@ const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthProfileIndexRoute = AuthProfileIndexImport.update({
+  path: '/profile/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthProfileEditRoute = AuthProfileEditImport.update({
+  path: '/profile/edit',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
+  {
+    path: '/profile/cart/$cartId/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -101,20 +121,6 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -159,11 +165,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsShowsImport
       parentRoute: typeof rootRoute
     }
+    '/user/login': {
+      id: '/user/login'
+      path: '/user/login'
+      fullPath: '/user/login'
+      preLoaderRoute: typeof UserLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/user/register': {
+      id: '/user/register'
+      path: '/user/register'
+      fullPath: '/user/register'
+      preLoaderRoute: typeof UserRegisterImport
+      parentRoute: typeof rootRoute
+    }
     '/products/': {
       id: '/products/'
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof ProductsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/profile/edit': {
+      id: '/_auth/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof AuthProfileEditImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/profile/': {
+      id: '/_auth/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthProfileIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/profile/cart/$cartId/': {
+      id: '/_auth/profile/cart/$cartId/'
+      path: '/profile/cart/$cartId'
+      fullPath: '/profile/cart/$cartId'
+      preLoaderRoute: typeof AuthProfileCartCartIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -178,12 +219,15 @@ export const routeTree = rootRoute.addChildren({
     EventsGenderRevealRoute,
     EventsNewYearsRoute,
   }),
-  LoginRoute,
-  RegisterRoute,
   AboutLazyRoute,
   ProductsProductIdRouteRoute,
   ProductsShowsRoute,
+  UserLoginRoute,
+  UserRegisterRoute,
   ProductsIndexRoute,
+  AuthProfileEditRoute,
+  AuthProfileIndexRoute,
+  AuthProfileCartCartIdIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -196,12 +240,15 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
-        "/login",
-        "/register",
         "/about",
         "/products/$productId",
         "/products/shows",
-        "/products/"
+        "/user/login",
+        "/user/register",
+        "/products/",
+        "/_auth/profile/edit",
+        "/_auth/profile/",
+        "/_auth/profile/cart/$cartId/"
       ]
     },
     "/": {
@@ -214,12 +261,6 @@ export const routeTree = rootRoute.addChildren({
         "/events/gender-reveal",
         "/events/new-years"
       ]
-    },
-    "/login": {
-      "filePath": "login.tsx"
-    },
-    "/register": {
-      "filePath": "register.tsx"
     },
     "/about": {
       "filePath": "about.lazy.tsx"
@@ -242,8 +283,23 @@ export const routeTree = rootRoute.addChildren({
     "/products/shows": {
       "filePath": "products/shows.tsx"
     },
+    "/user/login": {
+      "filePath": "user/login.tsx"
+    },
+    "/user/register": {
+      "filePath": "user/register.tsx"
+    },
     "/products/": {
       "filePath": "products/index.tsx"
+    },
+    "/_auth/profile/edit": {
+      "filePath": "_auth/profile/edit.tsx"
+    },
+    "/_auth/profile/": {
+      "filePath": "_auth/profile/index.tsx"
+    },
+    "/_auth/profile/cart/$cartId/": {
+      "filePath": "_auth/profile/cart/$cartId/index.tsx"
     }
   }
 }

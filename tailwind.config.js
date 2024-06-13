@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-undef */
+
 import daisyui from "daisyui";
 export default {
   content: [
@@ -14,14 +16,18 @@ export default {
     themes: [
       {
         dark: {
-          // eslint-disable-next-line @typescript-eslint/no-var-requires
           ...require("daisyui/src/theming/themes")["dark"],
           primary: "#002868",
           secondary: "#BF0A30",
         },
       },
-      "dark",
-      "light",
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          primary: "#002868",
+          secondary: "#BF0A30",
+        },
+      },
       "coffee",
       "sunset",
       "emerald",

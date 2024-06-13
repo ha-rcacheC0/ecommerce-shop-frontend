@@ -2,18 +2,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TProduct } from "../types";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
+import { useAuth } from "../providers/auth.provider";
+import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
   const packageString = product.package.join(", ");
+  const { authState, user } = useAuth();
+  const userCartId = user?.userInfo?.Cart.id;
+  const addItem = useAddItemToCartMutation(
+    userCartId!,
+    () => {},
+    () => {}
+  );
   return (
-    <div className="card w-96 bg-base-100 shadow-xl max-h-96">
+    <div className="card  w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
-        <img src={product.image} alt={`image for ${product.title}`} />
+        <Link
+          to={"/products/$productId"}
+          params={{ productId: product.id.toString() }}
+        >
+          <img src={product.image} alt={`image for ${product.title}`} />
+        </Link>
       </figure>
       <div className="card-body">
         <Link
           to={"/products/$productId"}
-          params={{ productId: product.id }}
+          params={{ productId: product.id.toString() }}
           className="card-title"
         >
           {product.title}
@@ -27,9 +41,21 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
               Packaged: {packageString}
             </div>
           </div>
-          <button className="btn btn-primary">
-            Add To Cart <FontAwesomeIcon icon={faCartPlus} />
-          </button>
+          {authState === "authenticated" ? (
+            <button
+              className="btn btn-primary"
+              onClick={() =>
+                addItem.mutate({
+                  productId: +product.id,
+                  cartId: userCartId!,
+                })
+              }
+            >
+              Add To Cart <FontAwesomeIcon icon={faCartPlus} />
+            </button>
+          ) : (
+            <p> Sign In to add product to cart</p>
+          )}
         </div>
       </div>
     </div>

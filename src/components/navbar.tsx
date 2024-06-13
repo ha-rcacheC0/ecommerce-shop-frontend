@@ -1,6 +1,16 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { useAuth } from "../providers/auth.provider";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const Navbar = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    auth.logout();
+    navigate({ to: "/" });
+  };
+
   const MenuButton = () => {
     return (
       <div tabIndex={0} role="button" className="btn btn-ghost md:hidden">
@@ -98,7 +108,46 @@ export const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="navbar-end flex gap-2 flex-1 "></div>
+        <div className="navbar-end flex gap-2 flex-1 ">
+          {auth.authState === "authenticated" ? (
+            <div className="flex gap-4 items-center">
+              <Link
+                to="/profile"
+                className="btn btn-accent [&.active]:btn-primary max-md:hidden"
+              >
+                Profile
+              </Link>
+              <Link
+                to={"/profile/cart/$cartId"}
+                params={{ cartId: auth.user!.userInfo!.Cart.id! }}
+                className="btn btn-accent"
+              >
+                Cart <FontAwesomeIcon icon={faCartShopping} />
+              </Link>
+              <div
+                onClick={handleLogout}
+                className="btn btn-neutral btn-outline  py-2 px-4 rounded-md"
+              >
+                Logout
+              </div>
+            </div>
+          ) : (
+            <div className="ml-auto mr-10 flex gap-4">
+              <Link
+                to="/user/register"
+                className="text-xl  btn btn-primary [&.active]:font-bold "
+              >
+                Sign Up
+              </Link>
+              <Link
+                to="/user/login"
+                className=" text-xl btn btn-secondary [&.active]:font-bold "
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

@@ -11,15 +11,11 @@ export const TextInput = ({
   const { theme } = useThemeProvider();
   return (
     <div className="form-control w-full max-w-sm">
-      <label className="input input-bordered flex items-center gap-2">
+      <label className="input input-bordered flex items-center gap-2 text-primary-content">
         {labelText}
         <input
           type="text"
-          className={
-            theme === "coffee"
-              ? "placeholder-secondary-content/50 text-secondary-content"
-              : "placeholder-secondary/50 text-secondary"
-          }
+          className={"placeholder-primary-content/50 text-primary-content  "}
           {...inputAttr}
         />
       </label>
