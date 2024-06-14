@@ -12,9 +12,43 @@ export const addProductToCart = async ({
   productId: number;
   cartId: string;
 }) => {
-  return await fetch(`${BASE_URL}/${cartId}`, {
+  return await fetch(`${BASE_URL}/${cartId}/add`, {
     method: "POST",
     body: JSON.stringify({ productId, cartId }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+};
+
+export const removeProductFromCart = async ({
+  productId,
+  cartId,
+}: {
+  productId: number;
+  cartId: string;
+}) => {
+  return await fetch(`${BASE_URL}/${cartId}/remove`, {
+    method: "POST",
+    body: JSON.stringify({ productId, cartId }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+};
+
+export const updateProductQuantity = async ({
+  cartId,
+  productId,
+  quantity,
+}: {
+  productId: number;
+  cartId: string;
+  quantity: number;
+}) => {
+  return await fetch(`${BASE_URL}/${cartId}/updateQuantity`, {
+    method: "POST",
+    body: JSON.stringify({ productId, cartId, quantity }),
     headers: {
       "Content-Type": "application/json",
     },

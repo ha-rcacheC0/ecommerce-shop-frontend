@@ -10,6 +10,8 @@ import {
   useThemeProvider,
 } from "./providers/theme.provider.tsx";
 import { AuthProvider, useAuth } from "./providers/auth.provider.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const queryClient = new QueryClient();
 
 const router = createRouter({
@@ -35,6 +37,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider>
+          <ToastContainer />
           <App />
         </ThemeProvider>
       </AuthProvider>

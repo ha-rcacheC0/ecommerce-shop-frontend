@@ -4,6 +4,7 @@ import { getOneProductQuery } from "../../../api/products/products";
 import { getOneProductQueryOptions } from "../../../api/products/productsQueries";
 import { useAuth } from "../../../providers/auth.provider";
 import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
+import { toast } from "react-toastify";
 
 const SingleProductPage = () => {
   const { productId } = useParams({ from: "/products/$productId" });
@@ -16,8 +17,17 @@ const SingleProductPage = () => {
   const userCartId = user?.userInfo?.Cart.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
-    () => {},
-    () => {}
+
+    () => {
+      toast.success(`${product.data?.title} added to cart!`, {
+        position: "bottom-right",
+      });
+    },
+    () => {
+      toast.error("Failed to add product to cart", {
+        position: "bottom-right",
+      });
+    }
   );
 
   if (product.isFetching)

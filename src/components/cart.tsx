@@ -1,30 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faX } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { TCartProduct, TProductSchema } from "../types";
-
-const CartItem = ({ product }: { product: TCartProduct }) => {
-  const { title, id, casePrice } = TProductSchema.parse(product.Product);
-
-  return (
-    <div className="grid grid-cols-5 gap-4 items-center p-4 border-b">
-      <div className="col-span-2">
-        <div className="font-semibold">{title}</div>
-        <div className="text-sm text-gray-400">SKU: {id}</div>
-      </div>
-      <div className="text-center text-lg font-semibold">
-        Case Price: ${casePrice.toFixed(2)}
-      </div>
-      <div className="text-center font-semibold">Qty: {product.quantity}</div>
-      <div className="text-center text-lg font-semibold">
-        SubTotal: ${(casePrice * product.quantity).toFixed(2)}
-      </div>
-      <button className="btn btn-error btn-outline col-start-6 justify-self-center">
-        <FontAwesomeIcon icon={faX} />
-      </button>
-    </div>
-  );
-};
+import CartItem from "./component-parts/cart-item";
 
 const Cart = ({ products }: { products: TCartProduct[] }) => {
   const subtotal = products.reduce((acc, elm) => {
@@ -33,22 +11,39 @@ const Cart = ({ products }: { products: TCartProduct[] }) => {
   }, 0);
 
   return (
-    <div className="card bg-white shadow-xl mx-auto p-6 text-gray-800  ">
+    <div className="card bg-white shadow-xl mx-auto p-6 text-gray-800">
       <h2 className="text-2xl text-center font-bold">Shopping Cart</h2>
-      <div className="space-y-4 ">
-        {products.map((product, index) => (
-          <CartItem key={index} product={product} />
-        ))}
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full mt-4 ">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Product</th>
+              <th className="px-4 py-2">SKU</th>
+              <th className="px-4 py-2">Case Price</th>
+              <th className="px-4 py-2">Quantity</th>
+              <th className="px-4 py-2">Subtotal</th>
+              <th className="px-4 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="p-2">
+            {products.map((product, index) => (
+              <CartItem key={index} product={product} />
+            ))}
+          </tbody>
+          <tfoot className="border-t border-gray-600">
+            <tr className="h-12">
+              <td colSpan={6} className="py-4"></td>
+            </tr>
+            <tr className="h-12 border-b border-gray-300">
+              <td colSpan={4}></td>
+              <td className="text-right font-semibold">Subtotal:</td>
+              <td className="text-lg font-semibold">${subtotal.toFixed(2)}</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
-      <div className="divider"></div>
-      <div className="space-y-2">
-        <div className="flex justify-between">
-          <span className="font-semibold">Subtotal:</span>
-          <span className="font-semibold">${subtotal.toFixed(2)}</span>
-        </div>
-      </div>
-      <div className="mt-4">
-        <Link to="/" className="btn btn-primary btn-block">
+      <div className="mt-4 text-center">
+        <Link to="/" className="btn btn-primary">
           Checkout <FontAwesomeIcon icon={faShoppingCart} />
         </Link>
       </div>

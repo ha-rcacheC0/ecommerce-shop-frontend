@@ -4,6 +4,7 @@ import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { useAddItemToCartMutation } from "../api/cart/cartQueries";
+import { toast } from "react-toastify";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
   const packageString = product.package.join(", ");
@@ -11,8 +12,16 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
   const userCartId = user?.userInfo?.Cart.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
-    () => {},
-    () => {}
+    () => {
+      toast.success(`${product.title} added to cart!`, {
+        position: "bottom-right",
+      });
+    },
+    () => {
+      toast.error("Failed to add product to cart", {
+        position: "bottom-right",
+      });
+    }
   );
   return (
     <div className="card  w-96 bg-base-100 shadow-xl max-h-96">
