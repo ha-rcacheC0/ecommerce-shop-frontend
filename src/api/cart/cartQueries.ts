@@ -7,7 +7,10 @@ import {
 } from "./cart";
 import { queryClient } from "../../main";
 
-export const cartItemsQueryOptions = (cartId: string, enabled: boolean) => {
+export const cartItemsQueryOptions = (
+  cartId: string,
+  enabled: boolean = true
+) => {
   return queryOptions({
     queryKey: ["cart", cartId],
     queryFn: () => getCartItems(cartId),
