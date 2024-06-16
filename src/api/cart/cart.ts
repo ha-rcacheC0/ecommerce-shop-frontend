@@ -54,3 +54,12 @@ export const updateProductQuantity = async ({
     },
   }).then((response) => response.json());
 };
+export const tryHelcim = async ({ cartId }: { cartId: string }) => {
+  return await fetch(`${BASE_URL}/${cartId}/purchase`, {
+    method: "POST",
+    body: JSON.stringify({}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => res.json());
+};

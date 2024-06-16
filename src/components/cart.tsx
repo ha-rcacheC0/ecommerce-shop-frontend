@@ -3,6 +3,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { TCartProduct, TProductSchema } from "../types";
 import CartItem from "./component-parts/cart-item";
+import HelcimPayButton from "./component-parts/helcimPayButton";
 
 const Cart = ({ products }: { products: TCartProduct[] }) => {
   const subtotal = products.reduce((acc, elm) => {
@@ -46,6 +47,7 @@ const Cart = ({ products }: { products: TCartProduct[] }) => {
         <Link to="/" className="btn btn-primary">
           Checkout <FontAwesomeIcon icon={faShoppingCart} />
         </Link>
+        <HelcimPayButton cartId={products[0].cartId} />
       </div>
     </div>
   );
