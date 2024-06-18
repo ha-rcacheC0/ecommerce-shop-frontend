@@ -47,7 +47,7 @@ const Cart = ({ products }: { products: TCartProduct[] }) => {
         <Link to="/" className="btn btn-primary">
           Checkout <FontAwesomeIcon icon={faShoppingCart} />
         </Link>
-        <HelcimPayButton cartId={products[0].cartId} />
+        <HelcimPayButton cartId={products[0].cartId} amount={subtotal} />
       </div>
     </div>
   );

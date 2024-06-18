@@ -7,13 +7,19 @@ declare global {
   }
 }
 
-const HelcimPayButton = ({ cartId }: { cartId: string }) => {
+const HelcimPayButton = ({
+  cartId,
+  amount,
+}: {
+  cartId: string;
+  amount: number;
+}) => {
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCheckoutToken = async () => {
       try {
-        const { checkoutToken } = await tryHelcim({ cartId });
+        const { checkoutToken } = await tryHelcim({ cartId, amount });
         setCheckoutToken(checkoutToken);
       } catch (error) {
         console.error("Failed to fetch checkout token", error);
@@ -33,11 +39,7 @@ const HelcimPayButton = ({ cartId }: { cartId: string }) => {
     }
   };
 
-  return (
-    <button onClick={handlePayNow} disabled={!checkoutToken}>
-      Pay Now
-    </button>
-  );
+  return <button onClick={handlePayNow}>Pay Now</button>;
 };
 
 export default HelcimPayButton;

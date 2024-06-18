@@ -54,10 +54,16 @@ export const updateProductQuantity = async ({
     },
   }).then((response) => response.json());
 };
-export const tryHelcim = async ({ cartId }: { cartId: string }) => {
+export const tryHelcim = async ({
+  cartId,
+  amount,
+}: {
+  cartId: string;
+  amount: number;
+}) => {
   return await fetch(`${BASE_URL}/${cartId}/purchase`, {
     method: "POST",
-    body: JSON.stringify({}),
+    body: JSON.stringify({ amount: amount }),
     headers: {
       "Content-Type": "application/json",
     },
