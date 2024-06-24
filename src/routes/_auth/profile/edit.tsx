@@ -119,9 +119,20 @@ export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
                     type="date"
                     id={field.name}
                     name={field.name}
-                    value={field.state.value}
+                    value={
+                      field.state.value
+                        ? new Date(field.state.value)
+                            .toISOString()
+                            .split("T")[0]
+                        : ""
+                    }
                     onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
+                    onChange={(e) => {
+                      const dateValue = e.target.value
+                        ? new Date(e.target.value)
+                        : undefined;
+                      field.handleChange(dateValue);
+                    }}
                     className="input input-bordered w-full mb-2"
                   />
                   <FieldInfo field={field} />

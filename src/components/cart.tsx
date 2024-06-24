@@ -1,6 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "@tanstack/react-router";
 import { TCartProduct, TProductSchema } from "../types";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
@@ -44,9 +41,6 @@ const Cart = ({ products }: { products: TCartProduct[] }) => {
         </table>
       </div>
       <div className="mt-4 text-center">
-        <Link to="/" className="btn btn-primary">
-          Checkout <FontAwesomeIcon icon={faShoppingCart} />
-        </Link>
         <HelcimPayButton cartId={products[0].cartId} amount={subtotal} />
       </div>
     </div>

@@ -70,8 +70,8 @@ export const ProfileCard = ({
           <div className="ml-2">
             {userProfile?.billingAddress?.street1}
             <br />
-            {userProfile?.billingAddress?.city},{" "}
-            {userProfile?.billingAddress?.state}{" "}
+            {userProfile?.billingAddress?.city}{" "}
+            {userProfile?.billingAddress?.state}
             {userProfile?.billingAddress?.postalCode}
           </div>
         </div>
@@ -80,7 +80,7 @@ export const ProfileCard = ({
           <div className="ml-2">
             {userProfile?.shippingAddress?.street1}
             <br />
-            {userProfile?.shippingAddress?.city},{" "}
+            {userProfile?.shippingAddress?.city}{" "}
             {userProfile?.shippingAddress?.state}{" "}
             {userProfile?.shippingAddress?.postalCode}
           </div>

@@ -25,6 +25,7 @@ import { Route as ProductsProductIdRouteImport } from './routes/products/$produc
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
 import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
+import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/profile/cart/$cartId/success'
 
 // Create Virtual Routes
 
@@ -104,6 +105,12 @@ const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
     getParentRoute: () => rootRoute,
   } as any,
 )
+
+const AuthProfileCartCartIdSuccessRoute =
+  AuthProfileCartCartIdSuccessImport.update({
+    path: '/profile/cart/$cartId/success',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -200,6 +207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/profile/cart/$cartId/success': {
+      id: '/_auth/profile/cart/$cartId/success'
+      path: '/profile/cart/$cartId/success'
+      fullPath: '/profile/cart/$cartId/success'
+      preLoaderRoute: typeof AuthProfileCartCartIdSuccessImport
+      parentRoute: typeof rootRoute
+    }
     '/_auth/profile/cart/$cartId/': {
       id: '/_auth/profile/cart/$cartId/'
       path: '/profile/cart/$cartId'
@@ -227,6 +241,7 @@ export const routeTree = rootRoute.addChildren({
   ProductsIndexRoute,
   AuthProfileEditRoute,
   AuthProfileIndexRoute,
+  AuthProfileCartCartIdSuccessRoute,
   AuthProfileCartCartIdIndexRoute,
 })
 
@@ -248,6 +263,7 @@ export const routeTree = rootRoute.addChildren({
         "/products/",
         "/_auth/profile/edit",
         "/_auth/profile/",
+        "/_auth/profile/cart/$cartId/success",
         "/_auth/profile/cart/$cartId/"
       ]
     },
@@ -297,6 +313,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_auth/profile/": {
       "filePath": "_auth/profile/index.tsx"
+    },
+    "/_auth/profile/cart/$cartId/success": {
+      "filePath": "_auth/profile/cart/$cartId/success.tsx"
     },
     "/_auth/profile/cart/$cartId/": {
       "filePath": "_auth/profile/cart/$cartId/index.tsx"
