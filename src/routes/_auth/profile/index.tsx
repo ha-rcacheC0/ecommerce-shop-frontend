@@ -46,7 +46,10 @@ const ProfilePage = () => {
         userEmail={auth.user!.userInfo!.email!}
       />
       <div className=" flex flex-col space-y-3 justify-center">
-        <Cart products={cart!.CartProducts} />
+        <Cart
+          products={cart!.CartProducts}
+          shippingAddress={userProfile!.shippingAddress!}
+        />
         <Link
           to="/profile/cart/$cartId"
           params={{ cartId: auth.user!.userInfo!.Cart.id }}

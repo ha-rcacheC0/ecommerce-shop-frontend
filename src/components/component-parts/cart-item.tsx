@@ -57,11 +57,11 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   };
 
   return (
-    <tr>
-      <td className="text-center">{title}</td>
+    <tr className="items-center align-middle p-6">
+      <td className="text-center ">{title}</td>
       <td className="text-center">{id}</td>
       <td className="text-center">${casePrice.toFixed(2)}</td>
-      <td className="flex justify-center items-center">
+      <td className="flex justify-center p-4 items-center">
         <button
           onClick={decrementQuantity}
           className="btn btn-outline btn-sm"
@@ -77,7 +77,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       <td className="text-center">
         ${(casePrice * product.quantity).toFixed(2)}
       </td>
-      <td className="text-center">
+      <td className="text-center ">
         <button
           onClick={() =>
             removeItem.mutate({

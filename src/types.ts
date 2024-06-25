@@ -56,30 +56,21 @@ export const States = {
 // Create a Zod enum schema from the states enum
 const StateEnum = z.nativeEnum(States);
 
+const AddressSchema = z.object({
+  street1: z.string(),
+  street2: z.string().optional(),
+  city: z.string(),
+  state: StateEnum,
+  postalCode: z.string(),
+});
 // Example of a schema that uses the StateEnum
 const UserProfileSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   dateOfBirth: z.date().optional(),
   phoneNumber: z.string().optional(),
-  billingAddress: z
-    .object({
-      street1: z.string(),
-      street2: z.string().optional(),
-      city: z.string(),
-      state: StateEnum,
-      postalCode: z.string(),
-    })
-    .optional(),
-  shippingAddress: z
-    .object({
-      street1: z.string(),
-      street2: z.string().optional(),
-      city: z.string(),
-      state: StateEnum,
-      postalCode: z.string(),
-    })
-    .optional(),
+  billingAddress: AddressSchema.optional(),
+  shippingAddress: AddressSchema.optional(),
   canContact: z.boolean().optional(),
   userId: z.string(),
 });
@@ -155,6 +146,7 @@ type UserProfile = z.infer<typeof UserProfileSchema>;
 type TProduct = z.infer<typeof TProductSchema>;
 type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
+type TAddress = z.infer<typeof AddressSchema>;
 export type {
   SignInRequest,
   SignInResponse,
@@ -164,4 +156,5 @@ export type {
   TProduct,
   TCartProduct,
   TCart,
+  TAddress,
 };
