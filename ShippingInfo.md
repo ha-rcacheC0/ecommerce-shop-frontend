@@ -1,6 +1,8 @@
 FREE pick up in ND - Please allow at least 24 hours to have your order ready. We deliver Mon. - Fri.
 (call for pick up instructions / instructions upon checkout)
 
+## Retail is Units // Wholesale is case
+
 Automatic \$359 shipping anywhere
 
 Add $350 retail to cart shipping goes to $300 - terminal
@@ -34,5 +36,7 @@ $1,250 - $300 - terminal
 $1,500 - $250 - terminal 
 $2,000 - $150 - terminal 
 $2,500 - $100 - terminal
-$3,500 wholesale only free shipping to most states (call to confirm current rates (fluctuate daily))
+$3,500 wholesale only free shipping to most states (call to confirm current rates (fluctuate daily)) <-
 \$7,500 wholesale only free shipping to all states.
+
+// Check to see if the user needs a lift gate +\$100

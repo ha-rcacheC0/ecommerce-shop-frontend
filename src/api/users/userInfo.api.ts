@@ -6,3 +6,17 @@ export const getUserInfo = async (token: string): Promise<UserProfile> => {
     headers: { Authorization: `Bearer ${token}` },
   }).then((response) => response.json());
 };
+export const postUserInfo = async (
+  token: string,
+  body: UserProfile
+): Promise<UserProfile> => {
+  console.log("Inside postUserInfo", body);
+  return await fetch(BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(body),
+  }).then((response) => response.json());
+};

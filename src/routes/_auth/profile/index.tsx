@@ -29,7 +29,6 @@ const ProfilePage = () => {
   const { data: cart } = useQuery(
     cartItemsQueryOptions(auth.user!.userInfo!.Cart.id)
   );
-  console.log("Cart", cart);
 
   if (isLoading) return <>Loading Profile ...</>;
   if (isError)

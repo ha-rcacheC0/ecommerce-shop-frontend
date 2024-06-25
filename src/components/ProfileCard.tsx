@@ -36,6 +36,8 @@ export const ProfileCard = ({
   userProfile: TUserProfile;
   userEmail: string;
 }) => {
+  console.log(userProfile);
+  const dob = new Date(userProfile.dateOfBirth!);
   return (
     <div className="card bg-neutral shadow-xl max-w-md  p-6 ">
       <div className="flex justify-between items-center gap-3 text-center mb-4">
@@ -59,7 +61,7 @@ export const ProfileCard = ({
         </div>
         <div>
           <span className="font-semibold">Date of Birth:</span>{" "}
-          {userProfile?.dateOfBirth?.toLocaleDateString()}
+          {dob.toLocaleDateString()}
         </div>
         <div>
           <span className="font-semibold">Phone Number:</span>{" "}

@@ -32,7 +32,7 @@ const HelcimPayButton = ({
     };
 
     fetchCheckoutToken();
-  }, [cartId]);
+  }, [cartId, amount]);
 
   const handlePayNow = () => {
     if (checkoutToken && typeof window.appendHelcimPayIframe === "function") {
