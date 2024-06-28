@@ -12,7 +12,7 @@ const retailShippingRates: {
   [amount: number]: { [destination in DestinationType]: number };
 } = {
   1500: { anywhere: 0, terminal: 0 },
-  1250: { anywhere: 0, terminal: 0 },
+  1250: { anywhere: 100, terminal: 0 },
   1000: { anywhere: 150, terminal: 150 },
   750: { anywhere: 250, terminal: 200 },
   500: { anywhere: 300, terminal: 250 },
@@ -86,9 +86,7 @@ function calculateShipping(options: ShippingOptions): number {
   }
 
   // Check if the user needs a lift gate
-  if (needLiftGate) {
-    shippingCost += 100;
-  }
+  if (needLiftGate) shippingCost += 100;
 
   return shippingCost;
 }

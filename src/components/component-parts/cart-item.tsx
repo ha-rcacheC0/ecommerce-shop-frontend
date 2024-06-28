@@ -57,7 +57,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   };
 
   return (
-    <tr className="items-center align-middle p-6">
+    <tr className=" w-full items-center align-middle p-6">
       <td className="text-center ">{title}</td>
       <td className="text-center">{id}</td>
       <td className="text-center">${casePrice.toFixed(2)}</td>

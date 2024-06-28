@@ -6,8 +6,9 @@ import { useQuery } from "@tanstack/react-query";
 import { userInfoQueryOptions } from "../../../../../api/users/userQueryOptions.api";
 
 export const Route = createFileRoute("/_auth/profile/cart/$cartId/")({
-  loader: async ({ context: { queryClient }, params: { cartId } }) => {
+  loader: async ({ context: { queryClient, auth }, params: { cartId } }) => {
     await queryClient.prefetchQuery(cartItemsQueryOptions(cartId, true));
+    await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
   },
   component: CartPage,
 });

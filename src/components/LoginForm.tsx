@@ -33,13 +33,11 @@ export const Login = () => {
     mutationFn: (body: SignInRequest) => signInUser(body),
     onSuccess: (data) => {
       if (!data.token && !data.userInfo) {
-        console.log("am I here?");
         throw new Error(data.message);
       } else {
         flushSync(() => {
           if (data.token && data.userInfo) {
             localStorage.setItem("user", JSON.stringify(data));
-
             authContext.login(data);
           }
         });
@@ -58,7 +56,6 @@ export const Login = () => {
     setServerMessage(""); // Clear previous messages
     if (emailValidState.success && passwordValidState.success) {
       const requestBody: SignInRequest = { email, password };
-      console.log(requestBody);
       mutation.mutate(requestBody);
     } else {
       console.log("Something isn't sending correctly");

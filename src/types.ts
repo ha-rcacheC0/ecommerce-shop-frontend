@@ -78,7 +78,7 @@ const TUserSchema = z.object({
   id: z.string(),
   role: z.enum(["USER", "MANAGER", "ADMIN"]),
   email: z.string().email(),
-  lastLogin: z.string().datetime(),
+  lastLogin: z.string().datetime().nullable(),
 });
 
 export const TProductSchema = z.object({
@@ -131,7 +131,7 @@ export const SignInResponseSchema = z.object({
     .object({
       email: z.string(),
       role: z.enum(["USER", "MANAGER", "ADMIN"]),
-      lastLogin: z.string().datetime(),
+      lastLogin: z.string().datetime().nullable(),
       Cart: TCartSchema,
     })
     .optional(),
