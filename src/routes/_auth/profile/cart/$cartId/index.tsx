@@ -25,7 +25,14 @@ function CartPage() {
     <div className="p-8 w-3/5 mx-auto">
       <Cart
         products={products!.CartProducts}
-        shippingAddress={userProfile!.shippingAddress!}
+        shippingAddress={
+          userProfile!.shippingAddress ?? {
+            street1: "",
+            state: "",
+            city: "",
+            postalCode: "",
+          }
+        }
       />
     </div>
   );

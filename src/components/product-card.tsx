@@ -7,6 +7,7 @@ import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 import { toast } from "react-toastify";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
+  console.log(product.UnitProduct);
   const packageString = product.package.join(", ");
   const { authState, user } = useAuth();
   const userCartId = user?.userInfo?.Cart.id;
@@ -40,28 +41,47 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
           className="card-title"
         >
           {product.title}
-          <div className="badge badge-secondary">{product.casePrice}</div>
+          <div className="badge badge-secondary">
+            {parseFloat(product.casePrice.toString()).toFixed(2)}
+          </div>
         </Link>
         <p>{product.description}</p>
         <div className="card-actions justify-end">
           <div className="mr-auto flex flex-col gap-3">
-            <div className="badge badge-accent "> SKU {product.id}</div>
+            <div className="badge badge-accent "> SKU {product.sku}</div>
             <div className="badge badge-accent mr-auto">
               Packaged: {packageString}
             </div>
           </div>
           {authState === "authenticated" ? (
-            <button
-              className="btn btn-primary"
-              onClick={() =>
-                addItem.mutate({
-                  productId: +product.id,
-                  cartId: userCartId!,
-                })
-              }
-            >
-              Add To Cart <FontAwesomeIcon icon={faCartPlus} />
-            </button>
+            <div className="flex flex-col gap-4">
+              <button
+                className="btn btn-primary"
+                onClick={() =>
+                  addItem.mutate({
+                    productId: product.id,
+                    cartId: userCartId!,
+                    isUnit: false,
+                  })
+                }
+              >
+                Add Case <FontAwesomeIcon icon={faCartPlus} />
+              </button>
+              {product.UnitProduct && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() =>
+                    addItem.mutate({
+                      productId: product.id,
+                      cartId: userCartId!,
+                      isUnit: true,
+                    })
+                  }
+                >
+                  Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                </button>
+              )}
+            </div>
           ) : (
             <p> Sign In to add product to cart</p>
           )}

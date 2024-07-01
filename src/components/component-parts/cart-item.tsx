@@ -8,7 +8,7 @@ import {
 import { TCartProduct, TProductSchema } from "../../types";
 
 const CartItem = ({ product }: { product: TCartProduct }) => {
-  const { title, id, casePrice } = TProductSchema.parse(product.Product);
+  const { title, sku, casePrice } = TProductSchema.parse(product.Product);
 
   const removeItem = useRemoveProductFromCartMutation(
     product.cartId,
@@ -59,8 +59,8 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   return (
     <tr className=" w-full items-center align-middle p-6">
       <td className="text-center ">{title}</td>
-      <td className="text-center">{id}</td>
-      <td className="text-center">${casePrice.toFixed(2)}</td>
+      <td className="text-center">{sku}</td>
+      <td className="text-center">${parseFloat(casePrice).toFixed(2)}</td>
       <td className="flex justify-center p-4 items-center">
         <button
           onClick={decrementQuantity}
@@ -75,7 +75,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         </button>
       </td>
       <td className="text-center">
-        ${(casePrice * product.quantity).toFixed(2)}
+        ${(parseFloat(casePrice) * product.quantity).toFixed(2)}
       </td>
       <td className="text-center ">
         <button

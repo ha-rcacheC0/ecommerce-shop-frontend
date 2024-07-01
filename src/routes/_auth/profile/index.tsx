@@ -48,15 +48,25 @@ const ProfilePage = () => {
       <div className=" flex flex-col space-y-3 justify-center">
         <Cart
           products={cart!.CartProducts}
-          shippingAddress={userProfile!.shippingAddress!}
+          shippingAddress={
+            userProfile!.shippingAddress ?? {
+              street1: "",
+              state: "",
+              city: "",
+              postalCode: "",
+            }
+          }
         />
-        <Link
-          to="/profile/cart/$cartId"
-          params={{ cartId: auth.user!.userInfo!.Cart.id }}
-          className="btn btn-wide btn-accent mx-auto"
-        >
-          Go To Cart <FontAwesomeIcon icon={faRightLong} />
-        </Link>
+
+        {cart!.CartProducts.length > 1 && (
+          <Link
+            to="/profile/cart/$cartId"
+            params={{ cartId: auth.user!.userInfo!.Cart.id }}
+            className="btn btn-wide btn-accent mx-auto"
+          >
+            Go To Cart <FontAwesomeIcon icon={faRightLong} />
+          </Link>
+        )}
       </div>
     </div>
   );

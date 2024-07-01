@@ -13,7 +13,7 @@ export const getAllProductsQueryOptions = ({
     queryFn: () => getAllProductsQuery({ page, pageSize }),
     placeholderData: keepPreviousData,
   });
-export const getOneProductQueryOptions = ({ id }: { id: number }) =>
+export const getOneProductQueryOptions = ({ id }: { id: string }) =>
   queryOptions({
     queryKey: ["product", id],
     queryFn: () => getOneProductQuery({ id }),

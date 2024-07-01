@@ -20,7 +20,7 @@ export const getAllProductsQuery = async ({
 export const getOneProductQuery = async ({
   id,
 }: {
-  id: number;
+  id: string;
 }): Promise<TProduct> => {
   return await fetch(`${BASE_URL}/${id}`, {}).then((response) =>
     response.json()

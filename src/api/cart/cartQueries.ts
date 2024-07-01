@@ -28,10 +28,12 @@ export const useAddItemToCartMutation = (
     mutationFn: ({
       productId,
       cartId,
+      isUnit,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
-    }) => addProductToCart({ productId, cartId }),
+      isUnit: boolean;
+    }) => addProductToCart({ productId, cartId, isUnit }),
     onSuccess: async () => {
       onSuccessCallback();
     },
@@ -86,7 +88,7 @@ export const useUpdateProductQuantityMutation = (
       cartId,
       quantity,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
       quantity: number;
     }) => updateProductQuantity({ productId, cartId, quantity }),

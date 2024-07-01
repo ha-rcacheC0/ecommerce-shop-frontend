@@ -9,13 +9,10 @@ import {
   validatePasswordInput,
   validateEmailInput,
 } from "../utils/validationUtils";
-import {
-  faEye,
-  faEyeSlash,
-  faRightToBracket,
-} from "@fortawesome/free-solid-svg-icons";
+import { faRightToBracket } from "@fortawesome/free-solid-svg-icons";
 import { UserCreateRequest } from "../types";
 import { createUser } from "../api/users/auth.api";
+import { PasswordIconSwap } from "./component-parts/showPasswordSwap";
 
 export const RegisterUser = () => {
   const [password, setPassword] = useState("");
@@ -141,20 +138,5 @@ export const RegisterUser = () => {
         </Link>
       </form>
     </div>
-  );
-};
-
-const PasswordIconSwap = ({
-  showPassword,
-  setShowPassword,
-}: {
-  showPassword: boolean;
-  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  return (
-    <FontAwesomeIcon
-      icon={showPassword ? faEyeSlash : faEye}
-      onClick={() => setShowPassword(!showPassword)}
-    />
   );
 };

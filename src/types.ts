@@ -81,12 +81,21 @@ const TUserSchema = z.object({
   lastLogin: z.string().datetime().nullable(),
 });
 
+const TUnitProduct = z.object({
+  id: z.string(),
+  sku: z.string(),
+  productId: z.string(),
+  unitPrice: z.string(),
+  package: z.number().array(),
+  availableStock: z.number(),
+});
+
 export const TProductSchema = z.object({
-  id: z.number(),
+  id: z.string(),
+  sku: z.number(),
   title: z.string(),
   description: z.string(),
-  casePrice: z.coerce.number(),
-  unitPrice: z.number().nullable(),
+  casePrice: z.string(),
   Categories: z.object({ id: z.string(), name: z.string() }),
   Brands: z.object({ id: z.string(), name: z.string() }),
   ColorStrings: z
@@ -98,12 +107,15 @@ export const TProductSchema = z.object({
     .array()
     .optional(),
   image: z.string(),
+  videoUrl: z.string().url().optional(),
   package: z.number().array(),
+  UnitProduct: TUnitProduct.optional(),
 });
 
 const CartProductSchema = z.object({
   id: z.string(),
   quantity: z.number(),
+  isUnit: z.boolean(),
   cartId: z.string(),
   Product: TProductSchema,
 });

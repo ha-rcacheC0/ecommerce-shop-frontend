@@ -8,13 +8,15 @@ export const getCartItems = async (cartId: string): Promise<TCart> =>
 export const addProductToCart = async ({
   productId,
   cartId,
+  isUnit,
 }: {
-  productId: number;
+  productId: string;
   cartId: string;
+  isUnit: boolean;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/add`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId }),
+    body: JSON.stringify({ productId, cartId, isUnit }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -42,7 +44,7 @@ export const updateProductQuantity = async ({
   productId,
   quantity,
 }: {
-  productId: number;
+  productId: string;
   cartId: string;
   quantity: number;
 }) => {
