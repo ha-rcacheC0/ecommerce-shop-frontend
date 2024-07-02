@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { TAddress, TCartProduct, TProductSchema } from "../types";
-import { calculateShipping } from "../utils/utils";
+import { calculateShipping, checkOrderType } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
 import { useEffect, useState } from "react";
+import { isObjectEmpty } from "../utils/validationUtils";
 
 const Cart = ({
   products,
@@ -16,22 +17,36 @@ const Cart = ({
   const [needLiftGate, setNeedLiftGate] = useState(false);
   const [shipping, setShipping] = useState(0);
 
+  let caseSubtotal = 0;
+  let unitSubtotal = 0;
+
   const subtotal = products.reduce((acc, elm) => {
     const parsed = TProductSchema.parse(elm.Product);
-    return acc + parseFloat(parsed.casePrice) * elm.quantity;
+
+    const productCaseSubtotal = parseFloat(parsed.casePrice) * elm.caseQuantity;
+    const productUnitSubtotal =
+      parseFloat(parsed.UnitProduct?.unitPrice || "0") * elm.unitQuantity;
+
+    caseSubtotal += productCaseSubtotal;
+    unitSubtotal += productUnitSubtotal;
+
+    return acc + productCaseSubtotal + productUnitSubtotal;
   }, 0);
+
+  const orderType = checkOrderType(caseSubtotal, unitSubtotal);
 
   useEffect(() => {
     const newShipping = calculateShipping({
       orderAmount: subtotal,
-      orderType: "retail",
+      orderType: orderType,
       destination: isTerminalDestination ? "terminal" : "anywhere",
       needLiftGate,
     });
     setShipping(newShipping);
-  }, [subtotal, isTerminalDestination, needLiftGate]);
+  }, [subtotal, isTerminalDestination, needLiftGate, orderType]);
 
   const grandTotal = subtotal + shipping;
+  const isShippingAddressSet = !isObjectEmpty(shippingAddress);
 
   if (products.length === 0) {
     return (
@@ -59,7 +74,9 @@ const Cart = ({
               <th className="px-4 py-2">Product</th>
               <th className="px-4 py-2">SKU</th>
               <th className="px-4 py-2">Case Price</th>
-              <th className="px-4 py-2">Quantity</th>
+              <th className="px-4 py-2">Case Quantity</th>
+              <th className="px-4 py-2">Unit Price</th>
+              <th className="px-4 py-2">Unit Quantity</th>
               <th className="px-4 py-2">Subtotal</th>
               <th className="px-4 py-2">Actions</th>
             </tr>
@@ -112,7 +129,10 @@ const Cart = ({
               <td className="text-lg  font-semibold">${subtotal.toFixed(2)}</td>
             </tr>
             <tr className="h-12 ">
-              <td className="text-right font-semibold">Shipping: </td>
+              <td className="text-right font-semibold">
+                {" "}
+                {orderType} Shipping:{" "}
+              </td>
               <td className="text-lg   font-semibold">
                 ${shipping.toFixed(2)}
               </td>
@@ -125,8 +145,33 @@ const Cart = ({
         </table>
       </div>
 
-      <div className="mt-4 text-center">
-        <HelcimPayButton cartId={products[0].cartId} amount={grandTotal} />
+      <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center ">
+        <HelcimPayButton
+          cartId={products[0].cartId}
+          amount={grandTotal}
+          btnDisabled={!isShippingAddressSet}
+        />
+        {!isShippingAddressSet && (
+          <div role="alert" className="  alert alert-warning">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6 shrink-0 stroke-current"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <span>
+              Warning: Please update your shipping address to continue to
+              Checkout
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

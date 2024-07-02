@@ -19,7 +19,10 @@ export const Navbar = () => {
   const { data: cartInfo } = useQuery(cartItemsQueryOptions(cartId, !!cartId));
 
   const cartQty =
-    cartInfo?.CartProducts.reduce((acc, elm) => acc + elm.quantity, 0) || 0;
+    cartInfo?.CartProducts.reduce(
+      (acc, elm) => acc + elm.caseQuantity + elm.unitQuantity,
+      0
+    ) || 0;
 
   const MenuButton = () => {
     return (
@@ -53,13 +56,13 @@ export const Navbar = () => {
           >
             <li>
               <Link to={"/products"}>Fireworks</Link>
-              <ul className="p-2">
+              {/* <ul className="p-2">
                 <li>
                   <Link to={"/products/shows"}>Shows</Link>
                 </li>
-              </ul>
+              </ul> */}
             </li>
-            <li>
+            {/* <li>
               <Link to={"/events"}>Events</Link>
               <ul className="p-2">
                 <li>
@@ -72,7 +75,7 @@ export const Navbar = () => {
                   <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
                 </li>
               </ul>
-            </li>
+            </li> */}
           </ul>
         </div>
         <Link to={"/"} className="btn btn-link">
@@ -82,19 +85,19 @@ export const Navbar = () => {
       <div className="navbar-center hidden md:flex flex-1 justify-center">
         <ul tabIndex={0} className="menu menu-horizontal mt-3 px-1">
           <li>
-            <details>
-              <summary>
-                <Link to={"/products"}>Fireworks</Link>
-              </summary>
-              <ul className="p-2">
+            {/* <details> */}
+            <summary>
+              <Link to={"/products"}>Fireworks</Link>
+            </summary>
+            {/* <ul className="p-2">
                 <li>
                   <Link to={"/products/shows"}>Shows</Link>
                 </li>
               </ul>
-            </details>
+            </details> */}
           </li>
           <li>
-            <details>
+            {/* <details>
               <summary>
                 <Link to={"/events"}>Events</Link>
               </summary>
@@ -109,7 +112,7 @@ export const Navbar = () => {
                   <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
                 </li>
               </ul>
-            </details>
+            </details> */}
           </li>
         </ul>
       </div>

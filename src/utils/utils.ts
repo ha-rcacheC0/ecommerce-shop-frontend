@@ -37,9 +37,9 @@ const comboShippingRates: {
 } = {
   3000: { anywhere: 0, terminal: 0 },
   2000: { anywhere: 0, terminal: 0 },
-  1500: { anywhere: 300, terminal: 300 },
+  1500: { anywhere: 150, terminal: 150 },
   750: { anywhere: 300, terminal: 300 },
-  0: { anywhere: 0, terminal: 0 },
+  0: { anywhere: 359, terminal: 359 },
 };
 
 const getShippingCost = (
@@ -56,6 +56,15 @@ const getShippingCost = (
   }
   return 0; // Default case, shouldn't reach here.
 };
+
+function checkOrderType(caseSubtotal: number, unitSubtotal: number): OrderType {
+  const combinedSubTotal = caseSubtotal + unitSubtotal;
+
+  if (combinedSubTotal === unitSubtotal) return "retail";
+  if (unitSubtotal === 0) return "wholesale";
+  if (unitSubtotal / combinedSubTotal < 0.25) return "wholesale";
+  return "combo";
+}
 
 function calculateShipping(options: ShippingOptions): number {
   const { orderAmount, orderType, destination, needLiftGate } = options;
@@ -90,4 +99,4 @@ function calculateShipping(options: ShippingOptions): number {
 
   return shippingCost;
 }
-export { calculateShipping };
+export { calculateShipping, checkOrderType };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { tryHelcim } from "../../api/cart/cart";
+import { startPaymentProcess } from "../../api/cart/cart";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "@tanstack/react-router";
@@ -14,9 +14,11 @@ declare global {
 const HelcimPayButton = ({
   cartId,
   amount,
+  btnDisabled,
 }: {
   cartId: string;
   amount: number;
+  btnDisabled: boolean;
 }) => {
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -24,7 +26,7 @@ const HelcimPayButton = ({
   useEffect(() => {
     const fetchCheckoutToken = async () => {
       try {
-        const { checkoutToken } = await tryHelcim({ cartId, amount });
+        const { checkoutToken } = await startPaymentProcess({ cartId, amount });
         setCheckoutToken(checkoutToken);
       } catch (error) {
         console.error("Failed to fetch checkout token", error);
@@ -65,7 +67,11 @@ const HelcimPayButton = ({
   };
 
   return (
-    <button className="btn btn-primary " onClick={handlePayNow}>
+    <button
+      className="btn btn-primary "
+      onClick={handlePayNow}
+      disabled={btnDisabled}
+    >
       Checkout <FontAwesomeIcon icon={faShoppingCart} />
     </button>
   );

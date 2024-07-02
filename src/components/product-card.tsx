@@ -7,7 +7,6 @@ import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 import { toast } from "react-toastify";
 
 export const ProductCard = ({ product }: { product: TProduct }) => {
-  console.log(product.UnitProduct);
   const packageString = product.package.join(", ");
   const { authState, user } = useAuth();
   const userCartId = user?.userInfo?.Cart.id;

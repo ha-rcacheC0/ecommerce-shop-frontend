@@ -27,7 +27,7 @@ export const removeProductFromCart = async ({
   productId,
   cartId,
 }: {
-  productId: number;
+  productId: string;
   cartId: string;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/remove`, {
@@ -43,20 +43,22 @@ export const updateProductQuantity = async ({
   cartId,
   productId,
   quantity,
+  isUnit,
 }: {
   productId: string;
   cartId: string;
   quantity: number;
+  isUnit: boolean;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/updateQuantity`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, quantity }),
+    body: JSON.stringify({ productId, cartId, quantity, isUnit }),
     headers: {
       "Content-Type": "application/json",
     },
   }).then((response) => response.json());
 };
-export const tryHelcim = async ({
+export const startPaymentProcess = async ({
   cartId,
   amount,
 }: {

@@ -58,7 +58,7 @@ export const useRemoveProductFromCartMutation = (
       productId,
       cartId,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
     }) => removeProductFromCart({ productId, cartId }),
     onSuccess: async () => {
@@ -87,11 +87,13 @@ export const useUpdateProductQuantityMutation = (
       productId,
       cartId,
       quantity,
+      isUnit,
     }: {
       productId: string;
       cartId: string;
       quantity: number;
-    }) => updateProductQuantity({ productId, cartId, quantity }),
+      isUnit: boolean;
+    }) => updateProductQuantity({ productId, cartId, quantity, isUnit }),
     onSuccess: async () => {
       onSuccessCallback();
     },
