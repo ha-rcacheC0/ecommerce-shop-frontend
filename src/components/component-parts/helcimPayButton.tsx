@@ -51,6 +51,12 @@ const HelcimPayButton = ({
             console.log("Transaction success!", event.data.eventMessage);
 
             // This is where we need to update the cart info and create the payment record
+
+            // get payment info, address and cart information
+
+            // set up row  ! Status : "prepared" | "ordered" | "out for delivery"
+
+            // BATCH UNIT ORDERS together daily - Just Case goes straight
             window.removeHelcimPayIframe();
             navigate({
               to: "/profile/cart/$cartId/success",

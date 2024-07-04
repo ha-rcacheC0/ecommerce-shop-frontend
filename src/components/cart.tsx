@@ -1,10 +1,17 @@
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { TAddress, TCartProduct, TProductSchema } from "../types";
 import { calculateShipping, checkOrderType } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
-import { useEffect, useState } from "react";
 import { isObjectEmpty } from "../utils/validationUtils";
+
+const terminals = [
+  { id: 1, name: "Terminal 1", state: "CA", zipcode: "90001" },
+  { id: 2, name: "Terminal 2", state: "CA", zipcode: "90002" },
+  { id: 3, name: "Terminal 3", state: "NY", zipcode: "10001" },
+  // Add more terminals as needed
+];
 
 const Cart = ({
   products,
@@ -16,6 +23,10 @@ const Cart = ({
   const [isTerminalDestination, setIsTerminalDestination] = useState(false);
   const [needLiftGate, setNeedLiftGate] = useState(false);
   const [shipping, setShipping] = useState(0);
+  const [terminalDestination, setTerminalDestination] = useState("");
+  const [state, setState] = useState("");
+  const [zipcode, setZipcode] = useState("");
+  const [filteredTerminals, setFilteredTerminals] = useState(terminals);
 
   let caseSubtotal = 0;
   let unitSubtotal = 0;
@@ -35,6 +46,9 @@ const Cart = ({
 
   const orderType = checkOrderType(caseSubtotal, unitSubtotal);
 
+  const grandTotal = subtotal + shipping;
+  const isShippingAddressSet = !isObjectEmpty(shippingAddress);
+
   useEffect(() => {
     const newShipping = calculateShipping({
       orderAmount: subtotal,
@@ -45,8 +59,13 @@ const Cart = ({
     setShipping(newShipping);
   }, [subtotal, isTerminalDestination, needLiftGate, orderType]);
 
-  const grandTotal = subtotal + shipping;
-  const isShippingAddressSet = !isObjectEmpty(shippingAddress);
+  useEffect(() => {
+    const filtered = terminals.filter(
+      (terminal) =>
+        terminal.state === state && (!zipcode || terminal.zipcode === zipcode)
+    );
+    setFilteredTerminals(filtered);
+  }, [state, zipcode]);
 
   if (products.length === 0) {
     return (
@@ -93,12 +112,20 @@ const Cart = ({
         <div className="w-1/2 bg-neutral-200 p-4 rounded-md text-center  ">
           <div>
             <h3 className="text-lg font-semibold">Shipping Address:</h3>
-            <p>{shippingAddress.street1}</p>
-            <p>{shippingAddress.street2}</p>
-            <p>
-              {shippingAddress.city}, {shippingAddress.state}
-            </p>
-            <p>{shippingAddress.postalCode}</p>
+            {!isShippingAddressSet ? (
+              <>
+                <p>Please set your Address or Select a Terminal to ship to</p>
+              </>
+            ) : (
+              <>
+                <p>{shippingAddress.street1}</p>
+                <p>{shippingAddress.street2}</p>
+                <p>
+                  {shippingAddress.city}, {shippingAddress.state}
+                </p>
+                <p>{shippingAddress.postalCode}</p>
+              </>
+            )}
           </div>
           <div className="mt-4 flex flex-col items-start gap-2">
             <label className="ml-4">
@@ -110,6 +137,52 @@ const Cart = ({
               />
               Ship to terminal
             </label>
+
+            {isTerminalDestination && (
+              <>
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">State</span>
+                  </div>
+                  <input
+                    type="text"
+                    className="input input-bordered text-white"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                  />
+                </label>
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Zip Code</span>
+                  </div>
+                  <input
+                    type="text"
+                    className="input input-bordered text-white"
+                    value={zipcode}
+                    onChange={(e) => setZipcode(e.target.value)}
+                  />
+                </label>
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Pick Terminal to Ship to</span>
+                  </div>
+                  <select
+                    className="select select-bordered text-white"
+                    value={terminalDestination}
+                    onChange={(e) => setTerminalDestination(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Pick a Terminal
+                    </option>
+                    {filteredTerminals.map((terminal) => (
+                      <option key={terminal.id} value={terminal.name}>
+                        {terminal.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </>
+            )}
             <label className="ml-4">
               <input
                 type="checkbox"
@@ -149,10 +222,10 @@ const Cart = ({
         <HelcimPayButton
           cartId={products[0].cartId}
           amount={grandTotal}
-          btnDisabled={!isShippingAddressSet}
+          btnDisabled={!isShippingAddressSet || !isTerminalDestination}
         />
-        {!isShippingAddressSet && (
-          <div role="alert" className="  alert alert-warning">
+        {!isShippingAddressSet && !isTerminalDestination && (
+          <div role="alert" className=" alert alert-warning">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 shrink-0 stroke-current"

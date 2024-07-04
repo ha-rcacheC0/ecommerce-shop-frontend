@@ -97,7 +97,9 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-center">Brands</h3>
+            <h3 className="font-bold mb-4  text-center text-2xl underline">
+              Brands
+            </h3>
             <div className="grid grid-cols-2 gap-1">
               {Object.values(Brand).map((brand) => (
                 <label key={brand} className="flex items-center space-x-2">
@@ -116,7 +118,9 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-center">Categories</h3>
+            <h3 className="font-bold mb-4  text-center text-2xl underline">
+              Categories
+            </h3>
             <div className="grid grid-cols-2 gap-1">
               {Object.values(Category).map((category) => (
                 <label key={category} className="flex items-center space-x-2">
@@ -135,7 +139,9 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-center">Colors</h3>
+            <h3 className="font-bold mb-4  text-center text-2xl underline">
+              Colors
+            </h3>
             <div className="grid grid-cols-2 gap-1">
               {Object.values(Colors).map((color) => (
                 <label key={color} className="flex items-center space-x-2">
@@ -154,7 +160,9 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-center">Effects</h3>
+            <h3 className="font-bold mb-4 text-center text-2xl underline">
+              Effects
+            </h3>
             <div className="grid grid-cols-2 gap-1">
               {Object.values(Effects).map((effect) => (
                 <label key={effect} className="flex items-center space-x-2">

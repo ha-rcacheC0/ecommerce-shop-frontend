@@ -7,8 +7,8 @@ import { userInfoQueryOptions } from "../../../../../api/users/userQueryOptions.
 
 export const Route = createFileRoute("/_auth/profile/cart/$cartId/")({
   loader: async ({ context: { queryClient, auth }, params: { cartId } }) => {
-    await queryClient.prefetchQuery(cartItemsQueryOptions(cartId, true));
     await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
+    await queryClient.prefetchQuery(cartItemsQueryOptions(cartId, true));
   },
   component: CartPage,
 });
@@ -26,7 +26,7 @@ function CartPage() {
       <Cart
         products={products!.CartProducts}
         shippingAddress={
-          userProfile!.shippingAddress ?? {
+          userProfile?.shippingAddress ?? {
             street1: "",
             state: "",
             city: "",
