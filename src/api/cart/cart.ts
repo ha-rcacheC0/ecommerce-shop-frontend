@@ -73,3 +73,20 @@ export const startPaymentProcess = async ({
     },
   }).then((res) => res.json());
 };
+
+export const makePurchase = async (userId: string) => {
+  const response = await fetch("/api/purchase", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+
+  return response.json();
+};

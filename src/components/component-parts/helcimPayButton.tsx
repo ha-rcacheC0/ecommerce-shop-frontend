@@ -3,6 +3,7 @@ import { startPaymentProcess } from "../../api/cart/cart";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "@tanstack/react-router";
+import { useMakePurchaseMutation } from "../../api/cart/cartQueries";
 
 declare global {
   interface Window {
@@ -15,13 +16,28 @@ const HelcimPayButton = ({
   cartId,
   amount,
   btnDisabled,
+  userId,
 }: {
   cartId: string;
   amount: number;
   btnDisabled: boolean;
+  userId: string;
 }) => {
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const { mutate: makePurchase, isPending } = useMakePurchaseMutation(
+    () => {
+      console.log("Purchase successful!");
+      navigate({
+        to: "/profile/cart/$cartId/success",
+        params: { cartId },
+      });
+    },
+    (error) => {
+      console.error("Purchase failed:", error.message);
+    }
+  );
 
   useEffect(() => {
     const fetchCheckoutToken = async () => {
@@ -51,17 +67,10 @@ const HelcimPayButton = ({
             console.log("Transaction success!", event.data.eventMessage);
 
             // This is where we need to update the cart info and create the payment record
+            makePurchase({ userId });
 
-            // get payment info, address and cart information
-
-            // set up row  ! Status : "prepared" | "ordered" | "out for delivery"
-
-            // BATCH UNIT ORDERS together daily - Just Case goes straight
+            // Remove the iframe
             window.removeHelcimPayIframe();
-            navigate({
-              to: "/profile/cart/$cartId/success",
-              params: { cartId },
-            });
           }
         }
       });
@@ -74,11 +83,12 @@ const HelcimPayButton = ({
 
   return (
     <button
-      className="btn btn-primary "
+      className="btn btn-primary"
       onClick={handlePayNow}
-      disabled={btnDisabled}
+      disabled={btnDisabled || isPending}
     >
-      Checkout <FontAwesomeIcon icon={faShoppingCart} />
+      {isPending ? "Processing..." : "Checkout"}
+      <FontAwesomeIcon icon={faShoppingCart} />
     </button>
   );
 };

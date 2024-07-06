@@ -5,6 +5,7 @@ import { calculateShipping, checkOrderType } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
 import { isObjectEmpty } from "../utils/validationUtils";
+import { useAuth } from "../providers/auth.provider";
 
 const terminals = [
   { id: 1, name: "Terminal 1", state: "CA", zipcode: "90001" },
@@ -27,7 +28,7 @@ const Cart = ({
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [filteredTerminals, setFilteredTerminals] = useState(terminals);
-
+  const { user } = useAuth();
   let caseSubtotal = 0;
   let unitSubtotal = 0;
 
@@ -223,6 +224,7 @@ const Cart = ({
           cartId={products[0].cartId}
           amount={grandTotal}
           btnDisabled={!isShippingAddressSet || !isTerminalDestination}
+          userId={user!.userInfo!.Cart.userId!}
         />
         {!isShippingAddressSet && !isTerminalDestination && (
           <div role="alert" className=" alert alert-warning">
