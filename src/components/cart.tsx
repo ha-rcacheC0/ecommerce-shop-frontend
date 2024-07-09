@@ -223,7 +223,7 @@ const Cart = ({
         <HelcimPayButton
           cartId={products[0].cartId}
           amount={grandTotal}
-          btnDisabled={!isShippingAddressSet || !isTerminalDestination}
+          btnDisabled={!isShippingAddressSet && !isTerminalDestination}
           userId={user!.userInfo!.Cart.userId!}
         />
         {!isShippingAddressSet && !isTerminalDestination && (

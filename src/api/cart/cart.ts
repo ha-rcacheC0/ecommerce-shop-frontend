@@ -1,7 +1,7 @@
 import { TCart } from "../../types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/cart";
-
+const PURCHASE_URL = import.meta.env.VITE_API_BASE_URL! + "/api/purchase";
 export const getCartItems = async (cartId: string): Promise<TCart> =>
   await fetch(`${BASE_URL}/${cartId}`, {}).then((response) => response.json());
 
@@ -75,7 +75,7 @@ export const startPaymentProcess = async ({
 };
 
 export const makePurchase = async (userId: string) => {
-  const response = await fetch("/api/purchase", {
+  const response = await fetch(PURCHASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
