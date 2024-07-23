@@ -114,7 +114,13 @@ export const useMakePurchaseMutation = (
 ) => {
   return useMutation({
     mutationKey: ["makePurchase"],
-    mutationFn: ({ userId }: { userId: string }) => makePurchase(userId),
+    mutationFn: ({
+      userId,
+      shippingAddressId,
+    }: {
+      userId: string;
+      shippingAddressId: string;
+    }) => makePurchase(userId, shippingAddressId),
     onSuccess: async () => {
       onSuccessCallback();
       // Invalidate the cart query to ensure it is refetched

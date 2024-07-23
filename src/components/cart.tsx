@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { TAddress, TCartProduct, TProductSchema } from "../types";
 import { calculateShipping, checkOrderType } from "../utils/utils";

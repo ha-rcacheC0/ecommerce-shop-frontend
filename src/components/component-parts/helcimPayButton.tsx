@@ -4,7 +4,6 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "@tanstack/react-router";
 import { useMakePurchaseMutation } from "../../api/cart/cartQueries";
-import { TAddress } from "../../types";
 
 declare global {
   interface Window {
@@ -70,7 +69,7 @@ const HelcimPayButton = ({
             console.log("Transaction success!", event.data.eventMessage);
 
             // This is where we need to update the cart info and create the payment record
-            makePurchase({ userId });
+            makePurchase({ userId, shippingAddressId });
 
             // Remove the iframe
             window.removeHelcimPayIframe();

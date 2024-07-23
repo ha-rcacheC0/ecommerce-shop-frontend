@@ -74,13 +74,16 @@ export const startPaymentProcess = async ({
   }).then((res) => res.json());
 };
 
-export const makePurchase = async (userId: string) => {
+export const makePurchase = async (
+  userId: string,
+  shippingAddressId: string
+) => {
   const response = await fetch(PURCHASE_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userId }),
+    body: JSON.stringify({ userId, shippingAddressId }),
   });
 
   if (!response.ok) {
