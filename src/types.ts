@@ -262,9 +262,13 @@ export const States = {
   WI: "WI",
   WY: "WY",
 };
+export const TerminalCompany = {
+  FEDEX: "FedEx",
+};
 
 // Create a Zod enum schema from the states enum
 const StateEnum = z.nativeEnum(States);
+const TerminalCompanyEnum = z.nativeEnum(TerminalCompany);
 
 const AddressSchema = z.object({
   street1: z.string(),
@@ -359,6 +363,15 @@ export const SignInResponseSchema = z.object({
     .optional(),
   message: z.string().optional(), // Assuming the message might be included in the response
 });
+const ApprovedTerminalSchema = z.object({
+  id: z.string(),
+  acceptOutOfStateLicence: z.boolean(),
+  terminalName: z.string(),
+  businessRequired: z.boolean(),
+  Address: AddressSchema,
+  addressId: z.string(),
+  company: TerminalCompanyEnum,
+});
 
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
@@ -369,6 +382,7 @@ type TProduct = z.infer<typeof TProductSchema>;
 type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
 type TAddress = z.infer<typeof AddressSchema>;
+type TApprovedTerminal = z.infer<typeof ApprovedTerminalSchema>;
 export type {
   SignInRequest,
   SignInResponse,
@@ -379,4 +393,5 @@ export type {
   TCartProduct,
   TCart,
   TAddress,
+  TApprovedTerminal,
 };

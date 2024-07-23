@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { TAddress, TCartProduct, TProductSchema } from "../types";
 import { calculateShipping, checkOrderType } from "../utils/utils";
@@ -6,13 +6,8 @@ import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
 import { isObjectEmpty } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
-
-const terminals = [
-  { id: 1, name: "Terminal 1", state: "CA", zipcode: "90001" },
-  { id: 2, name: "Terminal 2", state: "CA", zipcode: "90002" },
-  { id: 3, name: "Terminal 3", state: "NY", zipcode: "10001" },
-  // Add more terminals as needed
-];
+import StateZipInput from "./component-parts/state-zip-input";
+import TerminalSelection from "./component-parts/terminal-selection";
 
 const Cart = ({
   products,
@@ -27,7 +22,6 @@ const Cart = ({
   const [terminalDestination, setTerminalDestination] = useState("");
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
-  const [filteredTerminals, setFilteredTerminals] = useState(terminals);
   const { user } = useAuth();
   let caseSubtotal = 0;
   let unitSubtotal = 0;
@@ -58,15 +52,13 @@ const Cart = ({
       needLiftGate,
     });
     setShipping(newShipping);
-  }, [subtotal, isTerminalDestination, needLiftGate, orderType]);
-
-  useEffect(() => {
-    const filtered = terminals.filter(
-      (terminal) =>
-        terminal.state === state && (!zipcode || terminal.zipcode === zipcode)
-    );
-    setFilteredTerminals(filtered);
-  }, [state, zipcode]);
+  }, [
+    subtotal,
+    isTerminalDestination,
+    needLiftGate,
+    orderType,
+    terminalDestination,
+  ]);
 
   if (products.length === 0) {
     return (
@@ -82,6 +74,8 @@ const Cart = ({
       </div>
     );
   }
+  console.log("shippingA", shippingAddress);
+  console.log(terminalDestination);
 
   return (
     <div className="card bg-white shadow-xl mx-auto p-6 text-gray-800">
@@ -141,47 +135,18 @@ const Cart = ({
 
             {isTerminalDestination && (
               <>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">State</span>
-                  </div>
-                  <input
-                    type="text"
-                    className="input input-bordered text-white"
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Zip Code</span>
-                  </div>
-                  <input
-                    type="text"
-                    className="input input-bordered text-white"
-                    value={zipcode}
-                    onChange={(e) => setZipcode(e.target.value)}
-                  />
-                </label>
-                <label className="form-control w-full max-w-xs">
-                  <div className="label">
-                    <span className="label-text">Pick Terminal to Ship to</span>
-                  </div>
-                  <select
-                    className="select select-bordered text-white"
-                    value={terminalDestination}
-                    onChange={(e) => setTerminalDestination(e.target.value)}
-                  >
-                    <option disabled value="">
-                      Pick a Terminal
-                    </option>
-                    {filteredTerminals.map((terminal) => (
-                      <option key={terminal.id} value={terminal.name}>
-                        {terminal.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <StateZipInput
+                  state={state}
+                  zipcode={zipcode}
+                  onStateChange={setState}
+                  onZipcodeChange={setZipcode}
+                />
+                <TerminalSelection
+                  state={state}
+                  zipcode={zipcode}
+                  terminalDestination={terminalDestination}
+                  onTerminalChange={setTerminalDestination}
+                />
               </>
             )}
             <label className="ml-4">
@@ -221,12 +186,13 @@ const Cart = ({
 
       <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center ">
         <HelcimPayButton
-          cartId={products[0].cartId}
+          cartId={user!.userInfo!.Cart.id}
           amount={grandTotal}
-          btnDisabled={!isShippingAddressSet && !isTerminalDestination}
+          btnDisabled={!isShippingAddressSet}
           userId={user!.userInfo!.Cart.userId!}
+          shippingAddressId={terminalDestination}
         />
-        {!isShippingAddressSet && !isTerminalDestination && (
+        {!isShippingAddressSet && (
           <div role="alert" className=" alert alert-warning">
             <svg
               xmlns="http://www.w3.org/2000/svg"

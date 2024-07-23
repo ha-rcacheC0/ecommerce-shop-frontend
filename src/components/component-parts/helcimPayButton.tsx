@@ -4,6 +4,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "@tanstack/react-router";
 import { useMakePurchaseMutation } from "../../api/cart/cartQueries";
+import { TAddress } from "../../types";
 
 declare global {
   interface Window {
@@ -17,11 +18,13 @@ const HelcimPayButton = ({
   amount,
   btnDisabled,
   userId,
+  shippingAddressId,
 }: {
   cartId: string;
   amount: number;
   btnDisabled: boolean;
   userId: string;
+  shippingAddressId: string;
 }) => {
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
   const navigate = useNavigate();

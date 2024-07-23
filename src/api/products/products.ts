@@ -13,8 +13,12 @@ export const getAllProductsQuery = async ({
   page: number;
   pageSize: number;
 }): Promise<AllProductsResponse> => {
-  return await fetch(`${BASE_URL}?page=${page}&pageSize=${pageSize}`, {}).then(
-    (response) => response.json()
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("pageSize", pageSize.toString());
+
+  return await fetch(`${BASE_URL}?${params}`, {}).then((response) =>
+    response.json()
   );
 };
 export const getOneProductQuery = async ({
