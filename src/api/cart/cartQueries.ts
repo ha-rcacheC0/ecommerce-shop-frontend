@@ -2,6 +2,7 @@ import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
   addProductToCart,
   getCartItems,
+  makePurchase,
   removeProductFromCart,
   updateProductQuantity,
 } from "./cart";
@@ -28,10 +29,12 @@ export const useAddItemToCartMutation = (
     mutationFn: ({
       productId,
       cartId,
+      isUnit,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
-    }) => addProductToCart({ productId, cartId }),
+      isUnit: boolean;
+    }) => addProductToCart({ productId, cartId, isUnit }),
     onSuccess: async () => {
       onSuccessCallback();
     },
@@ -56,7 +59,7 @@ export const useRemoveProductFromCartMutation = (
       productId,
       cartId,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
     }) => removeProductFromCart({ productId, cartId }),
     onSuccess: async () => {
@@ -85,11 +88,13 @@ export const useUpdateProductQuantityMutation = (
       productId,
       cartId,
       quantity,
+      isUnit,
     }: {
-      productId: number;
+      productId: string;
       cartId: string;
       quantity: number;
-    }) => updateProductQuantity({ productId, cartId, quantity }),
+      isUnit: boolean;
+    }) => updateProductQuantity({ productId, cartId, quantity, isUnit }),
     onSuccess: async () => {
       onSuccessCallback();
     },
@@ -97,6 +102,29 @@ export const useUpdateProductQuantityMutation = (
       queryClient.invalidateQueries({
         queryKey: ["cart", cartId],
       });
+    },
+    onError: (e: Error) => {
+      onErrorCallback(e);
+    },
+  });
+};
+export const useMakePurchaseMutation = (
+  onSuccessCallback: () => void,
+  onErrorCallback: (error: Error) => void
+) => {
+  return useMutation({
+    mutationKey: ["makePurchase"],
+    mutationFn: ({
+      userId,
+      shippingAddressId,
+    }: {
+      userId: string;
+      shippingAddressId: string;
+    }) => makePurchase(userId, shippingAddressId),
+    onSuccess: async () => {
+      onSuccessCallback();
+      // Invalidate the cart query to ensure it is refetched
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
     onError: (e: Error) => {
       onErrorCallback(e);

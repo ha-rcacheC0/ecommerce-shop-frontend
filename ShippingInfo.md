@@ -1,6 +1,8 @@
 FREE pick up in ND - Please allow at least 24 hours to have your order ready. We deliver Mon. - Fri.
 (call for pick up instructions / instructions upon checkout)
 
+## Retail is Units // Wholesale is case
+
 Automatic \$359 shipping anywhere
 
 Add $350 retail to cart shipping goes to $300 - terminal
@@ -34,5 +36,41 @@ $1,250 - $300 - terminal
 $1,500 - $250 - terminal 
 $2,000 - $150 - terminal 
 $2,500 - $100 - terminal
-$3,500 wholesale only free shipping to most states (call to confirm current rates (fluctuate daily))
+$3,500 wholesale only free shipping to most states (call to confirm current rates (fluctuate daily)) <-
 \$7,500 wholesale only free shipping to all states.
+
+// Check to see if the user needs a lift gate +\$100
+
+### Retail Shipping
+
+| Condition                             | Terminal | Anywhere | Notes |
+| ------------------------------------- | -------- | -------- | ----- |
+| Base                                  | \$359    | \$359    |       |
+| Add \$350 retail to cart              | \$300    | \$350    |       |
+| Add \$500 retail to cart              | \$250    | \$300    |       |
+| Add \$750 retail to cart              | \$200    | \$250    |       |
+| Add \$1,000 retail to cart            | \$100    | \$150    |       |
+| \$1,250 retail after discount applied | Free     | \$100    |       |
+| \$1,500 retail after discount applied | Free     | Free     |       |
+
+### Wholesale only
+
+| Condition         | Terminal | Anywhere | Notes                                                         |
+| ----------------- | -------- | -------- | ------------------------------------------------------------- |
+| Base              | \$358    | \$358    |                                                               |
+| Wholesale \$1,250 | \$300    | \$350    |                                                               |
+| Wholesale \$1,500 | \$250    | \$300    |                                                               |
+| Wholesale \$2,000 | \$150    | \$200    |                                                               |
+| Wholesale \$2,500 | \$100    | \$150    |                                                               |
+| Wholesale \$3,500 | Free     | \$100    | Most states (call to confirm current rates (fluctuate daily)) |
+| Wholesale \$7,500 | Free     | Free     | All states                                                    |
+
+### Combo Shipping
+
+| Condition                          | Terminal | Anywhere | Notes       |
+| ---------------------------------- | -------- | -------- | ----------- |
+| Add \$750 wholesale/retail combo   | \$300    | \$300    |             |
+| Add \$1,500 wholesale/retail combo | \$300    | \$300    |             |
+| \$750 free shipping to ND          | Free     | N/A      | Combo to ND |
+| \$2,500 retail/wholesale combo     | Free     | Free     | Most states |
+| \$3,000 retail/wholesale combo     | Free     | Free     | All states  |

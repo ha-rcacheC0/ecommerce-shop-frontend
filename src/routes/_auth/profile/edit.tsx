@@ -1,40 +1,12 @@
 import { FieldApi, useForm } from "@tanstack/react-form";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-form-adapter";
-import { z } from "zod";
 
-// Define the schema using zod
-const userProfileSchema = z.object({
-  userId: z.string(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  dateOfBirth: z.preprocess(
-    (arg) => (arg ? new Date(arg as string) : undefined),
-    z.date().optional()
-  ),
-  phoneNumber: z.string().optional(),
-  billingAddress: z
-    .object({
-      street1: z.string(),
-      street2: z.string().optional(),
-      city: z.string(),
-      state: z.string(),
-      postalCode: z.string(),
-    })
-    .optional(),
-  shippingAddress: z
-    .object({
-      street1: z.string(),
-      street2: z.string().optional(),
-      city: z.string(),
-      state: z.string(),
-      postalCode: z.string(),
-    })
-    .optional(),
-  canContact: z.boolean().optional(),
-});
-
-type TUserProfile = z.infer<typeof userProfileSchema>;
+import { States, UserProfile } from "../../../types";
+import {
+  useUserInfoPostMutation,
+  userInfoQueryOptions,
+} from "../../../api/users/userQueryOptions.api";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
@@ -48,12 +20,21 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
   );
 }
 
-export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
+export const ProfileForm = ({ userProfile }: { userProfile: UserProfile }) => {
+  const { auth } = Route.useRouteContext();
+  const navigate = useNavigate();
+  const mutation = useUserInfoPostMutation(
+    auth.user!.token!,
+    () => {},
+    () => {}
+  );
   const form = useForm({
     validatorAdapter: zodValidator,
     defaultValues: userProfile,
     onSubmit: async ({ value }) => {
       console.log(value);
+      mutation.mutate({ token: auth.user!.token!, body: value });
+      navigate({ to: "/profile" });
     },
   });
 
@@ -65,219 +46,275 @@ export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-white p-8 rounded-lg shadow-md w-4/5 max-w-4xl"
+        className="bg-white p-8 rounded-lg shadow-md w-4/5 max-w-4xl "
       >
         <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4">Personal Info</h2>
+          <h2 className="text-xl font-bold mb-4 text-base-300">
+            Personal Info
+          </h2>
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-2">
+              <form.Field name="firstName">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      First Name:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="grow"
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="lastName">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      Last Name:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="grow"
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+            </div>
+            <div className="flex gap-2">
+              <form.Field name="dateOfBirth">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      Date of Birth:
+                      <input
+                        type="date"
+                        id={field.name}
+                        name={field.name}
+                        value={
+                          field.state.value
+                            ? new Date(field.state.value)
+                                .toISOString()
+                                .split("T")[0]
+                            : ""
+                        }
+                        onBlur={field.handleBlur}
+                        onChange={(e) => {
+                          const dateValue = e.target.value
+                            ? new Date(e.target.value)
+                            : undefined;
+                          field.handleChange(dateValue);
+                        }}
+                        className="grow"
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="phoneNumber">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      Phone Number:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="grow"
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="canContact">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="flex items-center font-semibold text-base-300"
+                    >
+                      Can Contact:
+                      <input
+                        type="checkbox"
+                        id={field.name}
+                        name={field.name}
+                        checked={field.state.value ?? false}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.checked)}
+                        className="checkbox checkbox-primary"
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-b pb-4 mb-4">
+          <h2 className="text-xl font-bold mb-4 text-base-300">
+            Billing Address
+          </h2>
           <div className="grid grid-cols-1 gap-4">
-            <form.Field
-              name="firstName"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="font-semibold">
-                    First Name:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="lastName"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Last Name:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="dateOfBirth"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Date of Birth:
-                  </label>
-                  <input
-                    type="date"
-                    id={field.name}
-                    name={field.name}
-                    value={
-                      field.state.value
-                        ? new Date(field.state.value)
-                            .toISOString()
-                            .split("T")[0]
-                        : ""
-                    }
-                    onBlur={field.handleBlur}
-                    onChange={(e) => {
-                      const dateValue = e.target.value
-                        ? new Date(e.target.value)
-                        : undefined;
-                      field.handleChange(dateValue);
-                    }}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="phoneNumber"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Phone Number:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4">Billing Address</h2>
-          <div className="grid grid-cols-1  gap-4">
-            <form.Field
-              name="billingAddress.street1"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Street 1:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="billingAddress.street2"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Street 2:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="billingAddress.city"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="w-1/2 font-semibold">
-                    City:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-1/2 mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="billingAddress.state"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className=" font-semibold">
-                    State:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-1/2 mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="billingAddress.postalCode"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Postal Code:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4">Shipping Address</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <form.Field
-              name="shippingAddress.street1"
-              children={(field) => (
+            <form.Field name="billingAddress.street1">
+              {(field) => (
                 <>
                   <label
                     htmlFor={field.name}
-                    className="input input-bordered flex items-center gap-2"
+                    className="font-semibold input input-bordered flex items-center gap-2"
                   >
                     Street 1:
                     <input
                       id={field.name}
                       name={field.name}
-                      value={field.state.value}
+                      value={field.state.value ?? ""}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </label>
+                  <FieldInfo field={field} />
+                </>
+              )}
+            </form.Field>
+            <form.Field name="billingAddress.street2">
+              {(field) => (
+                <>
+                  <label
+                    htmlFor={field.name}
+                    className="font-semibold input input-bordered flex items-center gap-2"
+                  >
+                    Street 2:
+                    <input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value ?? ""}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                  </label>
+                  <FieldInfo field={field} />
+                </>
+              )}
+            </form.Field>
+            <div className="flex gap-2">
+              <form.Field name="billingAddress.city">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered w-2/5 flex items-center mb-2"
+                    >
+                      City:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className=" "
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="billingAddress.state">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="w-1/5 font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      State:
+                      <select
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="select grow"
+                      >
+                        <option value="" disabled>
+                          Select a state
+                        </option>
+                        {Object.entries(States).map(([code, name]) => (
+                          <option key={code} value={code}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="billingAddress.postalCode">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="w-2/5 font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      Postal Code:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-b pb-4 mb-4">
+          <h2 className="text-xl font-bold mb-4 text-base-300">
+            Shipping Address
+          </h2>
+          <div className="flex flex-col gap-4">
+            <form.Field name="shippingAddress.street1">
+              {(field) => (
+                <>
+                  <label
+                    htmlFor={field.name}
+                    className="font-semibold input input-bordered flex items-center gap-2"
+                  >
+                    Street 1:
+                    <input
+                      id={field.name}
+                      name={field.name}
+                      value={field.state.value ?? ""}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className="grow"
@@ -286,20 +323,19 @@ export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
                   <FieldInfo field={field} />
                 </>
               )}
-            />
-            <form.Field
-              name="shippingAddress.street2"
-              children={(field) => (
+            </form.Field>
+            <form.Field name="shippingAddress.street2">
+              {(field) => (
                 <>
                   <label
                     htmlFor={field.name}
-                    className="input input-bordered flex items-center gap-2"
+                    className="font-semibold input input-bordered flex items-center gap-2"
                   >
                     Street 2:
                     <input
                       id={field.name}
                       name={field.name}
-                      value={field.state.value}
+                      value={field.state.value ?? ""}
                       onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
                       className="grow"
@@ -308,89 +344,80 @@ export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
                   <FieldInfo field={field} />
                 </>
               )}
-            />
-            <form.Field
-              name="shippingAddress.city"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    City:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="shippingAddress.state"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    State:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-            <form.Field
-              name="shippingAddress.postalCode"
-              children={(field) => (
-                <>
-                  <label htmlFor={field.name} className="block font-semibold">
-                    Postal Code:
-                  </label>
-                  <input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="input input-bordered w-full mb-2"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
+            </form.Field>
+            <div className="flex gap-2">
+              <form.Field name="shippingAddress.city">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="font-semibold input input-bordered w-2/5 flex items-center mb-2"
+                    >
+                      City:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className=" "
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="shippingAddress.state">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="w-1/5 font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      State:
+                      <select
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="select grow"
+                      >
+                        <option value="" disabled>
+                          Select a state
+                        </option>
+                        {Object.entries(States).map(([code, name]) => (
+                          <option key={code} value={code}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+              <form.Field name="shippingAddress.postalCode">
+                {(field) => (
+                  <>
+                    <label
+                      htmlFor={field.name}
+                      className="w-2/5 font-semibold input input-bordered flex items-center gap-2"
+                    >
+                      Postal Code:
+                      <input
+                        id={field.name}
+                        name={field.name}
+                        value={field.state.value ?? ""}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                      />
+                    </label>
+                    <FieldInfo field={field} />
+                  </>
+                )}
+              </form.Field>
+            </div>
           </div>
-        </div>
-
-        <div className="pb-4">
-          <h2 className="text-xl font-bold mb-4">Contact Preferences</h2>
-          <form.Field
-            name="canContact"
-            children={(field) => (
-              <>
-                <label htmlFor={field.name} className="block font-semibold">
-                  Can Contact:
-                </label>
-                <input
-                  type="checkbox"
-                  id={field.name}
-                  name={field.name}
-                  checked={field.state.value}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.checked)}
-                  className="checkbox checkbox-primary"
-                />
-                <FieldInfo field={field} />
-              </>
-            )}
-          />
         </div>
 
         <button type="submit" className="btn btn-primary w-full">
@@ -402,5 +429,8 @@ export const ProfileForm = ({ userProfile }: { userProfile: TUserProfile }) => {
 };
 
 export const Route = createFileRoute("/_auth/profile/edit")({
+  loader: async ({ context: { queryClient, auth } }) => {
+    await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
+  },
   component: ProfileForm,
 });

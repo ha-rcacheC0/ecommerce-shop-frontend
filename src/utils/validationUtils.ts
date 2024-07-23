@@ -1,9 +1,12 @@
-import {  ZodError, ZodSchema, z } from "zod";
+import { ZodError, ZodSchema, z } from "zod";
 
 type ValidationResult<T> = { success: boolean; data?: T; error?: ZodError<T> };
 
 // Generic validation function
-const validateInput = <T>(schema: ZodSchema<T>, input: T): ValidationResult<T> => {
+const validateInput = <T>(
+  schema: ZodSchema<T>,
+  input: T
+): ValidationResult<T> => {
   const result = schema.safeParse(input);
   if (!result.success) {
     return { success: false, error: result.error };
@@ -33,18 +36,32 @@ export const validationSchema = z.object({
     }),
 });
 
-const validateUsernameSchema = z.string().min(3, { message: "Must have at least 3 characters" });
+const validateUsernameSchema = z
+  .string()
+  .min(3, { message: "Must have at least 3 characters" });
 const validatePasswordSchema = z
-.string()
-.min(1, { message: "Must have at least 1 character" })
-.regex(passwordValidation, {
-  message: "Your password must contain at least 1 Capital, 1 lowercase ,1 number and 1 special character",
-})
-const validateEmailSchema = z.string().email("invalid email")
+  .string()
+  .min(1, { message: "Must have at least 1 character" })
+  .regex(passwordValidation, {
+    message:
+      "Your password must contain at least 1 Capital, 1 lowercase ,1 number and 1 special character",
+  });
+const validateEmailSchema = z.string().email("invalid email");
 
+export const validateUsernameInput = (username: string) =>
+  validateInput(validateUsernameSchema, username);
+export const validatePasswordInput = (password: string) =>
+  validateInput(validatePasswordSchema, password);
+export const validateEmailInput = (email: string) =>
+  validateInput(validateEmailSchema, email);
 
-export const validateUsernameInput = (username: string) => validateInput(validateUsernameSchema, username);
-export const validatePasswordInput = (password: string) => validateInput(validatePasswordSchema, password);
-export const validateEmailInput = (email: string) => validateInput(validateEmailSchema, email);
-
-  
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isObjectEmpty(obj: any) {
+  for (const key in obj) {
+    // eslint-disable-next-line no-prototype-builtins
+    if (obj.hasOwnProperty(key) && obj[key] !== "") {
+      return false;
+    }
+  }
+  return true;
+}

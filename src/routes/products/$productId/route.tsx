@@ -5,13 +5,15 @@ import { getOneProductQueryOptions } from "../../../api/products/productsQueries
 import { useAuth } from "../../../providers/auth.provider";
 import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
 const SingleProductPage = () => {
   const { productId } = useParams({ from: "/products/$productId" });
   const { user, authState } = useAuth();
   const product = useQuery({
     queryKey: ["product", productId],
-    queryFn: () => getOneProductQuery({ id: +productId }),
+    queryFn: () => getOneProductQuery({ id: productId }),
   });
 
   const userCartId = user?.userInfo?.Cart.id;
@@ -53,7 +55,7 @@ const SingleProductPage = () => {
         </div>
       </div>
     );
-  const packageString = product.data?.package.join(", ");
+  const packageString = product.data?.package?.join(", ");
   return (
     <div className="container p-10 h-svh flex mx-auto gap-4 justify-around ">
       <div className=" w-[620px] h-[620px] ">
@@ -68,11 +70,11 @@ const SingleProductPage = () => {
           <h2>{product.data?.Brands.name}</h2>
         </div>
         <p>Packaged : {packageString}</p>
-        <div className="flex gap-4 w-full justify-center pt-8">
+        <div className="flex gap-4 w-full justify-center pt-8 flex-col">
           <h2 className="text-2xl">Case Price : ${product.data?.casePrice}</h2>
           <h2 className="text-2xl">
-            {product.data?.unitPrice
-              ? `Unit Price :${product.data?.unitPrice}`
+            {product.data?.UnitProduct
+              ? `Unit Price : $${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
               : "Cannot be sold individually"}
           </h2>
         </div>
@@ -105,14 +107,28 @@ const SingleProductPage = () => {
               className="btn btn-wide btn-primary"
               onClick={() =>
                 addItem.mutate({
-                  productId: +productId,
+                  productId: productId,
                   cartId: userCartId!,
+                  isUnit: false,
                 })
               }
             >
-              Add to Cart
+              Add Case <FontAwesomeIcon icon={faCartPlus} />
             </button>
-            {/* <button className="btn btn-wide btn-secondary">Buy Now</button> */}
+            {product.data?.UnitProduct && (
+              <button
+                className="btn btn-wide btn-primary"
+                onClick={() =>
+                  addItem.mutate({
+                    productId: product.data.id,
+                    cartId: userCartId!,
+                    isUnit: true,
+                  })
+                }
+              >
+                Add Unit <FontAwesomeIcon icon={faCartPlus} />
+              </button>
+            )}
           </div>
         ) : (
           <div></div>
@@ -125,6 +141,6 @@ const SingleProductPage = () => {
 export const Route = createFileRoute("/products/$productId")({
   component: () => <SingleProductPage />,
   loader: ({ context: { queryClient }, params: { productId } }) => {
-    queryClient.ensureQueryData(getOneProductQueryOptions({ id: +productId }));
+    queryClient.ensureQueryData(getOneProductQueryOptions({ id: productId }));
   },
 });

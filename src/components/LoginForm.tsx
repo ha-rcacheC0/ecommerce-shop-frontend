@@ -13,12 +13,14 @@ import {
   validatePasswordInput,
 } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
+import { PasswordIconSwap } from "./component-parts/showPasswordSwap";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [serverMessage, setServerMessage] = useState(""); // Use this state to hold server messages
+  const [showPassword, setShowPassword] = useState(false);
   const emailValidState = validateEmailInput(email);
   const passwordValidState = validatePasswordInput(password);
   const navigate = useNavigate();
@@ -33,13 +35,11 @@ export const Login = () => {
     mutationFn: (body: SignInRequest) => signInUser(body),
     onSuccess: (data) => {
       if (!data.token && !data.userInfo) {
-        console.log("am I here?");
         throw new Error(data.message);
       } else {
         flushSync(() => {
           if (data.token && data.userInfo) {
             localStorage.setItem("user", JSON.stringify(data));
-
             authContext.login(data);
           }
         });
@@ -58,7 +58,6 @@ export const Login = () => {
     setServerMessage(""); // Clear previous messages
     if (emailValidState.success && passwordValidState.success) {
       const requestBody: SignInRequest = { email, password };
-      console.log(requestBody);
       mutation.mutate(requestBody);
     } else {
       console.log("Something isn't sending correctly");
@@ -97,16 +96,22 @@ export const Login = () => {
           show={isSubmitted && !emailValidState.success}
         />
 
-        <TextInput
-          labelText={"Password"}
-          inputAttr={{
-            name: "password",
-            placeholder: "password",
-            type: "password",
-            value: password,
-            onChange: (e) => setPassword(e.target.value),
-          }}
-        />
+        <div className="form-control w-full max-w-sm">
+          <label className="input input-bordered flex items-center gap-2 text-primary-content">
+            Password
+            <input
+              type={!showPassword ? "password" : "text"}
+              className="grow"
+              placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <PasswordIconSwap
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+          </label>
+        </div>
         <ErrorMessage
           message={passwordErrorMessage || ""}
           show={isSubmitted && !passwordValidState.success}

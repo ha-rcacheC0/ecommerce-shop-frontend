@@ -36,6 +36,7 @@ export const ProfileCard = ({
   userProfile: TUserProfile;
   userEmail: string;
 }) => {
+  const dob = new Date(userProfile.dateOfBirth!);
   return (
     <div className="card bg-neutral shadow-xl max-w-md  p-6 ">
       <div className="flex justify-between items-center gap-3 text-center mb-4">
@@ -59,7 +60,7 @@ export const ProfileCard = ({
         </div>
         <div>
           <span className="font-semibold">Date of Birth:</span>{" "}
-          {userProfile?.dateOfBirth?.toLocaleDateString()}
+          {dob.toLocaleDateString()}
         </div>
         <div>
           <span className="font-semibold">Phone Number:</span>{" "}
@@ -70,8 +71,9 @@ export const ProfileCard = ({
           <div className="ml-2">
             {userProfile?.billingAddress?.street1}
             <br />
-            {userProfile?.billingAddress?.city}{" "}
-            {userProfile?.billingAddress?.state}
+            {userProfile?.billingAddress?.city}
+            {", "}
+            {userProfile?.billingAddress?.state}{" "}
             {userProfile?.billingAddress?.postalCode}
           </div>
         </div>
@@ -80,7 +82,8 @@ export const ProfileCard = ({
           <div className="ml-2">
             {userProfile?.shippingAddress?.street1}
             <br />
-            {userProfile?.shippingAddress?.city}{" "}
+            {userProfile?.shippingAddress?.city}
+            {", "}
             {userProfile?.shippingAddress?.state}{" "}
             {userProfile?.shippingAddress?.postalCode}
           </div>

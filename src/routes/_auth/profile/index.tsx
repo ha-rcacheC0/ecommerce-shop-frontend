@@ -29,7 +29,6 @@ const ProfilePage = () => {
   const { data: cart } = useQuery(
     cartItemsQueryOptions(auth.user!.userInfo!.Cart.id)
   );
-  console.log("Cart", cart);
 
   if (isLoading) return <>Loading Profile ...</>;
   if (isError)
@@ -47,14 +46,27 @@ const ProfilePage = () => {
         userEmail={auth.user!.userInfo!.email!}
       />
       <div className=" flex flex-col space-y-3 justify-center">
-        <Cart products={cart!.CartProducts} />
-        <Link
-          to="/profile/cart/$cartId"
-          params={{ cartId: auth.user!.userInfo!.Cart.id }}
-          className="btn btn-wide btn-accent mx-auto"
-        >
-          Go To Cart <FontAwesomeIcon icon={faRightLong} />
-        </Link>
+        <Cart
+          products={cart!.CartProducts}
+          shippingAddress={
+            userProfile!.shippingAddress ?? {
+              street1: "",
+              state: "",
+              city: "",
+              postalCode: "",
+            }
+          }
+        />
+
+        {cart!.CartProducts.length > 1 && (
+          <Link
+            to="/profile/cart/$cartId"
+            params={{ cartId: auth.user!.userInfo!.Cart.id }}
+            className="btn btn-wide btn-accent mx-auto"
+          >
+            Go To Cart <FontAwesomeIcon icon={faRightLong} />
+          </Link>
+        )}
       </div>
     </div>
   );
