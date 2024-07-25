@@ -14,8 +14,15 @@ export const getTerminalsQueryOptions = ({
     placeholderData: [],
   });
 
-export const getOneTerminalQueryOptions = ({ id }: { id: string }) =>
+export const getOneTerminalQueryOptions = ({
+  id,
+  isTerminalDest,
+}: {
+  id: string;
+  isTerminalDest: boolean;
+}) =>
   queryOptions({
     queryKey: ["terminal", id],
     queryFn: () => getOneTerminalQuery({ id }),
+    enabled: isTerminalDest,
   });

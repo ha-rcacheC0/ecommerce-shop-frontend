@@ -271,6 +271,7 @@ const StateEnum = z.nativeEnum(States);
 const TerminalCompanyEnum = z.nativeEnum(TerminalCompany);
 
 const AddressSchema = z.object({
+  id: z.string(),
   street1: z.string(),
   street2: z.string().optional(),
   city: z.string(),

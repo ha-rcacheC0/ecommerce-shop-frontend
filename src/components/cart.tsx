@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
-import { TAddress, TCartProduct, TProductSchema } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import {
+  TAddress,
+  TApprovedTerminal,
+  TCartProduct,
+  TProductSchema,
+} from "../types";
 import { calculateShipping, checkOrderType } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
@@ -8,6 +14,7 @@ import { isObjectEmpty } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
 import StateZipInput from "./component-parts/state-zip-input";
 import TerminalSelection from "./component-parts/terminal-selection";
+import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
 
 const Cart = ({
   products,
@@ -19,6 +26,9 @@ const Cart = ({
   const [isTerminalDestination, setIsTerminalDestination] = useState(false);
   const [needLiftGate, setNeedLiftGate] = useState(false);
   const [shipping, setShipping] = useState(0);
+  const [currentShippingAddress, setCurrentShippingAddress] = useState<
+    TAddress | undefined
+  >(shippingAddress);
   const [terminalDestination, setTerminalDestination] = useState("");
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
@@ -42,7 +52,6 @@ const Cart = ({
   const orderType = checkOrderType(caseSubtotal, unitSubtotal);
 
   const grandTotal = subtotal + shipping;
-  const isShippingAddressSet = !isObjectEmpty(shippingAddress);
 
   useEffect(() => {
     const newShipping = calculateShipping({
@@ -60,6 +69,35 @@ const Cart = ({
     terminalDestination,
   ]);
 
+  const { data: terminalData }: { data: TApprovedTerminal | undefined } =
+    useQuery(
+      getOneTerminalQueryOptions({
+        id: terminalDestination,
+        isTerminalDest: !!terminalDestination,
+      })
+    );
+
+  useEffect(() => {
+    if (isTerminalDestination && terminalData) {
+      setCurrentShippingAddress({
+        id: terminalData.Address.id,
+        street1: terminalData.Address.street1,
+        street2: terminalData.Address.street2 || "",
+        city: terminalData.Address.city,
+        state: terminalData.Address.state,
+        postalCode: terminalData.Address.postalCode,
+      });
+    } else if (!isTerminalDestination) {
+      // When switching from terminal to user address
+      setCurrentShippingAddress(
+        isObjectEmpty(shippingAddress) ? undefined : shippingAddress
+      );
+    }
+  }, [isTerminalDestination, terminalData, shippingAddress]);
+
+  const isShippingAddressSet =
+    currentShippingAddress && !isObjectEmpty(currentShippingAddress);
+
   if (products.length === 0) {
     return (
       <div className="text-center mt-10">
@@ -74,8 +112,6 @@ const Cart = ({
       </div>
     );
   }
-  console.log("shippingA", shippingAddress);
-  console.log(terminalDestination);
 
   return (
     <div className="card bg-white shadow-xl mx-auto p-6 text-gray-800">
@@ -104,7 +140,7 @@ const Cart = ({
       </div>
 
       <div className="mt-4 flex items-center gap-4 justify-around ">
-        <div className="w-1/2 bg-neutral-200 p-4 rounded-md text-center  ">
+        <div className="w-1/2 bg-neutral-200 p-4 rounded-md text-center">
           <div>
             <h3 className="text-lg font-semibold">Shipping Address:</h3>
             {!isShippingAddressSet ? (
@@ -113,12 +149,13 @@ const Cart = ({
               </>
             ) : (
               <>
-                <p>{shippingAddress.street1}</p>
-                <p>{shippingAddress.street2}</p>
+                <p>{currentShippingAddress!.street1}</p>
+                <p>{currentShippingAddress!.street2}</p>
                 <p>
-                  {shippingAddress.city}, {shippingAddress.state}
+                  {currentShippingAddress!.city},{" "}
+                  {currentShippingAddress!.state}
                 </p>
-                <p>{shippingAddress.postalCode}</p>
+                <p>{currentShippingAddress!.postalCode}</p>
               </>
             )}
           </div>
@@ -128,7 +165,10 @@ const Cart = ({
                 type="checkbox"
                 checked={isTerminalDestination}
                 className="mr-2"
-                onChange={(e) => setIsTerminalDestination(e.target.checked)}
+                onChange={(e) => {
+                  setIsTerminalDestination(e.target.checked);
+                  setTerminalDestination(""); // Reset terminal destination if unchecked
+                }}
               />
               Ship to terminal
             </label>
@@ -165,32 +205,32 @@ const Cart = ({
           <tfoot className="">
             <tr className="h-12 border-b border-gray-300 ">
               <td className="text-right font-semibold">Subtotal: </td>
-              <td className="text-lg  font-semibold">${subtotal.toFixed(2)}</td>
+              <td className="text-lg font-semibold">${subtotal.toFixed(2)}</td>
             </tr>
             <tr className="h-12 ">
               <td className="text-right font-semibold">
                 {" "}
                 {orderType} Shipping:{" "}
               </td>
-              <td className="text-lg   font-semibold">
-                ${shipping.toFixed(2)}
-              </td>
+              <td className="text-lg font-semibold">${shipping.toFixed(2)}</td>
             </tr>
             <tr className="h-12 border-y-4 border-double border-black ">
               <td className="text-right font-bold">Grand Total: </td>
-              <td className="text-lg   font-bold">${grandTotal.toFixed(2)}</td>
+              <td className="text-lg font-bold">${grandTotal.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
       </div>
 
-      <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center ">
+      <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center">
         <HelcimPayButton
           cartId={user!.userInfo!.Cart.id}
           amount={grandTotal}
           btnDisabled={!isShippingAddressSet}
           userId={user!.userInfo!.Cart.userId!}
-          shippingAddressId={terminalDestination}
+          shippingAddressId={
+            isShippingAddressSet ? currentShippingAddress!.id : ""
+          }
         />
         {!isShippingAddressSet && (
           <div role="alert" className=" alert alert-warning">
