@@ -27,6 +27,7 @@ function CartPage() {
         products={products!.CartProducts}
         shippingAddress={
           userProfile?.shippingAddress ?? {
+            id: "",
             street1: "",
             state: "",
             city: "",

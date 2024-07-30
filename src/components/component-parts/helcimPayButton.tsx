@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { startPaymentProcess } from "../../api/cart/cart";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
+import { startPaymentProcess } from "../../api/cart/cart";
 import { useMakePurchaseMutation } from "../../api/cart/cartQueries";
 
 declare global {
@@ -28,13 +29,10 @@ const HelcimPayButton = ({
   const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const { mutate: makePurchase, isPending } = useMakePurchaseMutation(
+  const { mutateAsync: makePurchase, isPending } = useMakePurchaseMutation(
     () => {
       console.log("Purchase successful!");
-      navigate({
-        to: "/profile/cart/$cartId/success",
-        params: { cartId },
-      });
+      navigate({ to: `/profile/cart/${cartId}/success` });
     },
     (error) => {
       console.error("Purchase failed:", error.message);
@@ -57,7 +55,7 @@ const HelcimPayButton = ({
   const handlePayNow = () => {
     if (checkoutToken && typeof window.appendHelcimPayIframe === "function") {
       window.appendHelcimPayIframe(checkoutToken);
-      window.addEventListener("message", (event) => {
+      window.addEventListener("message", async (event) => {
         const helcimPayJsIdentifierKey = "helcim-pay-js-" + checkoutToken;
 
         if (event.data.eventName === helcimPayJsIdentifierKey) {
@@ -68,10 +66,14 @@ const HelcimPayButton = ({
           if (event.data.eventStatus === "SUCCESS") {
             console.log("Transaction success!", event.data.eventMessage);
 
-            // This is where we need to update the cart info and create the payment record
-            makePurchase({ userId, shippingAddressId });
+            // Wait for makePurchase to resolve
+            try {
+              await makePurchase({ userId, shippingAddressId });
+            } catch (error) {
+              console.error("Error completing purchase:", error);
+            }
 
-            // Remove the iframe
+            // Remove the iframe after makePurchase is resolved
             window.removeHelcimPayIframe();
           }
         }

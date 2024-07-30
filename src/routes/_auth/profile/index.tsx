@@ -50,6 +50,7 @@ const ProfilePage = () => {
           products={cart!.CartProducts}
           shippingAddress={
             userProfile!.shippingAddress ?? {
+              id: "",
               street1: "",
               state: "",
               city: "",
