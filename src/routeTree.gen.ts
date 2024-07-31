@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as AuthImport } from './routes/_auth'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as ProductsIndexImport } from './routes/products/index'
 import { Route as UserRegisterImport } from './routes/user/register'
@@ -38,6 +39,11 @@ const AboutLazyRoute = AboutLazyImport.update({
   path: '/about',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+
+const AuthRoute = AuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const EventsRouteRoute = EventsRouteImport.update({
   path: '/events',
@@ -91,25 +97,25 @@ const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
 
 const AuthProfileIndexRoute = AuthProfileIndexImport.update({
   path: '/profile/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthProfileEditRoute = AuthProfileEditImport.update({
   path: '/profile/edit',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
   {
     path: '/profile/cart/$cartId/',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthRoute,
   } as any,
 )
 
 const AuthProfileCartCartIdSuccessRoute =
   AuthProfileCartCartIdSuccessImport.update({
     path: '/profile/cart/$cartId/success',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => AuthRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -128,6 +134,13 @@ declare module '@tanstack/react-router' {
       path: '/events'
       fullPath: '/events'
       preLoaderRoute: typeof EventsRouteImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth': {
+      id: '/_auth'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
     '/about': {
@@ -198,28 +211,28 @@ declare module '@tanstack/react-router' {
       path: '/profile/edit'
       fullPath: '/profile/edit'
       preLoaderRoute: typeof AuthProfileEditImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
     '/_auth/profile/': {
       id: '/_auth/profile/'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthProfileIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
     '/_auth/profile/cart/$cartId/success': {
       id: '/_auth/profile/cart/$cartId/success'
       path: '/profile/cart/$cartId/success'
       fullPath: '/profile/cart/$cartId/success'
       preLoaderRoute: typeof AuthProfileCartCartIdSuccessImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
     '/_auth/profile/cart/$cartId/': {
       id: '/_auth/profile/cart/$cartId/'
       path: '/profile/cart/$cartId'
       fullPath: '/profile/cart/$cartId'
       preLoaderRoute: typeof AuthProfileCartCartIdIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AuthImport
     }
   }
 }
@@ -233,16 +246,18 @@ export const routeTree = rootRoute.addChildren({
     EventsGenderRevealRoute,
     EventsNewYearsRoute,
   }),
+  AuthRoute: AuthRoute.addChildren({
+    AuthProfileEditRoute,
+    AuthProfileIndexRoute,
+    AuthProfileCartCartIdSuccessRoute,
+    AuthProfileCartCartIdIndexRoute,
+  }),
   AboutLazyRoute,
   ProductsProductIdRouteRoute,
   ProductsShowsRoute,
   UserLoginRoute,
   UserRegisterRoute,
   ProductsIndexRoute,
-  AuthProfileEditRoute,
-  AuthProfileIndexRoute,
-  AuthProfileCartCartIdSuccessRoute,
-  AuthProfileCartCartIdIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -255,16 +270,13 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/events",
+        "/_auth",
         "/about",
         "/products/$productId",
         "/products/shows",
         "/user/login",
         "/user/register",
-        "/products/",
-        "/_auth/profile/edit",
-        "/_auth/profile/",
-        "/_auth/profile/cart/$cartId/success",
-        "/_auth/profile/cart/$cartId/"
+        "/products/"
       ]
     },
     "/": {
@@ -276,6 +288,15 @@ export const routeTree = rootRoute.addChildren({
         "/events/fourth-july",
         "/events/gender-reveal",
         "/events/new-years"
+      ]
+    },
+    "/_auth": {
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/profile/edit",
+        "/_auth/profile/",
+        "/_auth/profile/cart/$cartId/success",
+        "/_auth/profile/cart/$cartId/"
       ]
     },
     "/about": {
@@ -309,16 +330,20 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "products/index.tsx"
     },
     "/_auth/profile/edit": {
-      "filePath": "_auth/profile/edit.tsx"
+      "filePath": "_auth/profile/edit.tsx",
+      "parent": "/_auth"
     },
     "/_auth/profile/": {
-      "filePath": "_auth/profile/index.tsx"
+      "filePath": "_auth/profile/index.tsx",
+      "parent": "/_auth"
     },
     "/_auth/profile/cart/$cartId/success": {
-      "filePath": "_auth/profile/cart/$cartId/success.tsx"
+      "filePath": "_auth/profile/cart/$cartId/success.tsx",
+      "parent": "/_auth"
     },
     "/_auth/profile/cart/$cartId/": {
-      "filePath": "_auth/profile/cart/$cartId/index.tsx"
+      "filePath": "_auth/profile/cart/$cartId/index.tsx",
+      "parent": "/_auth"
     }
   }
 }
