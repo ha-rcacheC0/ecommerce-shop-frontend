@@ -142,7 +142,9 @@ const Cart = ({
       <div className="mt-4 flex items-center gap-4 justify-around ">
         <div className="w-1/2 bg-neutral-200 p-4 rounded-md text-center">
           <div>
-            <h3 className="text-lg font-semibold">Shipping Address:</h3>
+            <h3 className="text-lg font-semibold text-primary">
+              Shipping Address:
+            </h3>
             {!isShippingAddressSet ? (
               <>
                 <p>Please set your Address or Select a Terminal to ship to</p>
@@ -189,12 +191,15 @@ const Cart = ({
                 />
               </>
             )}
-            <label className="ml-4">
+            <label
+              className={`ml-4 ${isTerminalDestination ? "line-through text-gray-300" : ""}`}
+            >
               <input
                 type="checkbox"
                 checked={needLiftGate}
-                className="mr-2"
+                className={`mr-2 `}
                 onChange={(e) => setNeedLiftGate(e.target.checked)}
+                disabled={isTerminalDestination}
               />
               Need lift gate
             </label>
