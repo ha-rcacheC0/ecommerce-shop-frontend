@@ -71,7 +71,9 @@ const SingleProductPage = () => {
         </div>
         <p>Packaged : {packageString}</p>
         <div className="flex gap-4 w-full justify-center pt-8 flex-col">
-          <h2 className="text-2xl">Case Price : ${product.data?.casePrice}</h2>
+          <h2 className="text-2xl">
+            Case Price : ${parseFloat(product.data!.casePrice).toFixed(2)}
+          </h2>
           <h2 className="text-2xl">
             {product.data?.UnitProduct
               ? `Unit Price : $${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
