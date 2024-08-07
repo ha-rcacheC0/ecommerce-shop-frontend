@@ -17,16 +17,20 @@ export const getAllProductsQuery = async ({
   params.append("page", page.toString());
   params.append("pageSize", pageSize.toString());
 
-  return await fetch(`${BASE_URL}?${params}`, {}).then((response) =>
-    response.json()
-  );
+  return await fetch(`${BASE_URL}?${params}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
 };
 export const getOneProductQuery = async ({
   id,
 }: {
   id: string;
 }): Promise<TProduct> => {
-  return await fetch(`${BASE_URL}/${id}`, {}).then((response) =>
-    response.json()
-  );
+  return await fetch(`${BASE_URL}/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
 };
