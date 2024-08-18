@@ -94,7 +94,7 @@ const Products: React.FC = () => {
     if (selectedEffects.length > 0) searchParams.effects = selectedEffects;
 
     navigate({
-      search: (prev) => {
+      search: () => {
         // Start with a fresh object to avoid carrying over old filter values
         const newSearch: Record<string, string | string[]> = {
           page: searchParams.page,

@@ -12,6 +12,8 @@ import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { z } from "zod";
+import { Brand, Category, Colors, Effects } from "../../../types";
 
 const SingleProductPage = () => {
   const { productId } = useParams({ from: "/products/$productId" });
@@ -67,7 +69,15 @@ const SingleProductPage = () => {
     <div className="container p-10 h-svh flex flex-col mx-auto gap-4">
       <Link
         to="/products"
-        search={search}
+        search={{
+          page: search.page ? Number(search.page) : 1,
+          pageSize: search.pageSize ? Number(search.pageSize) : 25,
+          brands: search.brands,
+          categories: search.categories,
+          colors: search.colors,
+          effects: search.effects,
+          searchTitle: search.searchTitle,
+        }}
         className="btn btn-outline btn-sm self-start mb-4"
       >
         <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
@@ -157,6 +167,17 @@ const SingleProductPage = () => {
 
 export const Route = createFileRoute("/products/$productId")({
   component: () => <SingleProductPage />,
+  validateSearch: z.object({
+    page: z.coerce.number(),
+    pageSize: z.coerce.number(),
+    brands: z.union([z.string(), z.array(z.nativeEnum(Brand))]).optional(),
+    categories: z
+      .union([z.string(), z.array(z.nativeEnum(Category))])
+      .optional(),
+    colors: z.union([z.string(), z.array(z.nativeEnum(Colors))]).optional(),
+    effects: z.union([z.string(), z.array(z.nativeEnum(Effects))]).optional(),
+    searchTitle: z.string().optional(),
+  }),
   loader: ({ context: { queryClient }, params: { productId } }) => {
     queryClient.ensureQueryData(getOneProductQueryOptions({ id: productId }));
   },

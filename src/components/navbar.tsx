@@ -55,7 +55,9 @@ export const Navbar = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to={"/products"}>Fireworks</Link>
+              <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
+                Fireworks
+              </Link>
               {/* <ul className="p-2">
                 <li>
                   <Link to={"/products/shows"}>Shows</Link>
@@ -87,7 +89,9 @@ export const Navbar = () => {
           <li>
             {/* <details> */}
             <summary>
-              <Link to={"/products"}>Fireworks</Link>
+              <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
+                Fireworks
+              </Link>
             </summary>
             {/* <ul className="p-2">
                 <li>
