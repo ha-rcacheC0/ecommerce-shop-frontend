@@ -1,18 +1,18 @@
+import React from "react";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Dispatch, SetStateAction } from "react";
 
-interface PageButtonsProps {
+type PageButtonsProps = {
   isFetching: boolean;
   isPlaceholderData: boolean;
-  setPage: Dispatch<SetStateAction<number>>;
+  setPage: (value: number | ((prevValue: number) => number)) => void;
   page: number;
   hasMore: boolean;
   pageSize: number;
-  setPageAmount: Dispatch<SetStateAction<number>>;
-}
+  setPageAmount: (value: number) => void;
+};
 
-export const PageButtons = ({
+export const PageButtons: React.FC<PageButtonsProps> = ({
   isFetching,
   isPlaceholderData,
   setPage,
@@ -20,13 +20,13 @@ export const PageButtons = ({
   hasMore,
   pageSize,
   setPageAmount,
-}: PageButtonsProps) => {
+}) => {
   return (
     <div className="flex max-md:flex-col justify-center p-3">
       <div className="join flex justify-center items-center p-6">
         <button
           className="btn btn-square btn-outline join-item"
-          onClick={() => setPage((old) => Math.max(old - 1, 0))}
+          onClick={() => setPage((old) => Math.max(old - 1, 1))}
           disabled={page === 1}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
@@ -45,32 +45,18 @@ export const PageButtons = ({
         </button>
         {isFetching ? <span className="join-item ml-3">Loading...</span> : null}
       </div>
-
       <div className="join flex justify-center items-center ml-6">
-        <button
-          className={`btn join-item ${
-            pageSize === 10 ? "btn-primary" : "btn-outline"
-          }`}
-          onClick={() => setPageAmount(10)}
-        >
-          10 items
-        </button>
-        <button
-          className={`btn join-item ${
-            pageSize === 25 ? "btn-primary" : "btn-outline"
-          }`}
-          onClick={() => setPageAmount(25)}
-        >
-          25 items
-        </button>
-        <button
-          className={`btn join-item ${
-            pageSize === 50 ? "btn-primary" : "btn-outline"
-          }`}
-          onClick={() => setPageAmount(50)}
-        >
-          50 items
-        </button>
+        {[10, 25, 50].map((size) => (
+          <button
+            key={size}
+            className={`btn join-item ${
+              pageSize === size ? "btn-primary" : "btn-outline"
+            }`}
+            onClick={() => setPageAmount(size)}
+          >
+            {size} items
+          </button>
+        ))}
       </div>
     </div>
   );

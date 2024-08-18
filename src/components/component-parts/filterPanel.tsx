@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import React from "react";
 import {
   Brand,
   Category,
@@ -13,25 +13,25 @@ import { PageButtons } from "./pageButtons";
 
 interface FilterPanelProps {
   searchTitle: string;
-  setSearchTitle: Dispatch<SetStateAction<string>>;
+  setSearchTitle: (value: string) => void;
   selectedBrands: Brand[];
-  setSelectedBrands: Dispatch<SetStateAction<Brand[]>>;
+  setSelectedBrands: (brand: Brand) => void;
   selectedCategories: Category[];
-  setSelectedCategories: Dispatch<SetStateAction<Category[]>>;
+  setSelectedCategories: (category: Category) => void;
   selectedColors: Colors[];
-  setSelectedColors: Dispatch<SetStateAction<Colors[]>>;
+  setSelectedColors: (color: Colors) => void;
   selectedEffects: Effects[];
-  setSelectedEffects: Dispatch<SetStateAction<Effects[]>>;
+  setSelectedEffects: (effect: Effects) => void;
   isFetching: boolean;
   isPlaceholderData: boolean;
-  setPage: Dispatch<SetStateAction<number>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
   hasMore: boolean;
   pageSize: number;
-  setPageAmount: Dispatch<SetStateAction<number>>;
+  setPageAmount: (value: number) => void;
 }
 
-const FilterPanel = ({
+const FilterPanel: React.FC<FilterPanelProps> = ({
   searchTitle,
   setSearchTitle,
   selectedBrands,
@@ -49,20 +49,7 @@ const FilterPanel = ({
   hasMore,
   pageSize,
   setPageAmount,
-}: FilterPanelProps) => {
-  const handleCheckboxChange = <T,>(
-    setter: Dispatch<SetStateAction<T[]>>,
-    value: T
-  ) => {
-    setter((prev) => {
-      if (prev.includes(value)) {
-        return prev.filter((item) => item !== value);
-      } else {
-        return [...prev, value];
-      }
-    });
-  };
-
+}) => {
   return (
     <div className="drawer drawer-end">
       <input id="filter-drawer" type="checkbox" className="drawer-toggle" />
@@ -84,7 +71,7 @@ const FilterPanel = ({
         </div>
       </div>
       <div className="drawer-side z-50">
-        <label htmlFor="filter-drawer" className="drawer-overlay "></label>
+        <label htmlFor="filter-drawer" className="drawer-overlay"></label>
         <div className="menu p-4 w-80 bg-base-100 text-base-content">
           <div className="flex justify-center p-3">
             <input
@@ -97,7 +84,7 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-4  text-center text-2xl underline">
+            <h3 className="font-bold mb-4 text-center text-2xl underline">
               Brands
             </h3>
             <div className="grid grid-cols-2 gap-1">
@@ -106,9 +93,7 @@ const FilterPanel = ({
                   <input
                     type="checkbox"
                     checked={selectedBrands.includes(brand)}
-                    onChange={() =>
-                      handleCheckboxChange(setSelectedBrands, brand)
-                    }
+                    onChange={() => setSelectedBrands(brand)}
                     className="checkbox checkbox-sm"
                   />
                   <span>{BrandDisplay[brand]}</span>
@@ -118,7 +103,7 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-4  text-center text-2xl underline">
+            <h3 className="font-bold mb-4 text-center text-2xl underline">
               Categories
             </h3>
             <div className="grid grid-cols-2 gap-1">
@@ -127,9 +112,7 @@ const FilterPanel = ({
                   <input
                     type="checkbox"
                     checked={selectedCategories.includes(category)}
-                    onChange={() =>
-                      handleCheckboxChange(setSelectedCategories, category)
-                    }
+                    onChange={() => setSelectedCategories(category)}
                     className="checkbox checkbox-sm"
                   />
                   <span>{CategoryDisplay[category]}</span>
@@ -139,7 +122,7 @@ const FilterPanel = ({
           </div>
           <div className="divider"></div>
           <div className="mb-4">
-            <h3 className="font-bold mb-4  text-center text-2xl underline">
+            <h3 className="font-bold mb-4 text-center text-2xl underline">
               Colors
             </h3>
             <div className="grid grid-cols-2 gap-1">
@@ -148,9 +131,7 @@ const FilterPanel = ({
                   <input
                     type="checkbox"
                     checked={selectedColors.includes(color)}
-                    onChange={() =>
-                      handleCheckboxChange(setSelectedColors, color)
-                    }
+                    onChange={() => setSelectedColors(color)}
                     className="checkbox checkbox-sm"
                   />
                   <span>{ColorsDisplay[color]}</span>
@@ -169,9 +150,7 @@ const FilterPanel = ({
                   <input
                     type="checkbox"
                     checked={selectedEffects.includes(effect)}
-                    onChange={() =>
-                      handleCheckboxChange(setSelectedEffects, effect)
-                    }
+                    onChange={() => setSelectedEffects(effect)}
                     className="checkbox checkbox-sm"
                   />
                   <span>{EffectsDisplay[effect]}</span>

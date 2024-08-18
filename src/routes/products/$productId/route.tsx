@@ -1,16 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useParams } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  useParams,
+  Link,
+  useSearch,
+} from "@tanstack/react-router";
 import { getOneProductQuery } from "../../../api/products/products";
 import { getOneProductQueryOptions } from "../../../api/products/productsQueries";
 import { useAuth } from "../../../providers/auth.provider";
 import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCartPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const SingleProductPage = () => {
   const { productId } = useParams({ from: "/products/$productId" });
   const { user, authState } = useAuth();
+  const search = useSearch({ from: "/products/$productId" });
+
   const product = useQuery({
     queryKey: ["product", productId],
     queryFn: () => getOneProductQuery({ id: productId }),
@@ -57,7 +64,15 @@ const SingleProductPage = () => {
     );
   const packageString = product.data?.package?.join(", ");
   return (
-    <div className="container p-10 h-svh flex mx-auto gap-4 justify-around ">
+    <div className="container p-10 h-svh flex flex-col mx-auto gap-4">
+      <Link
+        to="/products"
+        search={search}
+        className="btn btn-outline btn-sm self-start mb-4"
+      >
+        <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
+        Back to Products
+      </Link>
       <div className=" w-[620px] h-[620px] ">
         <img src={product.data?.image} alt={product.data?.title} />
       </div>
