@@ -29,7 +29,8 @@ const InventoryTable = () => {
           </tr>
         </thead>
         <tbody>
-          {inventory.map((item) => (
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {inventory.map((item: any) => (
             <tr
               key={item.id}
               className="border-t border-gray-300 hover:bg-gray-50 hover:text-black"
