@@ -18,13 +18,22 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function Root() {
+  const isDevelopment = process.env.NODE_ENV === "development";
+
   return (
     <>
       <Navbar />
       <Outlet />
       <Footer />
-      <TanStackRouterDevtools position="bottom-right" />
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      {isDevelopment && (
+        <>
+          <TanStackRouterDevtools position="bottom-right" />
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-left"
+          />
+        </>
+      )}
     </>
   );
 }

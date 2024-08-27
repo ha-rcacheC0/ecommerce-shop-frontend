@@ -55,7 +55,9 @@ export const Navbar = () => {
             className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
           >
             <li>
-              <Link to={"/products"}>Fireworks</Link>
+              <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
+                Fireworks
+              </Link>
               {/* <ul className="p-2">
                 <li>
                   <Link to={"/products/shows"}>Shows</Link>
@@ -87,7 +89,9 @@ export const Navbar = () => {
           <li>
             {/* <details> */}
             <summary>
-              <Link to={"/products"}>Fireworks</Link>
+              <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
+                Fireworks
+              </Link>
             </summary>
             {/* <ul className="p-2">
                 <li>
@@ -119,10 +123,15 @@ export const Navbar = () => {
       <div className="navbar-end flex gap-2 flex-1">
         {auth.authState === "authenticated" ? (
           <div className="flex gap-4 items-center">
-            <Link
-              to="/profile"
-              className="btn btn-accent [&.active]:btn-primary max-md:hidden"
-            >
+            {auth.user?.userInfo?.role === "ADMIN" && (
+              <Link
+                to="/admin"
+                className="btn btn-accent [&.active]:btn-outline  max-md:hidden"
+              >
+                Admin
+              </Link>
+            )}
+            <Link to="/profile" className="btn btn-primary  max-md:hidden">
               Profile
             </Link>
             <div className="indicator">
@@ -132,7 +141,7 @@ export const Navbar = () => {
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-accent"
+                className="btn btn-primary [max-md:hidden"
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>

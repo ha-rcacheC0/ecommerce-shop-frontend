@@ -23,8 +23,12 @@ import { Route as EventsNewYearsImport } from './routes/events/new-years'
 import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
 import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
+import { Route as AuthAdminRouteImport } from './routes/_auth/admin/route'
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
+import { Route as AuthAdminUsersImport } from './routes/_auth/admin/users'
+import { Route as AuthAdminReportsImport } from './routes/_auth/admin/reports'
+import { Route as AuthAdminInventoryImport } from './routes/_auth/admin/inventory'
 import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
 import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/profile/cart/$cartId/success'
 
@@ -95,6 +99,11 @@ const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AuthAdminRouteRoute = AuthAdminRouteImport.update({
+  path: '/admin',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 const AuthProfileIndexRoute = AuthProfileIndexImport.update({
   path: '/profile/',
   getParentRoute: () => AuthRoute,
@@ -103,6 +112,21 @@ const AuthProfileIndexRoute = AuthProfileIndexImport.update({
 const AuthProfileEditRoute = AuthProfileEditImport.update({
   path: '/profile/edit',
   getParentRoute: () => AuthRoute,
+} as any)
+
+const AuthAdminUsersRoute = AuthAdminUsersImport.update({
+  path: '/users',
+  getParentRoute: () => AuthAdminRouteRoute,
+} as any)
+
+const AuthAdminReportsRoute = AuthAdminReportsImport.update({
+  path: '/reports',
+  getParentRoute: () => AuthAdminRouteRoute,
+} as any)
+
+const AuthAdminInventoryRoute = AuthAdminInventoryImport.update({
+  path: '/inventory',
+  getParentRoute: () => AuthAdminRouteRoute,
 } as any)
 
 const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
@@ -149,6 +173,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
+    }
+    '/_auth/admin': {
+      id: '/_auth/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthAdminRouteImport
+      parentRoute: typeof AuthImport
     }
     '/products/$productId': {
       id: '/products/$productId'
@@ -206,6 +237,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/admin/inventory': {
+      id: '/_auth/admin/inventory'
+      path: '/inventory'
+      fullPath: '/admin/inventory'
+      preLoaderRoute: typeof AuthAdminInventoryImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
+    '/_auth/admin/reports': {
+      id: '/_auth/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AuthAdminReportsImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
+    '/_auth/admin/users': {
+      id: '/_auth/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AuthAdminUsersImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
     '/_auth/profile/edit': {
       id: '/_auth/profile/edit'
       path: '/profile/edit'
@@ -247,6 +299,11 @@ export const routeTree = rootRoute.addChildren({
     EventsNewYearsRoute,
   }),
   AuthRoute: AuthRoute.addChildren({
+    AuthAdminRouteRoute: AuthAdminRouteRoute.addChildren({
+      AuthAdminInventoryRoute,
+      AuthAdminReportsRoute,
+      AuthAdminUsersRoute,
+    }),
     AuthProfileEditRoute,
     AuthProfileIndexRoute,
     AuthProfileCartCartIdSuccessRoute,
@@ -293,6 +350,7 @@ export const routeTree = rootRoute.addChildren({
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
+        "/_auth/admin",
         "/_auth/profile/edit",
         "/_auth/profile/",
         "/_auth/profile/cart/$cartId/success",
@@ -301,6 +359,15 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about": {
       "filePath": "about.lazy.tsx"
+    },
+    "/_auth/admin": {
+      "filePath": "_auth/admin/route.tsx",
+      "parent": "/_auth",
+      "children": [
+        "/_auth/admin/inventory",
+        "/_auth/admin/reports",
+        "/_auth/admin/users"
+      ]
     },
     "/products/$productId": {
       "filePath": "products/$productId/route.tsx"
@@ -328,6 +395,18 @@ export const routeTree = rootRoute.addChildren({
     },
     "/products/": {
       "filePath": "products/index.tsx"
+    },
+    "/_auth/admin/inventory": {
+      "filePath": "_auth/admin/inventory.tsx",
+      "parent": "/_auth/admin"
+    },
+    "/_auth/admin/reports": {
+      "filePath": "_auth/admin/reports.tsx",
+      "parent": "/_auth/admin"
+    },
+    "/_auth/admin/users": {
+      "filePath": "_auth/admin/users.tsx",
+      "parent": "/_auth/admin"
     },
     "/_auth/profile/edit": {
       "filePath": "_auth/profile/edit.tsx",

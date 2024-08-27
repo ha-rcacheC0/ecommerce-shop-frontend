@@ -374,6 +374,24 @@ const ApprovedTerminalSchema = z.object({
   company: TerminalCompanyEnum,
 });
 
+type ProductFilters = {
+  page: number;
+  pageSize: number;
+  searchTitle?: string;
+  selectedBrands?: Brand[];
+  selectedCategories?: Category[];
+  selectedColors?: Colors[];
+  selectedEffects?: Effects[];
+};
+
+// Define the response type from our API
+type ProductsResponse = {
+  contents: TProduct[];
+  hasMore: boolean;
+  totalPages: number;
+  currentPage: number;
+};
+
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
@@ -395,4 +413,6 @@ export type {
   TCart,
   TAddress,
   TApprovedTerminal,
+  ProductsResponse,
+  ProductFilters,
 };

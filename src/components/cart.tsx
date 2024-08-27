@@ -105,6 +105,7 @@ const Cart = ({
         <p className="mt-4">Add some items to your cart to get started.</p>
         <Link
           to="/products"
+          search={{ page: 1, pageSize: 25 }}
           className="mt-4 inline-block text-blue-500 underline"
         >
           Go to Product Catalog

@@ -1,15 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { TProduct } from "../types";
+import { ProductFilters, TProduct } from "../types";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 import { toast } from "react-toastify";
 
-export const ProductCard = ({ product }: { product: TProduct }) => {
+export const ProductCard = ({
+  product,
+  searchParams,
+}: {
+  product: TProduct;
+  searchParams: ProductFilters;
+}) => {
   const packageString = product.package.join(", ");
+  const unitpackageString = product.UnitProduct?.package.join(", ");
   const { authState, user } = useAuth();
   const userCartId = user?.userInfo?.Cart.id;
+
   const addItem = useAddItemToCartMutation(
     userCartId!,
     () => {
@@ -23,20 +31,23 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
       });
     }
   );
+
   return (
-    <div className="card  w-96 bg-base-100 shadow-xl max-h-96">
+    <div className="card w-96 bg-base-100 shadow-xl max-h-96">
       <figure>
         <Link
-          to={"/products/$productId"}
+          to="/products/$productId"
           params={{ productId: product.id.toString() }}
+          search={searchParams}
         >
           <img src={product.image} alt={`image for ${product.title}`} />
         </Link>
       </figure>
       <div className="card-body">
         <Link
-          to={"/products/$productId"}
+          to="/products/$productId"
           params={{ productId: product.id.toString() }}
+          search={searchParams}
           className="card-title"
         >
           {product.title}
@@ -48,9 +59,14 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
         <div className="card-actions justify-end">
           <div className="mr-auto flex flex-col gap-3">
             <div className="badge badge-accent "> SKU {product.sku}</div>
-            <div className="badge badge-accent mr-auto">
-              Packaged: {packageString}
+            <div className="badge badge-primary mr-auto">
+              Case Package: {packageString}
             </div>
+            {product.UnitProduct && (
+              <div className="badge badge-primary mr-auto">
+                Unit Package: {unitpackageString}
+              </div>
+            )}
           </div>
           {authState === "authenticated" ? (
             <div className="flex flex-col gap-4">
@@ -82,7 +98,7 @@ export const ProductCard = ({ product }: { product: TProduct }) => {
               )}
             </div>
           ) : (
-            <p> Sign In to add product to cart</p>
+            <p>Sign In to add product to cart</p>
           )}
         </div>
       </div>

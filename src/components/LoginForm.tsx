@@ -45,7 +45,7 @@ export const Login = () => {
         });
       }
       setIsSubmitted(false);
-      navigate({ to: "/products" });
+      navigate({ to: "/products", search: { page: 1, pageSize: 25 } });
     },
     onError: (error) => {
       setServerMessage(error.message || "An error occurred");

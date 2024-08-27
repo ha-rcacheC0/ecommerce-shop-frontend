@@ -1,27 +1,39 @@
-import { TProduct } from "../../types";
+import { ProductFilters, ProductsResponse, TProduct } from "../../types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/products";
-type AllProductsResponse = {
-  contents: TProduct[];
-  hasMore: boolean;
-};
 
-export const getAllProductsQuery = async ({
-  page,
-  pageSize,
-}: {
-  page: number;
-  pageSize: number;
-}): Promise<AllProductsResponse> => {
+export const getAllProductsQuery = async (
+  filters: ProductFilters
+): Promise<ProductsResponse> => {
   const params = new URLSearchParams();
-  params.append("page", page.toString());
-  params.append("pageSize", pageSize.toString());
 
-  return await fetch(`${BASE_URL}?${params}`, {
+  params.append("page", filters.page.toString());
+  params.append("pageSize", filters.pageSize.toString());
+
+  if (filters.searchTitle) {
+    params.append("searchTitle", filters.searchTitle);
+  }
+
+  filters.selectedBrands?.forEach((brand) => params.append("brands", brand));
+  filters.selectedCategories?.forEach((category) =>
+    params.append("categories", category)
+  );
+  filters.selectedColors?.forEach((color) => params.append("colors", color));
+  filters.selectedEffects?.forEach((effect) =>
+    params.append("effects", effect)
+  );
+
+  const response = await fetch(`${BASE_URL}?${params.toString()}`, {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => response.json());
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return response.json();
 };
 export const getOneProductQuery = async ({
   id,
