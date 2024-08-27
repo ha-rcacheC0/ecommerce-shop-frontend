@@ -123,10 +123,15 @@ export const Navbar = () => {
       <div className="navbar-end flex gap-2 flex-1">
         {auth.authState === "authenticated" ? (
           <div className="flex gap-4 items-center">
-            <Link
-              to="/profile"
-              className="btn btn-accent [&.active]:btn-primary max-md:hidden"
-            >
+            {auth.user?.userInfo?.role === "ADMIN" && (
+              <Link
+                to="/admin"
+                className="btn btn-accent [&.active]:btn-outline  max-md:hidden"
+              >
+                Admin
+              </Link>
+            )}
+            <Link to="/profile" className="btn btn-primary  max-md:hidden">
               Profile
             </Link>
             <div className="indicator">
@@ -136,7 +141,7 @@ export const Navbar = () => {
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-accent"
+                className="btn btn-primary [max-md:hidden"
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
