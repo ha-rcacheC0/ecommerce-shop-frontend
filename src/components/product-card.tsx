@@ -14,6 +14,7 @@ export const ProductCard = ({
   searchParams: ProductFilters;
 }) => {
   const packageString = product.package.join(", ");
+  const unitpackageString = product.UnitProduct?.package.join(", ");
   const { authState, user } = useAuth();
   const userCartId = user?.userInfo?.Cart.id;
 
@@ -58,9 +59,14 @@ export const ProductCard = ({
         <div className="card-actions justify-end">
           <div className="mr-auto flex flex-col gap-3">
             <div className="badge badge-accent "> SKU {product.sku}</div>
-            <div className="badge badge-accent mr-auto">
-              Packaged: {packageString}
+            <div className="badge badge-primary mr-auto">
+              Case Package: {packageString}
             </div>
+            {product.UnitProduct && (
+              <div className="badge badge-primary mr-auto">
+                Unit Package: {unitpackageString}
+              </div>
+            )}
           </div>
           {authState === "authenticated" ? (
             <div className="flex flex-col gap-4">
