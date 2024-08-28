@@ -1,4 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 
 export const Route = createLazyFileRoute("/")({
@@ -24,12 +24,12 @@ function Index() {
               <br /> on the best brands.
             </p>
             <div className="banner-links flex mx-auto mt-4 gap-4 justify-center ">
-              <a className="btn btn-primary " href="/user/register">
+              <Link className="btn btn-primary " to="/user/register">
                 Create Account
-              </a>
-              <a className="btn btn-secondary" href="/user/login">
+              </Link>
+              <Link className="btn btn-secondary" to="/user/login">
                 Sign In
-              </a>
+              </Link>
             </div>
           </>
         )}
