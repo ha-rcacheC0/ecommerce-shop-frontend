@@ -31,12 +31,25 @@ const deriveAuthState = ({
 
 const clearUser = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("tokenExpiration");
 };
 
 const getUserFromLocalStorage = (): User | null => {
   const userFromLocalStorage = localStorage.getItem("user");
+  const tokenExpiration = localStorage.getItem("tokenExpiration");
+
+  if (!userFromLocalStorage || !tokenExpiration) {
+    clearUser();
+    return null;
+  }
+
+  if (new Date().getTime() > parseInt(tokenExpiration)) {
+    clearUser();
+    return null;
+  }
+
   try {
-    return SignInResponseSchema.parse(JSON.parse(userFromLocalStorage || ""));
+    return SignInResponseSchema.parse(JSON.parse(userFromLocalStorage));
   } catch (e) {
     clearUser();
     return null;
@@ -61,6 +74,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (data: User) => {
     setIsLoading(false);
     setUser(data);
+    localStorage.setItem("user", JSON.stringify(data));
+    // Set token expiration to 24 hours from now
+    const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
+    localStorage.setItem("tokenExpiration", expirationTime.toString());
   };
 
   useEffect(() => {
@@ -71,6 +88,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     login(user);
+  }, []);
+
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      const user = getUserFromLocalStorage();
+      if (!user) {
+        logout();
+      }
+    };
+
+    const intervalId = setInterval(checkTokenExpiration, 60000); // Check every minute
+
+    return () => clearInterval(intervalId);
   }, []);
   return (
     <AuthContext.Provider

@@ -5,8 +5,6 @@ import AdminPageLayout from "./AdminPageLayout";
 import {
   faBox,
   faBoxOpen,
-  faClipboard,
-  faTag,
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -43,7 +41,7 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
     ? inventory.filter((item: InventoryItem) => {
         switch (selectedView) {
           case "low-stock":
-            return item.availableStock < 10; // Adjust this threshold as needed
+            return item.availableStock < 10 && item.availableStock > 0; // Adjust this threshold as needed
           case "out-of-stock":
             return item.availableStock === 0;
           default:
@@ -88,8 +86,6 @@ const InventoryPanel: React.FC = () => {
     { icon: faWarehouse, label: "All Inventory", id: "all-inventory" },
     { icon: faBox, label: "Low Stock", id: "low-stock" },
     { icon: faBoxOpen, label: "Out of Stock", id: "out-of-stock" },
-    { icon: faClipboard, label: "Inventory Report", id: "inventory-report" },
-    { icon: faTag, label: "Price List", id: "price-list" },
   ];
 
   return (
