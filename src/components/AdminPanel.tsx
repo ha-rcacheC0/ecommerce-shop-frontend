@@ -10,6 +10,7 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, Outlet } from "@tanstack/react-router";
+import DashboardContent from "./DashboardContent";
 
 const Sidebar = ({
   expanded,
@@ -68,9 +69,15 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-gray-600 min-h-screen">
       <Sidebar expanded={sidebarExpanded} toggleSidebar={toggleSidebar} />
-      <Outlet />
+      <div className="flex-1 overflow-auto">
+        <h1 className="text-2xl font-bold p-6 bg-gray-800 shadow-sm text-gray-200">
+          Admin Dashboard
+        </h1>
+        <DashboardContent />
+        <Outlet />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
-import { getUserInfo, postUserInfo } from "./userInfo.api";
+import { getAllUsers, getUserInfo, postUserInfo } from "./userInfo.api";
 import { UserProfile } from "../../types";
 import { queryClient } from "../../main";
 
@@ -28,3 +28,9 @@ export const useUserInfoPostMutation = (
     },
   });
 };
+
+export const getAllUsersQueryOptions = (token: string) =>
+  queryOptions({
+    queryKey: ["allUsers", token],
+    queryFn: () => getAllUsers(token),
+  });
