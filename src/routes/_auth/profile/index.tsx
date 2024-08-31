@@ -17,7 +17,6 @@ export const Route = createFileRoute("/_auth/profile/")({
   component: () => <ProfilePage />,
 });
 
-// Create Profile Page
 const ProfilePage = () => {
   const { auth } = Route.useRouteContext();
   const {
@@ -30,22 +29,22 @@ const ProfilePage = () => {
     cartItemsQueryOptions(auth.user!.userInfo!.Cart.id)
   );
 
-  if (isLoading) return <>Loading Profile ...</>;
+  if (isLoading)
+    return <div className="text-center py-4">Loading Profile ...</div>;
   if (isError)
     return (
-      <>
-        <div role="alert" className="alert alert-error">
-          <FontAwesomeIcon icon={faX} /> Error Loading Profile {error.message}
-        </div>
-      </>
+      <div role="alert" className="alert alert-error m-4">
+        <FontAwesomeIcon icon={faX} /> Error Loading Profile: {error.message}
+      </div>
     );
+
   return (
-    <div className="flex justify-center space-x-4 py-4">
+    <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0 p-4">
       <ProfileCard
         userProfile={userProfile!}
         userEmail={auth.user!.userInfo!.email!}
       />
-      <div className=" flex flex-col space-y-3 justify-center">
+      <div className="flex flex-col space-y-3 justify-center w-full lg:w-auto">
         <Cart
           products={cart!.CartProducts}
           shippingAddress={
@@ -58,14 +57,13 @@ const ProfilePage = () => {
             }
           }
         />
-
         {cart!.CartProducts.length > 1 && (
           <Link
             to="/profile/cart/$cartId"
             params={{ cartId: auth.user!.userInfo!.Cart.id }}
             className="btn btn-wide btn-accent mx-auto"
           >
-            Go To Cart <FontAwesomeIcon icon={faRightLong} />
+            Go To Cart <FontAwesomeIcon icon={faRightLong} className="ml-2" />
           </Link>
         )}
       </div>

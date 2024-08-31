@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getAllItemsInInventoryQueryOptions } from "../../../api/admin/inventoryQueries";
-import InventoryTable from "../../../components/InventoryTable";
+
+import InventoryPanel from "../../../components/InventoryPanel";
 
 export const Route = createFileRoute("/_auth/admin/inventory")({
-  component: () => <InventoryTable />,
+  component: InventoryPanel,
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(getAllItemsInInventoryQueryOptions());
   },

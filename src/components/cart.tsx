@@ -100,7 +100,7 @@ const Cart = ({
 
   if (products.length === 0) {
     return (
-      <div className="text-center mt-10">
+      <div className="text-center mt-10 p-4">
         <h2 className="text-2xl font-bold">Your cart is empty</h2>
         <p className="mt-4">Add some items to your cart to get started.</p>
         <Link
@@ -115,24 +115,24 @@ const Cart = ({
   }
 
   return (
-    <div className="card bg-white shadow-xl mx-auto p-6 text-gray-800">
-      <h2 className="text-2xl text-center font-bold">Shopping Cart</h2>
+    <div className="card bg-white shadow-xl mx-auto p-4 md:p-6 text-gray-800">
+      <h2 className="text-2xl text-center font-bold mb-4">Shopping Cart</h2>
 
-      <div className="overflow-x-auto mx-4 ">
-        <table className="table-auto w-full border-b-2">
-          <thead>
+      <div className="overflow-x-auto">
+        <table className="table-auto w-full border-b-2 mb-4">
+          <thead className="hidden md:table-header-group">
             <tr>
-              <th className="px-4 py-2">Product</th>
-              <th className="px-4 py-2">SKU</th>
-              <th className="px-4 py-2">Case Price</th>
-              <th className="px-4 py-2">Case Quantity</th>
-              <th className="px-4 py-2">Unit Price</th>
-              <th className="px-4 py-2">Unit Quantity</th>
-              <th className="px-4 py-2">Subtotal</th>
-              <th className="px-4 py-2">Actions</th>
+              <th className="px-2 py-2">Product</th>
+              <th className="px-2 py-2">SKU</th>
+              <th className="px-2 py-2">Case Price</th>
+              <th className="px-2 py-2">Case Qty</th>
+              <th className="px-2 py-2">Unit Price</th>
+              <th className="px-2 py-2">Unit Qty</th>
+              <th className="px-2 py-2">Subtotal</th>
+              <th className="px-2 py-2">Actions</th>
             </tr>
           </thead>
-          <tbody className="p-6">
+          <tbody>
             {products.map((product, index) => (
               <CartItem key={index} product={product} />
             ))}
@@ -140,16 +140,14 @@ const Cart = ({
         </table>
       </div>
 
-      <div className="mt-4 flex items-center gap-4 justify-around ">
-        <div className="w-1/2 bg-neutral-200 p-4 rounded-md text-center">
+      <div className="mt-4 flex flex-col md:flex-row items-start md:items-center gap-4 justify-around">
+        <div className="w-full md:w-1/2 bg-neutral-200 p-4 rounded-md text-center">
           <div>
             <h3 className="text-lg font-semibold text-primary">
               Shipping Address:
             </h3>
             {!isShippingAddressSet ? (
-              <>
-                <p>Please set your Address or Select a Terminal to ship to</p>
-              </>
+              <p>Please set your Address or Select a Terminal to ship to</p>
             ) : (
               <>
                 <p>{currentShippingAddress!.street1}</p>
@@ -163,21 +161,21 @@ const Cart = ({
             )}
           </div>
           <div className="mt-4 flex flex-col items-start gap-2">
-            <label className="ml-4">
+            <label className="flex items-center">
               <input
                 type="checkbox"
                 checked={isTerminalDestination}
                 className="mr-2"
                 onChange={(e) => {
                   setIsTerminalDestination(e.target.checked);
-                  setTerminalDestination(""); // Reset terminal destination if unchecked
+                  setTerminalDestination("");
                 }}
               />
               Ship to terminal
             </label>
 
             {isTerminalDestination && (
-              <>
+              <div className="w-full">
                 <StateZipInput
                   state={state}
                   zipcode={zipcode}
@@ -190,15 +188,17 @@ const Cart = ({
                   terminalDestination={terminalDestination}
                   onTerminalChange={setTerminalDestination}
                 />
-              </>
+              </div>
             )}
             <label
-              className={`ml-4 ${isTerminalDestination ? "line-through text-gray-300" : ""}`}
+              className={`flex items-center ${
+                isTerminalDestination ? "line-through text-gray-300" : ""
+              }`}
             >
               <input
                 type="checkbox"
                 checked={needLiftGate}
-                className={`mr-2 `}
+                className="mr-2"
                 onChange={(e) => setNeedLiftGate(e.target.checked)}
                 disabled={isTerminalDestination}
               />
@@ -207,25 +207,30 @@ const Cart = ({
           </div>
         </div>
 
-        <table className="table-auto w-full">
-          <tfoot className="">
-            <tr className="h-12 border-b border-gray-300 ">
-              <td className="text-right font-semibold">Subtotal: </td>
-              <td className="text-lg font-semibold">${subtotal.toFixed(2)}</td>
-            </tr>
-            <tr className="h-12 ">
-              <td className="text-right font-semibold">
-                {" "}
-                {orderType} Shipping:{" "}
-              </td>
-              <td className="text-lg font-semibold">${shipping.toFixed(2)}</td>
-            </tr>
-            <tr className="h-12 border-y-4 border-double border-black ">
-              <td className="text-right font-bold">Grand Total: </td>
-              <td className="text-lg font-bold">${grandTotal.toFixed(2)}</td>
-            </tr>
-          </tfoot>
-        </table>
+        <div className="w-full md:w-1/2">
+          <table className="table-auto w-full">
+            <tfoot>
+              <tr className="h-12 border-b border-gray-300">
+                <td className="text-right font-semibold">Subtotal:</td>
+                <td className="text-lg font-semibold">
+                  ${subtotal.toFixed(2)}
+                </td>
+              </tr>
+              <tr className="h-12">
+                <td className="text-right font-semibold">
+                  {orderType} Shipping:
+                </td>
+                <td className="text-lg font-semibold">
+                  ${shipping.toFixed(2)}
+                </td>
+              </tr>
+              <tr className="h-12 border-y-4 border-double border-black">
+                <td className="text-right font-bold">Grand Total:</td>
+                <td className="text-lg font-bold">${grandTotal.toFixed(2)}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </div>
 
       <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center">
@@ -239,7 +244,7 @@ const Cart = ({
           }
         />
         {!isShippingAddressSet && (
-          <div role="alert" className=" alert alert-warning">
+          <div role="alert" className="alert alert-warning">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6 shrink-0 stroke-current"

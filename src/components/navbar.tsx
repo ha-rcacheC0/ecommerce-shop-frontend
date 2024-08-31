@@ -47,7 +47,7 @@ export const Navbar = () => {
 
   return (
     <div className="navbar bg-base-300">
-      <div className="nav-start flex-1">
+      <div className="navbar-start flex-1">
         <div className="dropdown">
           <MenuButton />
           <ul
@@ -58,26 +58,32 @@ export const Navbar = () => {
               <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
                 Fireworks
               </Link>
-              {/* <ul className="p-2">
-                <li>
-                  <Link to={"/products/shows"}>Shows</Link>
-                </li>
-              </ul> */}
             </li>
-            {/* <li>
-              <Link to={"/events"}>Events</Link>
-              <ul className="p-2">
-                <li>
-                  <Link to={"/events/new-years"}>New Years</Link>
+            {auth.authState === "authenticated" && (
+              <>
+                <li className="mt-auto">
+                  <Link to="/profile" className="justify-between">
+                    Profile
+                    <span className="badge">New</span>
+                  </Link>
                 </li>
                 <li>
-                  <Link to={"/events/fourth-july"}>Fourth of July</Link>
+                  <Link
+                    to={"/profile/cart/$cartId"}
+                    params={{ cartId }}
+                    className="justify-between"
+                  >
+                    Cart
+                    <span className="badge badge-secondary">{cartQty}</span>
+                  </Link>
                 </li>
-                <li>
-                  <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
-                </li>
-              </ul>
-            </li> */}
+                {auth.user?.userInfo?.role === "ADMIN" && (
+                  <li>
+                    <Link to="/admin">Admin</Link>
+                  </li>
+                )}
+              </>
+            )}
           </ul>
         </div>
         <Link to={"/"} className="btn btn-link">
@@ -85,38 +91,11 @@ export const Navbar = () => {
         </Link>
       </div>
       <div className="navbar-center hidden md:flex flex-1 justify-center">
-        <ul tabIndex={0} className="menu menu-horizontal mt-3 px-1">
+        <ul className="menu menu-horizontal px-1">
           <li>
-            {/* <details> */}
-            <summary>
-              <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
-                Fireworks
-              </Link>
-            </summary>
-            {/* <ul className="p-2">
-                <li>
-                  <Link to={"/products/shows"}>Shows</Link>
-                </li>
-              </ul>
-            </details> */}
-          </li>
-          <li>
-            {/* <details>
-              <summary>
-                <Link to={"/events"}>Events</Link>
-              </summary>
-              <ul className="p-2">
-                <li>
-                  <Link to={"/events/new-years"}>New Years</Link>
-                </li>
-                <li>
-                  <Link to={"/events/fourth-july"}>Fourth of July</Link>
-                </li>
-                <li>
-                  <Link to={"/events/gender-reveal"}>Gender Reveal</Link>
-                </li>
-              </ul>
-            </details> */}
+            <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
+              Fireworks
+            </Link>
           </li>
         </ul>
       </div>
@@ -126,22 +105,25 @@ export const Navbar = () => {
             {auth.user?.userInfo?.role === "ADMIN" && (
               <Link
                 to="/admin"
-                className="btn btn-accent [&.active]:btn-outline  max-md:hidden"
+                className="btn btn-accent [&.active]:btn-outline hidden md:inline-flex"
               >
                 Admin
               </Link>
             )}
-            <Link to="/profile" className="btn btn-primary  max-md:hidden">
+            <Link
+              to="/profile"
+              className="btn btn-primary hidden md:inline-flex"
+            >
               Profile
             </Link>
-            <div className="indicator">
+            <div className="indicator hidden md:inline-flex">
               <span className="indicator-item badge badge-secondary">
                 {cartQty}
               </span>
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-primary [max-md:hidden"
+                className="btn btn-primary"
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
