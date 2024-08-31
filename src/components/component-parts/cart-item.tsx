@@ -66,6 +66,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       });
     }
   };
+
   const incrementUnitQuantity = () => {
     updateQuantity.mutate({
       productId: product.Product.id,
@@ -86,55 +87,76 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
     }
   };
 
+  const QuantityControl = ({
+    quantity,
+    onIncrement,
+    onDecrement,
+    isDisabled = false,
+  }) => (
+    <div className="flex md:flex-row flex-col items-center gap-1 md:gap-2">
+      <button
+        onClick={onIncrement}
+        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
+      >
+        <FontAwesomeIcon icon={faPlus} />
+      </button>
+      <span className="my-1 md:my-0">{quantity}</span>
+      <button
+        onClick={onDecrement}
+        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
+        disabled={isDisabled}
+      >
+        <FontAwesomeIcon icon={faMinus} />
+      </button>
+    </div>
+  );
+
   return (
-    <tr className=" w-full items-center align-middle p-6">
-      <td className="text-center ">{title}</td>
-      <td className="text-center">{sku}</td>
-      <td className="text-center">${parseFloat(casePrice).toFixed(2)}</td>
-      <td className="flex justify-center p-4 items-center">
-        <button
-          onClick={decrementCaseQuantity}
-          className="btn btn-outline btn-sm"
-          disabled={product.caseQuantity == 0}
-        >
-          <FontAwesomeIcon icon={faMinus} />
-        </button>
-        <span className="mx-2">{product.caseQuantity}</span>
-        <button
-          onClick={incrementCaseQuantity}
-          className="btn btn-outline btn-sm"
-        >
-          <FontAwesomeIcon icon={faPlus} />
-        </button>
+    <tr className="w-full items-center align-middle p-2 md:p-6 border-b">
+      <td className="text-left md:text-center">
+        <div className="font-semibold">{title}</div>
+        <div className="text-sm text-gray-500 md:hidden mt-1">SKU: {sku}</div>
+      </td>
+      <td className="hidden md:table-cell text-center">{sku}</td>
+      <td className="hidden md:table-cell text-center">
+        ${parseFloat(casePrice).toFixed(2)}
       </td>
       <td className="text-center">
-        {" "}
-        {!unitPrice ? "-" : `${unitPrice.toFixed(2)}`}
+        <QuantityControl
+          quantity={product.caseQuantity}
+          onIncrement={incrementCaseQuantity}
+          onDecrement={decrementCaseQuantity}
+          isDisabled={product.caseQuantity === 0}
+        />
+        <div className="text-sm text-gray-500 md:hidden mt-1">
+          ${parseFloat(casePrice).toFixed(2)} / Case
+        </div>
       </td>
-      <td className="flex justify-center p-4 items-center">
+      <td className="hidden md:table-cell text-center">
+        {!unitPrice ? "-" : `$${unitPrice.toFixed(2)}`}
+      </td>
+      <td className="text-center">
         {!unitPrice ? (
-          <> {"Not sold as unit"}</>
+          <span className="text-sm">Not sold as unit</span>
         ) : (
-          <>
-            <button
-              onClick={decrementUnitQuantity}
-              className="btn btn-outline btn-sm"
-              disabled={product.unitQuantity == 0}
-            >
-              <FontAwesomeIcon icon={faMinus} />
-            </button>
-            <span className="mx-2">{product.unitQuantity}</span>
-            <button
-              onClick={incrementUnitQuantity}
-              className="btn btn-outline btn-sm"
-            >
-              <FontAwesomeIcon icon={faPlus} />
-            </button>
-          </>
+          <div>
+            <QuantityControl
+              quantity={product.unitQuantity}
+              onIncrement={incrementUnitQuantity}
+              onDecrement={decrementUnitQuantity}
+              isDisabled={product.unitQuantity === 0}
+            />
+            <div className="text-sm text-gray-500 md:hidden mt-1">
+              ${unitPrice.toFixed(2)} / Unit
+            </div>
+          </div>
         )}
       </td>
-      <td className="text-center">${subtotal.toFixed(2)}</td>
-      <td className="text-center ">
+      <td className="text-right md:text-center font-semibold">
+        ${subtotal.toFixed(2)}
+        <div className="text-sm text-gray-500 md:hidden mt-1">Subtotal</div>
+      </td>
+      <td className="text-center">
         <button
           onClick={() =>
             removeItem.mutate({
@@ -142,7 +164,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
               cartId: product.cartId,
             })
           }
-          className="btn btn-error btn-outline"
+          className="btn btn-error btn-outline btn-sm"
         >
           <FontAwesomeIcon icon={faX} />
         </button>

@@ -15,7 +15,7 @@ import { useAuth } from "../providers/auth.provider";
 
 interface UserData {
   id: string;
-  role: "USER" | "MANAGER" | "ADMIN";
+  role: "USER" | "MANAGER" | "ADMIN" | "MEMBER";
   email: string;
   createdOn: string;
   lastLogin: string | null;
@@ -23,6 +23,7 @@ interface UserData {
     firstName: string | null;
     lastName: string | null;
     phoneNumber: string | null;
+    canContact: boolean;
   };
 }
 
@@ -47,16 +48,18 @@ const UsersTable: React.FC<{ selectedView: string | null }> = ({
   const filteredUsers = selectedView
     ? users?.filter((user: UserData) => {
         switch (selectedView) {
-          case "admins":
-            return user.role === "ADMIN";
-          case "managers":
-            return user.role === "MANAGER";
-          case "regular-users":
+          case "admins-managers":
+            return user.role === "ADMIN" || user.role === "MANAGER";
+          case "members":
+            return user.role === "MEMBER";
+          case "users":
             return user.role === "USER";
           case "recent-signups":
-            const oneMonthAgo = new Date();
-            oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-            return new Date(user.createdOn) > oneMonthAgo;
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+            return new Date(user.createdOn) > sevenDaysAgo;
+          case "email-list":
+            return user.profiles?.canContact;
           default:
             return true;
         }
@@ -76,7 +79,7 @@ const UsersTable: React.FC<{ selectedView: string | null }> = ({
           </tr>
         </thead>
         <tbody>
-          {filteredUsers.map((user: any) => (
+          {filteredUsers?.map((user: any) => (
             <tr
               key={user.id}
               className="border-t border-gray-600 text-black hover:bg-gray-400 hover:text-white text-center"
@@ -107,9 +110,9 @@ const UsersTable: React.FC<{ selectedView: string | null }> = ({
 const UsersScreen: React.FC = () => {
   const usersSidebarItems = [
     { icon: faUsers, label: "All Users", id: "all-users" },
-    { icon: faUserTie, label: "Admins", id: "admins" },
-    { icon: faUserCog, label: "Managers", id: "managers" },
-    { icon: faUsers, label: "Regular Users", id: "regular-users" },
+    { icon: faUserTie, label: "Admins/Managers", id: "admins-managers" },
+    { icon: faUserCog, label: "Members", id: "members" },
+    { icon: faUsers, label: "Regular Users", id: "users" },
     { icon: faCalendarAlt, label: "Recent Signups", id: "recent-signups" },
     { icon: faEnvelope, label: "Email List", id: "email-list" },
   ];
