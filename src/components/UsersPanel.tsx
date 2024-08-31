@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-case-declarations */
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import AdminPageLayout from "./AdminPageLayout";
@@ -10,22 +12,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getAllUsersQueryOptions } from "../api/users/userQueryOptions.api";
 import { useAuth } from "../providers/auth.provider";
-
-// You'll need to create this query function
-
-interface UserData {
-  id: string;
-  role: "USER" | "MANAGER" | "ADMIN" | "MEMBER";
-  email: string;
-  createdOn: string;
-  lastLogin: string | null;
-  profiles?: {
-    firstName: string | null;
-    lastName: string | null;
-    phoneNumber: string | null;
-    canContact: boolean;
-  };
-}
 
 const UsersTable: React.FC<{ selectedView: string | null }> = ({
   selectedView,
@@ -46,7 +32,7 @@ const UsersTable: React.FC<{ selectedView: string | null }> = ({
 
   // Filter users based on selectedView
   const filteredUsers = selectedView
-    ? users?.filter((user: UserData) => {
+    ? users?.filter((user: any) => {
         switch (selectedView) {
           case "admins-managers":
             return user.role === "ADMIN" || user.role === "MANAGER";

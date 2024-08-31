@@ -92,6 +92,11 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
     onIncrement,
     onDecrement,
     isDisabled = false,
+  }: {
+    quantity: number;
+    onIncrement: () => void;
+    onDecrement: () => void;
+    isDisabled: boolean;
   }) => (
     <div className="flex md:flex-row flex-col items-center gap-1 md:gap-2">
       <button
