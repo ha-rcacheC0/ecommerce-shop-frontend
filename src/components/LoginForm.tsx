@@ -19,7 +19,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [serverMessage, setServerMessage] = useState(""); // Use this state to hold server messages
+  const [serverMessage, setServerMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const emailValidState = validateEmailInput(email);
   const passwordValidState = validatePasswordInput(password);
@@ -55,7 +55,7 @@ export const Login = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitted(true);
-    setServerMessage(""); // Clear previous messages
+    setServerMessage("");
     if (emailValidState.success && passwordValidState.success) {
       const requestBody: SignInRequest = { email, password };
       mutation.mutate(requestBody);
@@ -65,16 +65,16 @@ export const Login = () => {
   };
 
   return (
-    <div className=" flex flex-col content-center">
+    <div className="flex flex-col content-center px-4 sm:px-0">
       <img
         src="/imgs/crew-logo.png"
-        className="w-128 my-5 self-center"
+        className="w-full max-w-xs sm:max-w-md md:max-w-lg my-5 self-center"
         alt="Crew Fireworks Logo"
       />
 
       <form
         onSubmit={handleSubmit}
-        className="bg-base-200 text-primary p-8 card gap-4 form-control shadow-2xl my-6 w-1/2 mx-auto flex flex-col items-center"
+        className="bg-base-200 text-primary p-4 sm:p-8 card gap-4 form-control shadow-2xl my-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto flex flex-col items-center"
       >
         {serverMessage && (
           <ErrorMessage
@@ -119,9 +119,9 @@ export const Login = () => {
 
         <button
           type="submit"
-          className="btn btn-primary text-slate-100 font-semibold  hover:bg-slate-800 disabled:bg-gray-600"
+          className="btn btn-primary text-slate-100 font-semibold hover:bg-slate-800 disabled:bg-gray-600 w-full sm:w-auto"
         >
-          {"Login"} <FontAwesomeIcon icon={faRightToBracket} />{" "}
+          {"Login"} <FontAwesomeIcon icon={faRightToBracket} />
         </button>
         <Link to={"/user/register"} className="text-primary-content underline">
           Create a New Account
@@ -129,5 +129,4 @@ export const Login = () => {
       </form>
     </div>
   );
-  4;
 };
