@@ -1,5 +1,4 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { useMutation } from "@tanstack/react-query";
 import { TextInput } from "./component-parts/TextInput";
 import { useState } from "react";
@@ -20,7 +19,7 @@ export const RegisterUser = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [serverMessage, setServerMessage] = useState(""); // Use this state to hold server messages
+  const [serverMessage, setServerMessage] = useState("");
   const passwordValidState = validatePasswordInput(password);
   const confirmedPassword = password === confirmPassword;
   const emailValidState = validateEmailInput(email);
@@ -33,13 +32,11 @@ export const RegisterUser = () => {
   const mutation = useMutation({
     mutationKey: ["createUser"],
     mutationFn: (body: UserCreateRequest) => createUser(body),
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onSuccess: (_data) => {
+    onSuccess: () => {
       setIsSubmitted(false);
       navigate({ to: "/user/login" });
     },
     onError: (error) => {
-      // Handle error state, e.g., show error message from server
       setServerMessage(error.message || "An error occurred");
     },
   });
@@ -47,7 +44,7 @@ export const RegisterUser = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitted(true);
-    setServerMessage(""); // Clear previous messages
+    setServerMessage("");
 
     const requestBody: UserCreateRequest = { password, email };
     if (
@@ -60,16 +57,18 @@ export const RegisterUser = () => {
   };
 
   return (
-    <div className=" flex flex-col content-center">
+    <div className="flex flex-col content-center px-4 sm:px-0">
       <img
         src="/imgs/crew-logo.png"
-        className="w-128 my-5 self-center"
+        className="w-full max-w-xs sm:max-w-md md:max-w-lg my-5 self-center"
         alt="Crew Fireworks Logo"
       />
-      {serverMessage && <div>{serverMessage}</div>}
+      {serverMessage && (
+        <div className="text-error text-center mb-4">{serverMessage}</div>
+      )}
       <form
         onSubmit={handleSubmit}
-        className="card gap-4 bg-base-200 text-primary p-8 my-5 w-1/2 mx-auto items-center"
+        className="card gap-4 bg-base-200 text-primary p-4 sm:p-8 my-5 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto items-center"
       >
         <TextInput
           labelText={"Email"}
@@ -129,9 +128,9 @@ export const RegisterUser = () => {
 
         <button
           type="submit"
-          className="btn btn-primary text-slate-100 font-semibold  hover:bg-slate-800 disabled:bg-gray-600"
+          className="btn btn-primary text-slate-100 font-semibold hover:bg-slate-800 disabled:bg-gray-600 w-full sm:w-auto"
         >
-          {"Register"} <FontAwesomeIcon icon={faRightToBracket} />{" "}
+          {"Register"} <FontAwesomeIcon icon={faRightToBracket} />
         </button>
         <Link to={"/user/login"} className="text-primary-content underline">
           Login to your Account
