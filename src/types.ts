@@ -62,7 +62,6 @@ export const CategoryDisplay = {
   ROMAN_CANDLES: "Roman Candles",
   FOUNTAINS: "Fountains",
   GENDER_REVEAL: "Gender Reveal",
-  SHELLS_MINES: "Shells & Mines",
   FUSE: "Fuse",
   SUPPLIES_VISIBILITY: "Supplies & Visibility",
   CONFETTI_SHOOTERS_AIR_COMPRESSED: "Confetti Shooters (Air Compressed)",

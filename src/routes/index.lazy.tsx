@@ -20,8 +20,8 @@ function Index() {
         {authState !== "authenticated" && (
           <>
             <p className="text-4xl text-secondary-content ">
-              Sign-in to get the best deals
-              <br /> on the best brands.
+              Sign-in to get epic deals
+              <br /> on premium products from top-notch brands.
             </p>
             <div className="banner-links flex mx-auto mt-4 gap-4 justify-center ">
               <Link className="btn btn-primary " to="/user/register">

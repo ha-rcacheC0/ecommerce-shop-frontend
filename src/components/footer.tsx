@@ -58,7 +58,7 @@ export const Footer = () => {
             help provide you with a better, faster and safer browsing experience
             and for marketing purposes.
           </p>
-          <p>&copy; Crew Fireworks 2024. All right reserved.</p>
+          <p>&copy; Crew Fireworks 2025. All right reserved.</p>
         </div>
         <nav className="md:place-self-center md:justify-self-end">
           <div className="grid grid-flow-col gap-4">
