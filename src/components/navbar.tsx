@@ -4,6 +4,7 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { cartItemsQueryOptions } from "../api/cart/cartQueries";
+import ThemeSelector from "../components/component-parts/themeSelector";
 
 export const Navbar = () => {
   const auth = useAuth();
@@ -46,7 +47,7 @@ export const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-300">
+    <div className="navbar bg-base-100 border-b-2 border-secondary pt-3">
       <div className="navbar-start flex-1">
         <div className="dropdown">
           <MenuButton />
@@ -67,6 +68,7 @@ export const Navbar = () => {
                     <span className="badge">New</span>
                   </Link>
                 </li>
+
                 <li>
                   <Link
                     to={"/profile/cart/$cartId"}
@@ -87,7 +89,11 @@ export const Navbar = () => {
           </ul>
         </div>
         <Link to={"/"} className="btn btn-link">
-          <img className="w-40" src="/imgs/crew-logo.png" alt="company logo" />
+          <img
+            className="w-68 mb-[-10px]"
+            src="/imgs/crew-logo.png"
+            alt="company logo"
+          />
         </Link>
       </div>
       <div className="navbar-center hidden md:flex flex-1 justify-center">
@@ -105,32 +111,33 @@ export const Navbar = () => {
             {auth.user?.userInfo?.role === "ADMIN" && (
               <Link
                 to="/admin"
-                className="btn btn-accent [&.active]:btn-outline hidden md:inline-flex"
+                className="btn btn-primary [&.active]:btn-outline hidden md:inline-flex"
               >
                 Admin
               </Link>
             )}
             <Link
               to="/profile"
-              className="btn btn-primary hidden md:inline-flex"
+              className="btn btn-secondary hidden md:inline-flex"
             >
               Profile
             </Link>
+            <ThemeSelector />
             <div className="indicator hidden md:inline-flex">
-              <span className="indicator-item badge badge-secondary">
+              <span className="indicator-item badge badge-primary">
                 {cartQty}
               </span>
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-primary"
+                className="btn btn-secondary btn-outline"
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
             </div>
             <div
               onClick={handleLogout}
-              className="btn btn-neutral btn-outline py-2 px-4 rounded-md"
+              className="btn btn-secondary btn-outline py-2 px-4 rounded-md max-md:hidden"
             >
               Logout
             </div>
@@ -139,13 +146,13 @@ export const Navbar = () => {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/user/register"
-              className="text-xl btn btn-primary [&.active]:font-bold"
+              className="text-md font-semibold text-[#bf0a30] border-2 border-[#bf0a30] rounded-sm px-2 py-1 hover:bg-[#bf0a30] hover:text-slate-100"
             >
               Sign Up
             </Link>
             <Link
               to="/user/login"
-              className="text-xl btn btn-secondary [&.active]:font-bold"
+              className="text-md font-semibold text-[#002868] border-2 border-[#002868] rounded-sm px-2 py-1 hover:bg-[#002868] hover:text-slate-100"
             >
               Sign In
             </Link>

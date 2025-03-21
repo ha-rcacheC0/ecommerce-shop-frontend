@@ -149,64 +149,70 @@ const Products: React.FC = () => {
   if (isError) return <div>Error: {error.message}</div>;
 
   return (
-    <div>
-      <FilterPanel
-        searchTitle={searchTitle}
-        setSearchTitle={(value) => {
-          setSearchTitle(value);
-          setPage(1);
-        }}
-        selectedBrands={selectedBrands}
-        setSelectedBrands={(brand: Brand) =>
-          handleFilterChange(setSelectedBrands, brand)
-        }
-        selectedCategories={selectedCategories}
-        setSelectedCategories={(category: Category) =>
-          handleFilterChange(setSelectedCategories, category)
-        }
-        selectedColors={selectedColors}
-        setSelectedColors={(color: Colors) =>
-          handleFilterChange(setSelectedColors, color)
-        }
-        selectedEffects={selectedEffects}
-        setSelectedEffects={(effect: Effects) =>
-          handleFilterChange(setSelectedEffects, effect)
-        }
-        isFetching={isFetching}
-        isPlaceholderData={isPlaceholderData}
-        setPage={setPage}
-        page={page}
-        hasMore={products?.hasMore ?? false}
-        pageSize={pageSize}
-        setPageAmount={(value) => {
-          setPageSize(value);
-          setPage(1);
-        }}
-      />
-
-      <div className="flex flex-wrap gap-4 p-6 h-[900px] overflow-y-auto justify-center bg-primary">
-        {products?.contents.map((product: TProduct) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            searchParams={search}
-          />
-        ))}
+    <div className="flex min-h-screen">
+      <div className="flex-shrink-0">
+        <FilterPanel
+          searchTitle={searchTitle}
+          setSearchTitle={(value) => {
+            setSearchTitle(value);
+            setPage(1);
+          }}
+          selectedBrands={selectedBrands}
+          setSelectedBrands={(brand: Brand) =>
+            handleFilterChange(setSelectedBrands, brand)
+          }
+          selectedCategories={selectedCategories}
+          setSelectedCategories={(category: Category) =>
+            handleFilterChange(setSelectedCategories, category)
+          }
+          selectedColors={selectedColors}
+          setSelectedColors={(color: Colors) =>
+            handleFilterChange(setSelectedColors, color)
+          }
+          selectedEffects={selectedEffects}
+          setSelectedEffects={(effect: Effects) =>
+            handleFilterChange(setSelectedEffects, effect)
+          }
+          isFetching={isFetching}
+          isPlaceholderData={isPlaceholderData}
+          setPage={setPage}
+          page={page}
+          hasMore={products?.hasMore ?? false}
+          pageSize={pageSize}
+          setPageAmount={(value) => {
+            setPageSize(value);
+            setPage(1);
+          }}
+        />
       </div>
+      <div className="flex flex-col p-6">
+        <div className="overflow-y-auto p-6 bg-base-100">
+          <div className="flex flex-wrap gap-4 p-6">
+            {products?.contents.map((product: TProduct) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                searchParams={search}
+              />
+            ))}
+          </div>
+        </div>
 
-      <PageButtons
-        isFetching={isFetching}
-        isPlaceholderData={isPlaceholderData}
-        setPage={setPage}
-        page={page}
-        hasMore={products?.hasMore ?? false}
-        pageSize={pageSize}
-        setPageAmount={(value) => {
-          setPageSize(value);
-          setPage(1);
-        }}
-      />
-
+        <div className="p-4 bg-base-100">
+          <PageButtons
+            isFetching={isFetching}
+            isPlaceholderData={isPlaceholderData}
+            setPage={setPage}
+            page={page}
+            hasMore={products?.hasMore ?? false}
+            pageSize={pageSize}
+            setPageAmount={(value) => {
+              setPageSize(value);
+              setPage(1);
+            }}
+          />
+        </div>
+      </div>
       {isFetching && <div>Fetching...</div>}
     </div>
   );

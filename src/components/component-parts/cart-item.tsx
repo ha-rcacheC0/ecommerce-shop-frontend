@@ -103,7 +103,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         onClick={onIncrement}
         className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
       >
-        <FontAwesomeIcon icon={faPlus} />
+        <FontAwesomeIcon icon={faMinus} />
       </button>
       <span className="my-1 md:my-0">{quantity}</span>
       <button
@@ -111,7 +111,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
         disabled={isDisabled}
       >
-        <FontAwesomeIcon icon={faMinus} />
+        <FontAwesomeIcon icon={faPlus} />
       </button>
     </div>
   );

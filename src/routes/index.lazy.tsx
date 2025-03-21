@@ -8,9 +8,9 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const { authState } = useAuth();
   return (
-    <div className="h-svh">
-      <div className="flex w-4/5 flex-col text-center p-6  mx-auto justify-center items-center rounded-lg">
-        <h1 className="text-7xl text-primary-content">
+    <div className="border-2 bg-slate-100 py-10">
+      <div className="border-4 flex flex-col items-center justify-center text-center">
+        <h1 className="text-6xl text-[#bf0a30] font-semibold tracking-tight ">
           Crew Fireworks
           <br />
           Best Quality
@@ -19,15 +19,21 @@ function Index() {
         </h1>
         {authState !== "authenticated" && (
           <>
-            <p className="text-4xl text-secondary-content ">
-              Sign-in to get epic deals
-              <br /> on premium products from top-notch brands.
+            <p className="text-2xl text-[#002868] mt-1 font-semibold tracking-tight">
+              Sign-in for epic deals
+              <br /> on premium brands.
             </p>
-            <div className="banner-links flex mx-auto mt-4 gap-4 justify-center ">
-              <Link className="btn btn-primary " to="/user/register">
+            <div className="flex mt-3 gap-4 items-center  ">
+              <Link
+                className="text-lg font-semibold text-[#bf0a30] border-3 border-[#bf0a30] rounded-xs p-2 hover:bg-[#bf0a30] hover:text-slate-100"
+                to="/user/register"
+              >
                 Create Account
               </Link>
-              <Link className="btn btn-secondary" to="/user/login">
+              <Link
+                className="text-lg font-semibold text-[#002868] border-3 border-[#002868] rounded-xs p-2 hover:bg-[#002868] hover:text-slate-100"
+                to="/user/login"
+              >
                 Sign In
               </Link>
             </div>
@@ -37,3 +43,4 @@ function Index() {
     </div>
   );
 }
+console.log(<Link>hello</Link>);

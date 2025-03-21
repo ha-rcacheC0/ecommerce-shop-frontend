@@ -143,7 +143,7 @@ const Cart = ({
       <div className="mt-4 flex flex-col md:flex-row items-start md:items-center gap-4 justify-around">
         <div className="w-full md:w-1/2 bg-neutral-200 p-4 rounded-md text-center">
           <div>
-            <h3 className="text-lg font-semibold text-primary">
+            <h3 className="text-lg font-semibold text-[#bf0a30]">
               Shipping Address:
             </h3>
             {!isShippingAddressSet ? (
@@ -202,7 +202,7 @@ const Cart = ({
                 onChange={(e) => setNeedLiftGate(e.target.checked)}
                 disabled={isTerminalDestination}
               />
-              Need lift gate
+              Need a liftgate? + $100 shipping.
             </label>
           </div>
         </div>

@@ -25,6 +25,8 @@ export const EffectsDisplay = {
   GLOW: "Glow",
   NISHIKI_KAMURO: "Nishiki Kamuro",
   GLITTER: "Glitter",
+  SNAKE: "Snake",
+  CONFETTI: "Confetti",
 };
 
 export const ColorsDisplay = {
@@ -102,6 +104,15 @@ export const BrandDisplay = {
   MUSCLE_PACK: "Muscle Pack",
   SKIES_THE_LIMIT: "Skies the Limit",
   DUCK: "Duck",
+  PYRO_PIRATE: "Pyro Pirate",
+  IRONMAN: "Ironman",
+  BEIHAI_POPPOP: "Beihai Poppop",
+  BOOMER: "Boomer",
+  FIREHAWK: "Firehawk",
+  SKY_PAINTER: "Sky Painter",
+  GALAXY_FIREWORKS: "Galaxy Fireworks",
+  FOX_FIREWORKS: "Fox Fireworks",
+  SUNS_FIREWORKS: "Suns Fireworks",
 };
 
 export enum Effects {
@@ -129,6 +140,8 @@ export enum Effects {
   GLOW = "GLOW",
   NISHIKI_KAMURO = "NISHIKI_KAMURO",
   GLITTER = "GLITTER",
+  SNAKE = "SNAKE",
+  CONFETTI = "CONFETTI",
 }
 
 export enum Colors {
@@ -206,6 +219,15 @@ export enum Brand {
   MUSCLE_PACK = "MUSCLE_PACK",
   SKIES_THE_LIMIT = "SKIES_THE_LIMIT",
   DUCK = "DUCK",
+  PYRO_PIRATE = "PYRO_PIRATE",
+  IRONMAN = "IRONMAN",
+  BEIHAI_POPPOP = "BEIHAI_POPPOP",
+  BOOMER = "BOOMER",
+  FIREHAWK = "FIREHAWK",
+  SKY_PAINTER = "SKY_PAINTER",
+  GALAXY_FIREWORKS = "GALAXY_FIREWORKS",
+  FOX_FIREWORKS = "FOX_FIREWORKS",
+  SUNS_FIREWORKS = "SUNS_FIREWORKS",
 }
 
 export const States = {

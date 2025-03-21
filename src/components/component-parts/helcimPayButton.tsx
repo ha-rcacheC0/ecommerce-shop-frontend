@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
