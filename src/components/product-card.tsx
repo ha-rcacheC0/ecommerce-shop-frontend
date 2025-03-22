@@ -33,7 +33,7 @@ export const ProductCard = ({
   );
 
   return (
-    <div className="w-[320px] h-[620px] bg-base-100 shadow-lg shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
+    <div className="w-[320px] h-[560px] bg-base-100 shadow-lg shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
       <figure>
         <Link
           to="/products/$productId"
@@ -57,15 +57,15 @@ export const ProductCard = ({
           <span className="card-title text-xl font-bold underline">
             {product.title}
           </span>{" "}
-          <div className="badge badge-accent">SKU: {product.sku}</div>
+          <div className="badge badge-accent mt-2">SKU: {product.sku}</div>
         </Link>
 
         {/* <p>{product.description}</p> */}
         <div className="card-actions justify-end">
           <div className="flex w-full gap-4">
-            <div className="flex flex-col items-center justify-center gap-4 h-[200px]">
+            <div className="flex flex-col items-start justify-center gap-4 h-[160px]">
               <div className="badge badge-secondary text-xs p-3">
-                Case Pkg: {packageString}
+                Case: {packageString}
               </div>
               <div className="badge badge-primary text-xl font-semibold p-3">
                 ${parseFloat(product.casePrice.toString()).toFixed(2)}
@@ -83,10 +83,10 @@ export const ProductCard = ({
                 Add Case <FontAwesomeIcon icon={faCartPlus} />
               </button>
             </div>
-            <div className="flex flex-col items-center justify-center gap-4 h-[200px]">
+            <div className="flex flex-col items-start justify-center gap-4 h-[160px]">
               {product.UnitProduct && (
                 <div className="badge badge-secondary text-xs p-3">
-                  Unit Pkg: {unitpackageString}
+                  Unit: {unitpackageString}
                 </div>
               )}
               <div className="badge badge-primary text-xl font-semibold p-2">

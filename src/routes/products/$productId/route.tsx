@@ -84,7 +84,15 @@ const SingleProductPage = () => {
         Back to Products
       </Link>
 
-      <div className="p-10 w-full flex flex-wrap align-middle justify-around bg-base-100">
+      <div className="p-10 w-full flex items-center justify-around bg-base-100 max-lg:flex-col">
+        <div className="flex gap-4 w-full justify-between text-base-content lg:hidden">
+          {/* TODO:Create a util function to make these values look more human readable */}
+          <h2>Category: {product.data?.Categories.name}</h2>
+          <h2>Brand: {product.data?.Brands.name}</h2>
+        </div>
+        <h1 className="text-3xl font-bold text-base-content underline lg:hidden">
+          {product.data?.title}
+        </h1>
         <div>
           <img
             className="max-w-[520px] w-full h-[520px] object-center object-contain"
@@ -93,32 +101,70 @@ const SingleProductPage = () => {
           />
         </div>
 
-        <div className="flex flex-col gap-4 w-1/3">
-          <h1 className="text-3xl font-semibold text-base-content">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-4xl font-bold text-base-content underline max-lg:hidden">
             {product.data?.title}
           </h1>
-          <div className="flex gap-4 w-full justify-between text-base-content">
+          <div className="flex gap-4 w-full justify-between text-base-content max-lg:hidden">
             {/* TODO:Create a util function to make these values look more human readable */}
             <h2>Category: {product.data?.Categories.name}</h2>
             <h2>Brand: {product.data?.Brands.name}</h2>
           </div>
-          <p className="text-base-content">Case Packaged: {packageString}</p>
-          <div className="flex gap-4 w-full justify-center pt-8 flex-col text-base-content">
-            <h2 className="text-2xl">
-              Case Price:{" "}
-              <span className="font-semibold">
-                ${parseFloat(product.data!.casePrice).toFixed(2)}
-              </span>
-            </h2>
-            <h2 className="text-2xl text-base-content">
-              Unit Price:
-              <span className="font-semibold">
+
+          <div className="flex gap-4 w-full justify-center">
+            <div className="flex flex-col justify-around items-start w-full h-[150px]">
+              <p className="badge badge-secondary p-3">
+                Case Pkg: {packageString}
+              </p>
+              <h2 className="text-xl text-center badge badge-primary p-6">
+                Case: ${parseFloat(product.data!.casePrice).toFixed(2)}
+              </h2>
+            </div>
+            <div className="flex flex-col justify-around items-start w-full h-[150px]">
+              <p className="badge badge-secondary p-3">
+                Unit Pkg: {packageString}
+              </p>
+              <h2 className="text-xl text-center badge badge-primary p-6">
+                Unit: $
                 {product.data?.UnitProduct
-                  ? ` $${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
+                  ? `${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
                   : " Case only"}
-              </span>
-            </h2>
+              </h2>
+            </div>
           </div>
+
+          {authState === "authenticated" ? (
+            <div className="flex gap-4 w-full justify-evenly pt-8">
+              <button
+                className="btn lg:btn-wide btn-secondary"
+                onClick={() =>
+                  addItem.mutate({
+                    productId: productId,
+                    cartId: userCartId!,
+                    isUnit: false,
+                  })
+                }
+              >
+                Add Case <FontAwesomeIcon icon={faCartPlus} />
+              </button>
+              {product.data?.UnitProduct && (
+                <button
+                  className="btn lg:btn-wide btn-secondary"
+                  onClick={() =>
+                    addItem.mutate({
+                      productId: product.data.id,
+                      cartId: userCartId!,
+                      isUnit: true,
+                    })
+                  }
+                >
+                  Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                </button>
+              )}
+            </div>
+          ) : (
+            <div></div>
+          )}
           <p className="text-base-content">
             Description:
             <br /> {product.data?.description}
@@ -145,38 +191,6 @@ const SingleProductPage = () => {
               </ul>
             </div>
           </div>
-          {authState === "authenticated" ? (
-            <div className="flex gap-4 w-full justify-center pt-8">
-              <button
-                className="btn btn-wide btn-outline btn-secondary"
-                onClick={() =>
-                  addItem.mutate({
-                    productId: productId,
-                    cartId: userCartId!,
-                    isUnit: false,
-                  })
-                }
-              >
-                Add Case <FontAwesomeIcon icon={faCartPlus} />
-              </button>
-              {product.data?.UnitProduct && (
-                <button
-                  className="btn btn-outline btn-wide btn-secondary"
-                  onClick={() =>
-                    addItem.mutate({
-                      productId: product.data.id,
-                      cartId: userCartId!,
-                      isUnit: true,
-                    })
-                  }
-                >
-                  Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                </button>
-              )}
-            </div>
-          ) : (
-            <div></div>
-          )}
         </div>
       </div>
     </>
