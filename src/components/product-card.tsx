@@ -54,7 +54,7 @@ export const ProductCard = ({
           search={searchParams}
           className="flex flex-col items-start mt-0 pt-0"
         >
-          <span className="card-title text-xl font-bold underline">
+          <span className="card-title text-xl font-bold underline overflow-scroll whitespace-nowrap">
             {product.title}
           </span>{" "}
           <div className="badge badge-accent mt-2">SKU: {product.sku}</div>

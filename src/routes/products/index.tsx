@@ -149,8 +149,8 @@ const Products: React.FC = () => {
   if (isError) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-shrink-0">
+    <div className="flex min-h-screen max-lg:flex-col max-lg:items-center">
+      <div className="flex-shrink-0 max-lg:w-40">
         <FilterPanel
           searchTitle={searchTitle}
           setSearchTitle={(value) => {
@@ -185,9 +185,9 @@ const Products: React.FC = () => {
           }}
         />
       </div>
-      <div className="flex flex-col p-6">
-        <div className="overflow-y-auto p-6 bg-base-100">
-          <div className="flex flex-wrap gap-4 p-6">
+      <div className="flex flex-col sm:p-6">
+        <div className="sm:p-6 bg-base-100 lg:overflow-y-auto">
+          <div className="flex flex-wrap gap-4 sm:p-6 items-center justify-center">
             {products?.contents.map((product: TProduct) => (
               <ProductCard
                 key={product.id}
@@ -198,7 +198,7 @@ const Products: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-base-100">
+        <div className="bg-base-100 lg:p-4">
           <PageButtons
             isFetching={isFetching}
             isPlaceholderData={isPlaceholderData}
