@@ -33,7 +33,7 @@ export const ProductCard = ({
   );
 
   return (
-    <div className="w-[320px] h-[520px] bg-base-100 shadow-lg shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
+    <div className="w-[320px] h-[620px] bg-base-100 shadow-lg shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
       <figure>
         <Link
           to="/products/$productId"
@@ -57,29 +57,19 @@ export const ProductCard = ({
           <span className="card-title text-xl font-bold underline">
             {product.title}
           </span>{" "}
-          <div className="badge badge-accent"> SKU: {product.sku}</div>
+          <div className="badge badge-accent">SKU: {product.sku}</div>
         </Link>
 
         {/* <p>{product.description}</p> */}
         <div className="card-actions justify-end">
-          <div className="flex">
-            <div className="w-full flex justify-center border-2">
-              <div className="badge badge-secondary text-xs">
-                Case: {packageString}
+          <div className="flex w-full gap-4">
+            <div className="flex flex-col items-center justify-center gap-4 h-[200px]">
+              <div className="badge badge-secondary text-xs p-3">
+                Case Pkg: {packageString}
               </div>
-              {product.UnitProduct && (
-                <div className="badge badge-secondary">
-                  Unit: {unitpackageString}
-                </div>
-              )}
-            </div>
-            <div className="badge badge-primary text-xl font-semibold p-2">
-              Case: ${parseFloat(product.casePrice.toString()).toFixed(2)}
-            </div>
-          </div>
-
-          {authState === "authenticated" ? (
-            <div className="flex justify-around items-center gap-4">
+              <div className="badge badge-primary text-xl font-semibold p-3">
+                ${parseFloat(product.casePrice.toString()).toFixed(2)}
+              </div>
               <button
                 className="btn btn-secondary btn-outline"
                 onClick={() =>
@@ -92,24 +82,40 @@ export const ProductCard = ({
               >
                 Add Case <FontAwesomeIcon icon={faCartPlus} />
               </button>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-4 h-[200px]">
               {product.UnitProduct && (
-                <button
-                  className="btn btn-secondary btn-outline"
-                  onClick={() =>
-                    addItem.mutate({
-                      productId: product.id,
-                      cartId: userCartId!,
-                      isUnit: true,
-                    })
-                  }
-                >
-                  Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                </button>
+                <div className="badge badge-secondary text-xs p-3">
+                  Unit Pkg: {unitpackageString}
+                </div>
+              )}
+              <div className="badge badge-primary text-xl font-semibold p-2">
+                {product.data?.UnitProduct
+                  ? `${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
+                  : "NaN"}
+              </div>
+              {authState === "authenticated" ? (
+                <div className="flex justify-around items-center gap-4">
+                  {product.UnitProduct && (
+                    <button
+                      className="btn btn-secondary btn-outline"
+                      onClick={() =>
+                        addItem.mutate({
+                          productId: product.id,
+                          cartId: userCartId!,
+                          isUnit: true,
+                        })
+                      }
+                    >
+                      Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <p>Please sign-in to add product to cart</p>
               )}
             </div>
-          ) : (
-            <p>Please sign-in to add product to cart</p>
-          )}
+          </div>
         </div>
       </div>
     </div>
