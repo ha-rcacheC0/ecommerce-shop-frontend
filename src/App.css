@@ -6,6 +6,7 @@
   name: "light";
   default: true;
   --color-primary: #bf0a30;
+  --color-primary-content: #f9f9f9;
   --color-secondary: #002868;
   --color-accent: #e3e3e3;
   --color-accent-content: #0f0f0f;
@@ -13,4 +14,9 @@
   --color-base-200: #f8f8f8;
   --color-base-300: #ccc;
   --color-base-content: #0f0f0f;
+}
+
+@plugin "daisyui/theme" {
+  name: "cupcake";
+  default: false;
 }

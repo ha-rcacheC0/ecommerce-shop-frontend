@@ -9,11 +9,11 @@ export const TextInput = ({
 }) => {
   return (
     <div className="form-control w-full max-w-sm">
-      <label className="input input-bordered flex items-center gap-2 text-primary-content">
+      <label className="input input-bordered flex items-center gap-2 text-base-content">
         {labelText}
         <input
           type="text"
-          className={"placeholder-primary-content/50 text-primary-content  "}
+          className={"placeholder-base-content/50 text-primary-content"}
           {...inputAttr}
         />
       </label>

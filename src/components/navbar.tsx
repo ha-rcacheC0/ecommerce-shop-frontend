@@ -146,13 +146,13 @@ export const Navbar = () => {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/user/register"
-              className="text-md font-semibold text-[#bf0a30] border-2 border-[#bf0a30] rounded-sm px-2 py-1 hover:bg-[#bf0a30] hover:text-slate-100"
+              className="btn btn-primary btn-outline max-md:hidden"
             >
               Sign Up
             </Link>
             <Link
               to="/user/login"
-              className="text-md font-semibold text-[#002868] border-2 border-[#002868] rounded-sm px-2 py-1 hover:bg-[#002868] hover:text-slate-100"
+              className="btn btn-secondary btn-outline max-md:hidden"
             >
               Sign In
             </Link>

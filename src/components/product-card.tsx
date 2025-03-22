@@ -52,10 +52,12 @@ export const ProductCard = ({
           to="/products/$productId"
           params={{ productId: product.id.toString() }}
           search={searchParams}
-          className="card-title flex flex-col items-start mt-0 pt-0"
+          className="flex flex-col items-start mt-0 pt-0"
         >
-          {product.title}
-          <div className="badge badge-accent "> SKU {product.sku}</div>
+          <span className="card-title text-xl font-bold underline">
+            {product.title}
+          </span>{" "}
+          <div className="badge badge-accent"> SKU: {product.sku}</div>
         </Link>
 
         {/* <p>{product.description}</p> */}

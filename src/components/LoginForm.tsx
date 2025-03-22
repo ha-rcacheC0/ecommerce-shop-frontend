@@ -74,7 +74,7 @@ export const Login = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-base-200 text-primary p-4 sm:p-8 card gap-4 form-control shadow-2xl my-6 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto flex flex-col items-center"
+        className="bg-base-100 text-primary p-4 sm:p-8 card gap-4 form-control shadow-2xl shadow-base-300 mb-10 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto flex flex-col items-center"
       >
         {serverMessage && (
           <ErrorMessage
@@ -83,10 +83,10 @@ export const Login = () => {
           />
         )}
         <TextInput
-          labelText={"Email"}
+          labelText={"Email: "}
           inputAttr={{
             name: "email",
-            placeholder: "email",
+            placeholder: "Email",
             value: email,
             onChange: (e) => setEmail(e.target.value),
           }}
@@ -97,12 +97,12 @@ export const Login = () => {
         />
 
         <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2 text-primary-content">
-            Password
+          <label className="input input-bordered flex items-center gap-2 text-base-content">
+            Password:
             <input
               type={!showPassword ? "password" : "text"}
               className="grow"
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -119,11 +119,11 @@ export const Login = () => {
 
         <button
           type="submit"
-          className="btn btn-primary text-slate-100 font-semibold hover:bg-slate-800 disabled:bg-gray-600 w-full sm:w-auto"
+          className="btn btn-primary btn-wide disabled:bg-gray-600 w-full"
         >
           {"Login"} <FontAwesomeIcon icon={faRightToBracket} />
         </button>
-        <Link to={"/user/register"} className="text-primary-content underline">
+        <Link to={"/user/register"} className="text-base-content underline">
           Create a New Account
         </Link>
       </form>

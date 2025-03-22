@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./App.css";
-
 import { routeTree } from "./routeTree.gen.ts";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -12,6 +11,7 @@ import {
 import { AuthProvider, useAuth } from "./providers/auth.provider.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 export const queryClient = new QueryClient();
 
 const router = createRouter({
