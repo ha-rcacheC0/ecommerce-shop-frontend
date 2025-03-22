@@ -40,8 +40,10 @@ const ProfilePage = () => {
     );
 
   return (
-    <div className="flex flex-col items-center lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0 p-4">
-      <ThemeSelector />
+    <div className="flex flex-col items-center lg:flex-row justify-center space-y-4 p-4">
+      <div className="lg:hidden">
+        <ThemeSelector />
+      </div>
       <ProfileCard
         userProfile={userProfile!}
         userEmail={auth.user!.userInfo!.email!}

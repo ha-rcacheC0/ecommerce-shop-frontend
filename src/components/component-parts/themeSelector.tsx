@@ -41,7 +41,7 @@ const ThemeSelector = () => {
   ];
   const { theme, updateTheme } = useThemeProvider();
   return (
-    <label className="btn btn-secondary max-w-xs max-sm:hidden">
+    <label className="btn btn-secondary max-w-xs">
       <span className="label text-lg text-base-100">Theme</span>
       <select
         value={theme}

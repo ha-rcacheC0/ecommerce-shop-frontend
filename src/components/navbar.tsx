@@ -122,7 +122,10 @@ export const Navbar = () => {
             >
               Profile
             </Link>
-            <ThemeSelector />
+
+            <div className="max-sm:hidden">
+              <ThemeSelector />
+            </div>
             <div className="indicator hidden md:inline-flex">
               <span className="indicator-item badge badge-primary">
                 {cartQty}
