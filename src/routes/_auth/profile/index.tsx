@@ -6,6 +6,7 @@ import { faRightLong, faX } from "@fortawesome/free-solid-svg-icons";
 import { ProfileCard } from "../../../components/ProfileCard";
 import Cart from "../../../components/cart";
 import { cartItemsQueryOptions } from "../../../api/cart/cartQueries";
+import ThemeSelector from "../../../components/component-parts/themeSelector";
 
 export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { queryClient, auth } }) => {
@@ -39,11 +40,13 @@ const ProfilePage = () => {
     );
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0 p-4">
+    <div className="flex flex-col items-center lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0 p-4">
+      <ThemeSelector />
       <ProfileCard
         userProfile={userProfile!}
         userEmail={auth.user!.userInfo!.email!}
       />
+
       <div className="flex flex-col space-y-3 justify-center w-full lg:w-auto">
         <Cart
           products={cart!.CartProducts}

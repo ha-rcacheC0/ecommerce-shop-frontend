@@ -117,8 +117,8 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   );
 
   return (
-    <tr className="w-full items-center align-middle p-2 md:p-6 border-b">
-      <td className="text-left md:text-center">
+    <tr className="w-full align-middle border-b">
+      <td className="text-center py-2">
         <div className="font-semibold">{title}</div>
         <div className="text-sm text-base-content md:hidden mt-1">
           SKU: {sku}
@@ -161,7 +161,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       </td>
       <td className="text-right md:text-center font-semibold">
         ${subtotal.toFixed(2)}
-        <div className="text-sm text-gray-500 md:hidden mt-1">Subtotal</div>
+        <div className="text-sm text-base-content md:hidden mt-1">Subtotal</div>
       </td>
       <td className="text-center">
         <button

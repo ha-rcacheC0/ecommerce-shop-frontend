@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export const Footer = () => {
   return (
     <>
-      <footer className="footer flex flex-wrap p-10 bg-base-100 items-base justify-around text-base-content border-t-3 border-secondary">
+      <footer className="footer flex flex-wrap p-10 bg-base-100 items-base justify-around text-base-content border-t-3 mt-10 border-secondary">
         <nav>
           <h6 className="footer-title underline">Company</h6>
           <a className="link link-hover">About us</a>
