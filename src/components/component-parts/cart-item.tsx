@@ -98,18 +98,18 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
     onDecrement: () => void;
     isDisabled: boolean;
   }) => (
-    <div className="flex md:flex-row flex-col items-center gap-1 md:gap-2">
+    <div className="flex flex-col-reverse items-center justify-center gap-2 md:flex-row">
       <button
-        onClick={onIncrement}
-        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
+        onClick={onDecrement}
+        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-6"
+        disabled={isDisabled}
       >
         <FontAwesomeIcon icon={faMinus} />
       </button>
       <span className="my-1 md:my-0">{quantity}</span>
       <button
-        onClick={onDecrement}
-        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-8 md:h-auto"
-        disabled={isDisabled}
+        onClick={onIncrement}
+        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-6"
       >
         <FontAwesomeIcon icon={faPlus} />
       </button>
@@ -120,22 +120,24 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
     <tr className="w-full items-center align-middle p-2 md:p-6 border-b">
       <td className="text-left md:text-center">
         <div className="font-semibold">{title}</div>
-        <div className="text-sm text-gray-500 md:hidden mt-1">SKU: {sku}</div>
+        <div className="text-sm text-base-content md:hidden mt-1">
+          SKU: {sku}
+        </div>
       </td>
       <td className="hidden md:table-cell text-center">{sku}</td>
       <td className="hidden md:table-cell text-center">
         ${parseFloat(casePrice).toFixed(2)}
       </td>
       <td className="text-center">
+        <div className="text-sm text-base-content md:hidden mt-1">
+          Case: ${parseFloat(casePrice).toFixed(2)}
+        </div>
         <QuantityControl
           quantity={product.caseQuantity}
           onIncrement={incrementCaseQuantity}
           onDecrement={decrementCaseQuantity}
           isDisabled={product.caseQuantity === 0}
         />
-        <div className="text-sm text-gray-500 md:hidden mt-1">
-          ${parseFloat(casePrice).toFixed(2)} / Case
-        </div>
       </td>
       <td className="hidden md:table-cell text-center">
         {!unitPrice ? "-" : `$${unitPrice.toFixed(2)}`}
@@ -145,15 +147,15 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
           <span className="text-sm">Not sold as unit</span>
         ) : (
           <div>
+            <div className="text-sm text-base-content md:hidden mt-1">
+              Unit: ${unitPrice.toFixed(2)}
+            </div>
             <QuantityControl
               quantity={product.unitQuantity}
               onIncrement={incrementUnitQuantity}
               onDecrement={decrementUnitQuantity}
               isDisabled={product.unitQuantity === 0}
             />
-            <div className="text-sm text-gray-500 md:hidden mt-1">
-              ${unitPrice.toFixed(2)} / Unit
-            </div>
           </div>
         )}
       </td>
