@@ -18,6 +18,21 @@
 }
 
 @plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  --color-primary: #002868;
+  --color-primary-content: #f9f9f9;
+  --color-secondary: #bf0a30;
+  --color-secondary-content: #f9f9f9;
+  --color-accent: #e3e3e3;
+  --color-accent-content: #0e0f03;
+  --color-base-100: #050505;
+  --color-base-200: #000;
+  --color-base-300: #5f5f5f;
+  --color-base-content: #cecece;
+}
+
+@plugin "daisyui/theme" {
   name: "cupcake";
   default: false;
 }

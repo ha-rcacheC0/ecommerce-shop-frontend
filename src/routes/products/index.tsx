@@ -185,9 +185,9 @@ const Products: React.FC = () => {
           }}
         />
       </div>
-      <div className="flex flex-col sm:p-6">
-        <div className="sm:p-6 bg-base-100 lg:overflow-y-auto">
-          <div className="flex flex-wrap gap-4 sm:p-6 items-center justify-center">
+      <div className="flex flex-col sm:p-4">
+        <div className="bg-base-100 sm:p-4 ">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:p-4">
             {products?.contents.map((product: TProduct) => (
               <ProductCard
                 key={product.id}
