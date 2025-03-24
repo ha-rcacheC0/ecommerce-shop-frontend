@@ -33,6 +33,31 @@
 }
 
 @plugin "daisyui/theme" {
+  name: "acid";
+  default: false;
+  --color-base-100: #010101;
+  --color-base-200: #000;
+  --color-base-300: #0f0f0f;
+  --color-base-content: #fff;
+}
+
+@plugin "daisyui/theme" {
+  name: "emerald";
+  default: false;
+  --color-base-100: #010101;
+  --color-base-200: #000;
+  --color-base-300: #050f0f;
+  --color-base-content: #fff;
+}
+
+@plugin "daisyui/theme" {
+  name: "retro";
+  default: false;
+  --color-secondary: #cc5500;
+  --color-secondary-content: #e9e9e9;
+}
+
+@plugin "daisyui/theme" {
   name: "cupcake";
   default: false;
 }
