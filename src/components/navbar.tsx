@@ -4,7 +4,6 @@ import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import { cartItemsQueryOptions } from "../api/cart/cartQueries";
-import ThemeSelector from "../components/component-parts/themeSelector";
 
 export const Navbar = () => {
   const auth = useAuth();
@@ -122,10 +121,6 @@ export const Navbar = () => {
             >
               Profile
             </Link>
-
-            <div className="max-sm:hidden">
-              <ThemeSelector />
-            </div>
             <div className="indicator hidden md:inline-flex">
               <span className="indicator-item badge badge-primary">
                 {cartQty}

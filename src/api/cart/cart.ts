@@ -58,6 +58,7 @@ export const updateProductQuantity = async ({
     },
   }).then((response) => response.json());
 };
+
 export const startPaymentProcess = async ({
   cartId,
   amount,
@@ -90,6 +91,5 @@ export const makePurchase = async (
     const error = await response.json();
     throw new Error(error.message);
   }
-
   return response.json();
 };

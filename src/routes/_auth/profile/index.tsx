@@ -40,15 +40,14 @@ const ProfilePage = () => {
     );
 
   return (
-    <div className="flex flex-col items-center lg:flex-row justify-center space-y-4 p-4">
-      <div className="lg:hidden">
+    <div className="flex flex-col items-center lg:flex-row justify-center space-y-4 space-x-10 p-4">
+      <div className="flex flex-col items-center justify-around">
         <ThemeSelector />
+        <ProfileCard
+          userProfile={userProfile!}
+          userEmail={auth.user!.userInfo!.email!}
+        />
       </div>
-      <ProfileCard
-        userProfile={userProfile!}
-        userEmail={auth.user!.userInfo!.email!}
-      />
-
       <div className="flex flex-col space-y-3 justify-center w-full lg:w-auto">
         <Cart
           products={cart!.CartProducts}

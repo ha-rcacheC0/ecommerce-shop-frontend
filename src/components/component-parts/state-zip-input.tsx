@@ -21,7 +21,7 @@ const StateZipInput: React.FC<StateZipInputProps> = ({
           <span className="label-text">State</span>
         </div>
         <select
-          className="select select-bordered text-white"
+          className="select select-bordered text-base-content"
           value={state}
           onChange={(e) => onStateChange(e.target.value)}
         >
@@ -41,7 +41,7 @@ const StateZipInput: React.FC<StateZipInputProps> = ({
         </div>
         <input
           type="text"
-          className="input input-bordered text-white"
+          className="input input-bordered text-base-content"
           value={zipcode}
           onChange={(e) => onZipcodeChange(e.target.value)}
         />
