@@ -44,7 +44,7 @@ const validatePasswordSchema = z
   .min(1, { message: "Must have at least 1 character" })
   .regex(passwordValidation, {
     message:
-      "Your password must contain at least 1 Capital, 1 lowercase ,1 number and 1 special character",
+      "Your password must contain at least 1 capital, lowercase, number & special character #?!@$%^&*-",
   });
 const validateEmailSchema = z.string().email("invalid email");
 

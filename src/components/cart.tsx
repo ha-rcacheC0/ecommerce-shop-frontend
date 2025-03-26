@@ -115,7 +115,7 @@ const Cart = ({
   }
 
   return (
-    <div className="card bg-white shadow-xl mx-auto p-4 md:p-6 text-gray-800">
+    <div className="card bg-base-100 shadow-xl mx-auto p-4 md:p-6 text-base-content">
       <h2 className="text-2xl text-center font-bold mb-4">Shopping Cart</h2>
 
       <div className="overflow-x-auto">
@@ -141,7 +141,7 @@ const Cart = ({
       </div>
 
       <div className="mt-4 flex flex-col md:flex-row items-start md:items-center gap-4 justify-around">
-        <div className="w-full md:w-1/2 bg-neutral-200 p-4 rounded-md text-center">
+        <div className="w-full md:w-1/2 bg-base-300 p-4 rounded-md text-center">
           <div>
             <h3 className="text-lg font-semibold text-primary">
               Shipping Address:
@@ -150,18 +150,24 @@ const Cart = ({
               <p>Please set your Address or Select a Terminal to ship to</p>
             ) : (
               <>
-                <p>{currentShippingAddress!.street1}</p>
-                <p>{currentShippingAddress!.street2}</p>
-                <p>
+                <p className="text-base-content">
+                  {currentShippingAddress!.street1}
+                </p>
+                <p className="text-base-content">
+                  {currentShippingAddress!.street2}
+                </p>
+                <p className="text-base-content">
                   {currentShippingAddress!.city},{" "}
                   {currentShippingAddress!.state}
                 </p>
-                <p>{currentShippingAddress!.postalCode}</p>
+                <p className="text-base-content">
+                  {currentShippingAddress!.postalCode}
+                </p>
               </>
             )}
           </div>
           <div className="mt-4 flex flex-col items-start gap-2">
-            <label className="flex items-center">
+            <label className="flex items-center text-base-content">
               <input
                 type="checkbox"
                 checked={isTerminalDestination}
@@ -191,7 +197,7 @@ const Cart = ({
               </div>
             )}
             <label
-              className={`flex items-center ${
+              className={`flex items-center text-base-content ${
                 isTerminalDestination ? "line-through text-gray-300" : ""
               }`}
             >
@@ -202,7 +208,7 @@ const Cart = ({
                 onChange={(e) => setNeedLiftGate(e.target.checked)}
                 disabled={isTerminalDestination}
               />
-              Need lift gate
+              Need a liftgate? + $100 shipping.
             </label>
           </div>
         </div>

@@ -22,18 +22,20 @@ export const PageButtons: React.FC<PageButtonsProps> = ({
   setPageAmount,
 }) => {
   return (
-    <div className="flex max-md:flex-col justify-center p-3">
-      <div className="join flex justify-center items-center p-6">
+    <div className="flex text-sm justify-end flex-wrap p-4 max-md:justify-center">
+      <div className="join flex justify-center items-center p-1">
         <button
-          className="btn btn-square btn-outline join-item"
+          className="btn btn-square btn-secondary btn-outline join-item text-sm"
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
           disabled={page === 1}
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
-        <span className="join-item btn btn-outline">Page {page}</span>
+        <span className="join-item btn btn-secondary btn-outline font-normal text-sm">
+          Page {page}
+        </span>
         <button
-          className="btn btn-square btn-outline join-item"
+          className="btn btn-square btn-secondary btn-outline join-item text-sm"
           onClick={() => {
             if (!isPlaceholderData && hasMore) {
               setPage((old) => old + 1);
@@ -49,7 +51,7 @@ export const PageButtons: React.FC<PageButtonsProps> = ({
         {[10, 25, 50].map((size) => (
           <button
             key={size}
-            className={`btn join-item ${
+            className={`btn btn-secondary join-item font-normal ${
               pageSize === size ? "btn-primary" : "btn-outline"
             }`}
             onClick={() => setPageAmount(size)}

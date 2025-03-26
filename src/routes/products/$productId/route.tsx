@@ -64,7 +64,7 @@ const SingleProductPage = () => {
         </div>
       </div>
     );
-  const packageString = product.data?.package?.join(", ");
+  const packageString = product.data?.package?.join("/");
   return (
     <>
       <Link
@@ -78,62 +78,65 @@ const SingleProductPage = () => {
           effects: search.effects,
           searchTitle: search.searchTitle,
         }}
-        className="btn btn-outline btn-sm  m-4"
+        className="btn btn-outline btn-sm m-4"
       >
         <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
         Back to Products
       </Link>
 
-      <div className="container p-10 w-full flex mx-auto gap-4">
-        <div className=" w-[620px] h-[620px] ">
-          <img src={product.data?.image} alt={product.data?.title} />
+      <div className="p-10 w-full flex items-center justify-around bg-base-100 max-lg:flex-col">
+        <div className="flex gap-4 w-full justify-between text-base-content lg:hidden">
+          {/* TODO:Create a util function to make these values look more human readable */}
+          <h2>Category: {product.data?.Categories.name}</h2>
+          <h2>Brand: {product.data?.Brands.name}</h2>
+        </div>
+        <h1 className="text-3xl font-bold text-base-content underline lg:hidden">
+          {product.data?.title}
+        </h1>
+        <div>
+          <img
+            className="max-w-[520px] w-full h-[520px] object-center object-contain"
+            src={product.data?.image}
+            alt={product.data?.title}
+          />
         </div>
 
-        <div className="flex flex-col gap-4 w-1/3">
-          <h1 className="text-3xl">{product.data?.title}</h1>
-          <div className="flex gap-4 w-full justify-between">
+        <div className="flex flex-col gap-4">
+          <h1 className="text-4xl font-bold text-base-content underline max-lg:hidden">
+            {product.data?.title}
+          </h1>
+          <div className="flex gap-4 w-full justify-between text-base-content max-lg:hidden">
             {/* TODO:Create a util function to make these values look more human readable */}
-            <h2>{product.data?.Categories.name}</h2>
-            <h2>{product.data?.Brands.name}</h2>
+            <h2>Category: {product.data?.Categories.name}</h2>
+            <h2>Brand: {product.data?.Brands.name}</h2>
           </div>
-          <p>Packaged : {packageString}</p>
-          <div className="flex gap-4 w-full justify-center pt-8 flex-col">
-            <h2 className="text-2xl">
-              Case Price : ${parseFloat(product.data!.casePrice).toFixed(2)}
-            </h2>
-            <h2 className="text-2xl">
-              {product.data?.UnitProduct
-                ? `Unit Price : $${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
-                : "Cannot be sold individually"}
-            </h2>
-          </div>
-          <p>{product.data?.description}</p>
-          <div className="flex justify-around">
-            <div className="w-1/2">
-              <h2 className="text-2xl underline ">Colors</h2>
-              <ul>
-                {product.data?.ColorStrings?.map(
-                  (color: { name: string; id: string }) => (
-                    <li key={color.id}>{color.name}</li>
-                  )
-                )}
-              </ul>
+
+          <div className="flex gap-4 w-full justify-center">
+            <div className="flex flex-col justify-around items-start w-full h-[150px]">
+              <p className="badge badge-secondary p-3">
+                Case Pkg: {packageString}
+              </p>
+              <h2 className="text-xl text-center badge badge-primary p-6">
+                Case: ${parseFloat(product.data!.casePrice).toFixed(2)}
+              </h2>
             </div>
-            <div className="w-1/2">
-              <h2 className="text-2xl underline ">Effects</h2>
-              <ul>
-                {product.data?.EffectStrings?.map(
-                  (effect: { name: string; id: string }) => (
-                    <li key={effect.id}>{effect.name}</li>
-                  )
-                )}
-              </ul>
+            <div className="flex flex-col justify-around items-start w-full h-[150px]">
+              <p className="badge badge-secondary p-3">
+                Unit Pkg: {packageString}
+              </p>
+              <h2 className="text-xl text-center badge badge-primary p-6">
+                Unit: $
+                {product.data?.UnitProduct
+                  ? `${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
+                  : " Case only"}
+              </h2>
             </div>
           </div>
+
           {authState === "authenticated" ? (
-            <div className="flex gap-4 w-full justify-center pt-8">
+            <div className="flex gap-4 w-full justify-evenly pt-8">
               <button
-                className="btn btn-wide btn-primary"
+                className="btn lg:btn-wide btn-secondary"
                 onClick={() =>
                   addItem.mutate({
                     productId: productId,
@@ -146,7 +149,7 @@ const SingleProductPage = () => {
               </button>
               {product.data?.UnitProduct && (
                 <button
-                  className="btn btn-wide btn-primary"
+                  className="btn lg:btn-wide btn-secondary"
                   onClick={() =>
                     addItem.mutate({
                       productId: product.data.id,
@@ -162,6 +165,32 @@ const SingleProductPage = () => {
           ) : (
             <div></div>
           )}
+          <p className="text-base-content">
+            Description:
+            <br /> {product.data?.description}
+          </p>
+          <div className="flex justify-around text-base-content">
+            <div className="w-1/2">
+              <h2 className="text-xl underline">Colors:</h2>
+              <ul className="flex flex-wrap gap-1">
+                {product.data?.ColorStrings?.map(
+                  (color: { name: string; id: string }) => (
+                    <li key={color.id}>{color.name}</li>
+                  )
+                )}
+              </ul>
+            </div>
+            <div className="w-1/2">
+              <h2 className="text-xl underline">Effects:</h2>
+              <ul className="flex flex-wrap gap-1">
+                {product.data?.EffectStrings?.map(
+                  (effect: { name: string; id: string }) => (
+                    <li key={effect.id}>{effect.name}</li>
+                  )
+                )}
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -62,7 +62,7 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
           placeholder="Search inventory..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500"
         />
       </div>
       <div className="border border-gray-900 rounded-lg overflow-hidden">

@@ -9,7 +9,6 @@ import {
   ColorsDisplay,
   EffectsDisplay,
 } from "../../types";
-import { PageButtons } from "./pageButtons";
 
 interface FilterPanelProps {
   searchTitle: string;
@@ -42,64 +41,29 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   setSelectedColors,
   selectedEffects,
   setSelectedEffects,
-  isFetching,
-  isPlaceholderData,
-  setPage,
-  page,
-  hasMore,
-  pageSize,
-  setPageAmount,
 }) => {
   return (
-    <div className="drawer drawer-end">
+    <div className="drawer h-full p-1 border-2 m-2 rounded-md lg:drawer-open max-lg:h-auto drawer-start">
       <input id="filter-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
-        <label htmlFor="filter-drawer" className="btn btn-primary m-4">
+        <label
+          htmlFor="filter-drawer"
+          className="btn btn-primary m-4 lg:hidden"
+        >
           Open Filters
         </label>
-
-        <div className="flex flex-wrap justify-center p-4">
-          <PageButtons
-            isFetching={isFetching}
-            isPlaceholderData={isPlaceholderData}
-            setPage={setPage}
-            page={page}
-            hasMore={hasMore}
-            pageSize={pageSize}
-            setPageAmount={setPageAmount}
-          />
-        </div>
       </div>
       <div className="drawer-side z-50">
         <label htmlFor="filter-drawer" className="drawer-overlay"></label>
         <div className="menu p-4 w-80 bg-base-100 text-base-content">
-          <div className="flex justify-center p-3">
+          <div className="flex justify-center p-3 rounded-2xl">
             <input
               type="text"
-              placeholder="Filter by title"
+              placeholder="Search..."
               value={searchTitle}
               onChange={(e) => setSearchTitle(e.target.value)}
               className="input input-bordered w-full max-w-xs"
             />
-          </div>
-          <div className="divider"></div>
-          <div className="mb-4">
-            <h3 className="font-bold mb-4 text-center text-2xl underline">
-              Brands
-            </h3>
-            <div className="grid grid-cols-2 gap-1">
-              {Object.values(Brand).map((brand) => (
-                <label key={brand} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand)}
-                    onChange={() => setSelectedBrands(brand)}
-                    className="checkbox checkbox-sm"
-                  />
-                  <span>{BrandDisplay[brand]}</span>
-                </label>
-              ))}
-            </div>
           </div>
           <div className="divider"></div>
           <div className="mb-4">
@@ -116,6 +80,25 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                     className="checkbox checkbox-sm"
                   />
                   <span>{CategoryDisplay[category]}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div className="divider"></div>
+          <div className="mb-4">
+            <h3 className="font-bold mb-4 text-center text-2xl underline">
+              Brands
+            </h3>
+            <div className="grid grid-cols-2 gap-1">
+              {Object.values(Brand).map((brand) => (
+                <label key={brand} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedBrands.includes(brand)}
+                    onChange={() => setSelectedBrands(brand)}
+                    className="checkbox checkbox-sm"
+                  />
+                  <span>{BrandDisplay[brand]}</span>
                 </label>
               ))}
             </div>

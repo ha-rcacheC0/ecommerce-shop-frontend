@@ -28,7 +28,7 @@ const TerminalSelection: React.FC<TerminalSelectionProps> = ({
         <span className="label-text">Pick Terminal to Ship to</span>
       </div>
       <select
-        className="select select-bordered text-white"
+        className="select select-bordered text-base-content"
         value={terminalDestination}
         onChange={(e) => onTerminalChange(e.target.value)}
       >

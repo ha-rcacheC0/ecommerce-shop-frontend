@@ -46,13 +46,13 @@ export const Navbar = () => {
   };
 
   return (
-    <div className="navbar bg-base-300">
+    <div className="navbar bg-base-100 border-b-2 border-secondary pt-3">
       <div className="navbar-start flex-1">
         <div className="dropdown">
           <MenuButton />
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+            className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow-sm bg-base-100 rounded-box w-52"
           >
             <li>
               <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
@@ -67,6 +67,7 @@ export const Navbar = () => {
                     <span className="badge">New</span>
                   </Link>
                 </li>
+
                 <li>
                   <Link
                     to={"/profile/cart/$cartId"}
@@ -87,7 +88,11 @@ export const Navbar = () => {
           </ul>
         </div>
         <Link to={"/"} className="btn btn-link">
-          <img className="w-40" src="/imgs/crew-logo.png" alt="company logo" />
+          <img
+            className="w-68 mb-[-10px]"
+            src="/imgs/crew-logo.png"
+            alt="company logo"
+          />
         </Link>
       </div>
       <div className="navbar-center hidden md:flex flex-1 justify-center">
@@ -105,32 +110,32 @@ export const Navbar = () => {
             {auth.user?.userInfo?.role === "ADMIN" && (
               <Link
                 to="/admin"
-                className="btn btn-accent [&.active]:btn-outline hidden md:inline-flex"
+                className="btn btn-primary [&.active]:btn-outline hidden md:inline-flex"
               >
                 Admin
               </Link>
             )}
             <Link
               to="/profile"
-              className="btn btn-primary hidden md:inline-flex"
+              className="btn btn-secondary hidden md:inline-flex"
             >
               Profile
             </Link>
             <div className="indicator hidden md:inline-flex">
-              <span className="indicator-item badge badge-secondary">
+              <span className="indicator-item badge badge-primary">
                 {cartQty}
               </span>
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-primary"
+                className="btn btn-secondary btn-outline"
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
             </div>
             <div
               onClick={handleLogout}
-              className="btn btn-neutral btn-outline py-2 px-4 rounded-md"
+              className="btn btn-secondary btn-outline py-2 px-4 rounded-md max-md:hidden"
             >
               Logout
             </div>
@@ -139,13 +144,13 @@ export const Navbar = () => {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/user/register"
-              className="text-xl btn btn-primary [&.active]:font-bold"
+              className="btn btn-primary btn-outline max-md:hidden"
             >
               Sign Up
             </Link>
             <Link
               to="/user/login"
-              className="text-xl btn btn-secondary [&.active]:font-bold"
+              className="btn btn-secondary btn-outline max-md:hidden"
             >
               Sign In
             </Link>

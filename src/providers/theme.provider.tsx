@@ -14,6 +14,36 @@ export const ThemeTypeSchema = z.enum([
   "coffee",
   "sunset",
   "emerald",
+  "cupcake",
+  "bumblebee",
+  "corporate",
+  "synthwave",
+  "retro",
+  "cyberpunk",
+  "valentine",
+  "halloween",
+  "garden",
+  "forest",
+  "aqua",
+  "lofi",
+  "pastel",
+  "fantasy",
+  "wireframe",
+  "black",
+  "luxury",
+  "dracula",
+  "cmyk",
+  "autumn",
+  "business",
+  "acid",
+  "lemondade",
+  "night",
+  "winter",
+  "dim",
+  "nord",
+  "caramellatte",
+  "abyss",
+  "silk",
 ]);
 
 export type ThemeType = z.infer<typeof ThemeTypeSchema>;
@@ -26,7 +56,7 @@ export type ThemeContextType = {
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const resetThemeDefault = () => {
-  localStorage.setItem("theme", "dark");
+  localStorage.setItem("theme", "light");
 };
 
 const getThemeFromLocalStorage = (): ThemeType | null => {
@@ -44,7 +74,7 @@ const getThemeFromLocalStorage = (): ThemeType | null => {
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("dark");
+  const [theme, setTheme] = useState<ThemeType>("light");
 
   useEffect(() => {
     const storedTheme = getThemeFromLocalStorage();

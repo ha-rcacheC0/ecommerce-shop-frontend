@@ -8,9 +8,9 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
   const { authState } = useAuth();
   return (
-    <div className="h-svh">
-      <div className="flex w-4/5 flex-col text-center p-6  mx-auto justify-center items-center rounded-lg">
-        <h1 className="text-7xl text-primary-content">
+    <div className="bg-base-100 py-10">
+      <div className="flex flex-col items-center justify-center text-center">
+        <h1 className="text-6xl text-primary leading-14 font-semibold tracking-tight">
           Crew Fireworks
           <br />
           Best Quality
@@ -19,16 +19,17 @@ function Index() {
         </h1>
         {authState !== "authenticated" && (
           <>
-            <p className="text-4xl text-secondary-content ">
-              Sign-in to get epic deals
-              <br /> on premium products from top-notch brands.
+            <p className="text-2xl text-secondary mt-2 leading-7 font-semibold tracking-tight">
+              Sign-in for epic deals on
+              <br />
+              premium brands.
             </p>
-            <div className="banner-links flex mx-auto mt-4 gap-4 justify-center ">
-              <Link className="btn btn-primary " to="/user/register">
+            <div className="flex mt-2 gap-4 items-center  ">
+              <Link className="btn btn-primary btn-outline" to="/user/register">
                 Create Account
               </Link>
-              <Link className="btn btn-secondary" to="/user/login">
-                Sign In
+              <Link className="btn btn-secondary btn-outline" to="/user/login">
+                Existing User
               </Link>
             </div>
           </>
@@ -37,3 +38,4 @@ function Index() {
     </div>
   );
 }
+console.log(<Link>hello</Link>);

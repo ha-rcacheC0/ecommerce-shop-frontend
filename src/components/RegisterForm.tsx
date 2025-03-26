@@ -57,10 +57,10 @@ export const RegisterUser = () => {
   };
 
   return (
-    <div className="flex flex-col content-center px-4 sm:px-0">
+    <div className="flex flex-col items-center px-4 sm:px-0">
       <img
-        src="/imgs/crew-logo.png"
-        className="w-full max-w-xs sm:max-w-md md:max-w-lg my-5 self-center"
+        src="/imgs/crew-logo-square.png"
+        className="w-full max-w-xs sm:max-w-md md:max-w-lg self-center mb-[-8em]"
         alt="Crew Fireworks Logo"
       />
       {serverMessage && (
@@ -68,13 +68,13 @@ export const RegisterUser = () => {
       )}
       <form
         onSubmit={handleSubmit}
-        className="card gap-4 bg-base-200 text-primary p-4 sm:p-8 my-5 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto items-center"
+        className="flex flex-col w-full items-center gap-4 bg-base-200 rounded-lg p-8 mb-10 sm:p-8 sm:w-3/4 md:w-2/3 lg:w-1/2"
       >
         <TextInput
-          labelText={"Email"}
+          labelText={"Email: "}
           inputAttr={{
             name: "email",
-            placeholder: "email",
+            placeholder: "Email",
             type: "email",
             value: email,
             onChange: (e) => setEmail(e.target.value),
@@ -85,12 +85,12 @@ export const RegisterUser = () => {
           show={isSubmitted && !emailValidState.success}
         />
         <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2 text-primary-content">
-            Password
+          <label className="input input-bordered gap-2 text-base-content">
+            Password:
             <input
               type={!showPassword ? "password" : "text"}
               className="grow"
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -106,12 +106,12 @@ export const RegisterUser = () => {
         />
 
         <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2 text-primary-content">
-            Confirm Password
+          <label className="input input-bordered gap-2 text-base-content">
+            Confirm Password:
             <input
               type={!showPassword ? "password" : "text"}
               className="grow"
-              placeholder="confirmPassword"
+              placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
@@ -128,11 +128,11 @@ export const RegisterUser = () => {
 
         <button
           type="submit"
-          className="btn btn-primary text-slate-100 font-semibold hover:bg-slate-800 disabled:bg-gray-600 w-full sm:w-auto"
+          className="btn btn-primary btn-wide text-base-100"
         >
           {"Register"} <FontAwesomeIcon icon={faRightToBracket} />
         </button>
-        <Link to={"/user/login"} className="text-primary-content underline">
+        <Link to={"/user/login"} className="text-base-content underline">
           Login to your Account
         </Link>
       </form>
