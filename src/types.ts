@@ -77,7 +77,6 @@ export const CategoryDisplay = {
 
 export const BrandDisplay = {
   ALPHA_FIREWORKS: "Alpha Fireworks",
-  BEIHAI_POPPOP: "Beihai Poppop",
   BLACK_SCORPION: "Black Scorpion",
   BLUE_DRAGON: "Blue Dragon",
   BOOM_WOW: "Boom Wow",
@@ -201,7 +200,6 @@ export enum Category {
 
 export enum Brand {
   ALPHA_FIREWORKS = "ALPHA_FIREWORKS",
-  BEIHAI_POPPOP = "BEIHAI_POPPOP",
   BLACK_SCORPION = "BLACK_SCORPION",
   BLUE_DRAGON = "BLUE_DRAGON",
   BOOM_WOW = "BOOM_WOW",
