@@ -52,7 +52,10 @@ export const ProfileCard = ({
         <ProfileField label="First Name" value={userProfile?.firstName} />
         <ProfileField label="Last Name" value={userProfile?.lastName} />
         <ProfileField label="Email" value={userEmail} />
-        <ProfileField label="Date of Birth" value={dob?.toLocaleDateString()} />
+        <ProfileField
+          label="Date of Birth"
+          value={dob?.toLocaleDateString("en-US", { timeZone: "UTC" })}
+        />
         <ProfileField label="Phone Number" value={userProfile?.phoneNumber} />
         <AddressField
           label="Billing Address"

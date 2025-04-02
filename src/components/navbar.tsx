@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useAuth } from "../providers/auth.provider";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,12 @@ import { cartItemsQueryOptions } from "../api/cart/cartQueries";
 export const Navbar = () => {
   const auth = useAuth();
   const navigate = useNavigate();
+  const routerState = useRouterState();
+  const currentPath = routerState.location.pathname;
+
+  const isExactPath = (path: string): boolean => {
+    return currentPath === path;
+  };
 
   const handleLogout = () => {
     auth.logout();
@@ -64,7 +70,6 @@ export const Navbar = () => {
                 <li className="mt-auto">
                   <Link to="/profile" className="justify-between">
                     Profile
-                    <span className="badge">New</span>
                   </Link>
                 </li>
 
@@ -110,14 +115,14 @@ export const Navbar = () => {
             {auth.user?.userInfo?.role === "ADMIN" && (
               <Link
                 to="/admin"
-                className="btn btn-primary [&.active]:btn-outline hidden md:inline-flex"
+                className={`btn btn-primary ${isExactPath("/admin") ? "btn-outline" : ""} hidden md:inline-flex`}
               >
                 Admin
               </Link>
             )}
             <Link
               to="/profile"
-              className="btn btn-secondary hidden md:inline-flex"
+              className={`btn btn-secondary ${isExactPath("/profile") ? "btn-outline" : ""} hidden md:inline-flex`}
             >
               Profile
             </Link>
@@ -128,14 +133,14 @@ export const Navbar = () => {
               <Link
                 to={"/profile/cart/$cartId"}
                 params={{ cartId }}
-                className="btn btn-secondary btn-outline"
+                className={`btn btn-info ${isExactPath(`/profile/cart/${cartId}`) ? "btn-outline" : ""}`}
               >
                 Cart <FontAwesomeIcon icon={faCartShopping} />
               </Link>
             </div>
             <div
               onClick={handleLogout}
-              className="btn btn-secondary btn-outline py-2 px-4 rounded-md max-md:hidden"
+              className="btn btn-error py-2 px-4 rounded-md max-md:hidden"
             >
               Logout
             </div>
@@ -144,14 +149,11 @@ export const Navbar = () => {
           <div className="ml-auto mr-10 flex gap-4">
             <Link
               to="/user/register"
-              className="btn btn-primary btn-outline max-md:hidden"
+              className="btn btn-primary  max-md:hidden"
             >
               Sign Up
             </Link>
-            <Link
-              to="/user/login"
-              className="btn btn-secondary btn-outline max-md:hidden"
-            >
+            <Link to="/user/login" className="btn btn-secondary  max-md:hidden">
               Sign In
             </Link>
           </div>

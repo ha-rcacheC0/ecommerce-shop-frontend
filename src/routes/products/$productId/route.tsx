@@ -65,6 +65,7 @@ const SingleProductPage = () => {
       </div>
     );
   const packageString = product.data?.package?.join("/");
+  const productPackageString = product.data?.UnitProduct?.package?.join("/");
   return (
     <>
       <Link
@@ -106,7 +107,6 @@ const SingleProductPage = () => {
             {product.data?.title}
           </h1>
           <div className="flex gap-4 w-full justify-between text-base-content max-lg:hidden">
-            {/* TODO:Create a util function to make these values look more human readable */}
             <h2>Category: {product.data?.Categories.name}</h2>
             <h2>Brand: {product.data?.Brands.name}</h2>
           </div>
@@ -119,10 +119,26 @@ const SingleProductPage = () => {
               <h2 className="text-xl text-center badge badge-primary p-6">
                 Case: ${parseFloat(product.data!.casePrice).toFixed(2)}
               </h2>
+              {authState === "authenticated" ? (
+                <button
+                  className="btn lg:btn-wide btn-secondary"
+                  onClick={() =>
+                    addItem.mutate({
+                      productId: productId,
+                      cartId: userCartId!,
+                      isUnit: false,
+                    })
+                  }
+                >
+                  Add Case <FontAwesomeIcon icon={faCartPlus} />
+                </button>
+              ) : (
+                <p>Please sign-in to add product to cart</p>
+              )}
             </div>
             <div className="flex flex-col justify-around items-start w-full h-[150px]">
               <p className="badge badge-secondary p-3">
-                Unit Pkg: {packageString}
+                Unit Pkg: {productPackageString}
               </p>
               <h2 className="text-xl text-center badge badge-primary p-6">
                 Unit: $
@@ -130,41 +146,29 @@ const SingleProductPage = () => {
                   ? `${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
                   : " Case only"}
               </h2>
-            </div>
-          </div>
-
-          {authState === "authenticated" ? (
-            <div className="flex gap-4 w-full justify-evenly pt-8">
-              <button
-                className="btn lg:btn-wide btn-secondary"
-                onClick={() =>
-                  addItem.mutate({
-                    productId: productId,
-                    cartId: userCartId!,
-                    isUnit: false,
-                  })
-                }
-              >
-                Add Case <FontAwesomeIcon icon={faCartPlus} />
-              </button>
-              {product.data?.UnitProduct && (
-                <button
-                  className="btn lg:btn-wide btn-secondary"
-                  onClick={() =>
-                    addItem.mutate({
-                      productId: product.data.id,
-                      cartId: userCartId!,
-                      isUnit: true,
-                    })
-                  }
-                >
-                  Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                </button>
+              {authState === "authenticated" ? (
+                <>
+                  {product.data?.UnitProduct && (
+                    <button
+                      className="btn lg:btn-wide btn-secondary"
+                      onClick={() =>
+                        addItem.mutate({
+                          productId: product.data.id,
+                          cartId: userCartId!,
+                          isUnit: true,
+                        })
+                      }
+                    >
+                      Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>Please sign-in to add product to cart</p>
               )}
             </div>
-          ) : (
-            <div></div>
-          )}
+          </div>
+          <iframe src={"www.youtube.com/embed/8Fe2-y-MQzs"}></iframe>
           <p className="text-base-content">
             Description:
             <br /> {product.data?.description}
