@@ -7,6 +7,7 @@ import {
   useUserInfoPostMutation,
   userInfoQueryOptions,
 } from "../../../api/users/userQueryOptions.api";
+import { useQuery } from "@tanstack/react-query";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
@@ -20,8 +21,11 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
   );
 }
 
-export const ProfileForm = ({ userProfile }: { userProfile: UserProfile }) => {
+export const ProfileForm = () => {
   const { auth } = Route.useRouteContext();
+  const { data: userProfile }: { data: UserProfile | undefined } = useQuery({
+    queryKey: ["userInfo", auth.user?.token],
+  });
   const navigate = useNavigate();
   const mutation = useUserInfoPostMutation(
     auth.user!.token!,
@@ -32,7 +36,6 @@ export const ProfileForm = ({ userProfile }: { userProfile: UserProfile }) => {
     validatorAdapter: zodValidator,
     defaultValues: userProfile,
     onSubmit: async ({ value }) => {
-      console.log(value);
       mutation.mutate({ token: auth.user!.token!, body: value });
       navigate({ to: "/profile" });
     },

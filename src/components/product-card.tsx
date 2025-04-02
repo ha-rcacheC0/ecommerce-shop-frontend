@@ -14,7 +14,7 @@ export const ProductCard = ({
   searchParams: ProductFilters;
 }) => {
   const packageString = product.package.join("/");
-  const unitpackageString = product.UnitProduct?.package.join("/");
+  const unitPackageString = product.UnitProduct?.package.join("/");
   const { authState, user } = useAuth();
   const userCartId = user?.userInfo?.Cart.id;
 
@@ -33,8 +33,9 @@ export const ProductCard = ({
   );
 
   return (
-    <div className="w-[320px] h-[560px] bg-base-100 shadow-lg shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
+    <div className="w-[320px] gap-3 p-4 bg-base-100 shadow-md shadow-secondary flex flex-col items-center justify-between rounded-sm hover:outline-1 hover:outline-secondary hover:shadow-xl">
       <figure>
+        <div className="badge badge-accent my-2">SKU: {product.sku}</div>
         <Link
           to="/products/$productId"
           params={{ productId: product.id.toString() }}
@@ -57,64 +58,66 @@ export const ProductCard = ({
           <span className="card-title text-xl font-bold underline overflow-scroll whitespace-nowrap">
             {product.title}
           </span>{" "}
-          <div className="badge badge-accent mt-2">SKU: {product.sku}</div>
         </Link>
 
-        {/* <p>{product.description}</p> */}
         <div className="card-actions justify-end">
-          <div className="flex w-full gap-4">
-            <div className="flex flex-col items-start justify-center gap-4 h-[160px]">
+          <div className="flex w-full gap-4 items-center justify-center">
+            <div className="flex flex-col items-center justify-center gap-4 h-[160px]">
               <div className="badge badge-secondary text-xs p-3">
                 Case: {packageString}
               </div>
               <div className="badge badge-primary text-xl font-semibold p-3">
                 ${parseFloat(product.casePrice.toString()).toFixed(2)}
               </div>
-              <button
-                className="btn btn-secondary btn-outline"
-                onClick={() =>
-                  addItem.mutate({
-                    productId: product.id,
-                    cartId: userCartId!,
-                    isUnit: false,
-                  })
-                }
-              >
-                Add Case <FontAwesomeIcon icon={faCartPlus} />
-              </button>
-            </div>
-            <div className="flex flex-col items-start justify-center gap-4 h-[160px]">
-              {product.UnitProduct && (
-                <div className="badge badge-secondary text-xs p-3">
-                  Unit: {unitpackageString}
-                </div>
-              )}
-              <div className="badge badge-primary text-xl font-semibold p-2">
-                {product.data?.UnitProduct
-                  ? `${parseFloat(product.data?.UnitProduct.unitPrice).toFixed(2)}`
-                  : "NaN"}
-              </div>
               {authState === "authenticated" ? (
-                <div className="flex justify-around items-center gap-4">
-                  {product.UnitProduct && (
-                    <button
-                      className="btn btn-secondary btn-outline"
-                      onClick={() =>
-                        addItem.mutate({
-                          productId: product.id,
-                          cartId: userCartId!,
-                          isUnit: true,
-                        })
-                      }
-                    >
-                      Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
-                  )}
-                </div>
+                <button
+                  className="btn btn-secondary btn-outline"
+                  onClick={() =>
+                    addItem.mutate({
+                      productId: product.id,
+                      cartId: userCartId!,
+                      isUnit: false,
+                    })
+                  }
+                >
+                  Add Case <FontAwesomeIcon icon={faCartPlus} />
+                </button>
               ) : (
                 <p>Please sign-in to add product to cart</p>
               )}
             </div>
+            {product.UnitProduct && (
+              <>
+                <div className="flex flex-col items-center justify-center gap-4 h-[160px] ">
+                  <div className="badge badge-secondary text-xs p-3">
+                    Unit: {unitPackageString}
+                  </div>
+
+                  <div className="badge badge-primary text-xl font-semibold p-2">
+                    ${parseFloat(product.UnitProduct.unitPrice).toFixed(2)}
+                  </div>
+
+                  {authState === "authenticated" ? (
+                    <div className="flex justify-around items-center gap-4">
+                      <button
+                        className="btn btn-secondary btn-outline"
+                        onClick={() =>
+                          addItem.mutate({
+                            productId: product.id,
+                            cartId: userCartId!,
+                            isUnit: true,
+                          })
+                        }
+                      >
+                        Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    </div>
+                  ) : (
+                    <p>Please sign-in to add product to cart</p>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

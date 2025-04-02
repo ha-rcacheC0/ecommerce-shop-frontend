@@ -38,4 +38,3 @@ function Index() {
     </div>
   );
 }
-console.log(<Link>hello</Link>);

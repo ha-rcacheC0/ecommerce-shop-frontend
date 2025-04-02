@@ -34,15 +34,9 @@ import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/prof
 
 // Create Virtual Routes
 
-const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
-
-const AboutLazyRoute = AboutLazyImport.update({
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
@@ -165,13 +159,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
       parentRoute: typeof rootRoute
     }
     '/_auth/admin': {
@@ -309,7 +296,6 @@ export const routeTree = rootRoute.addChildren({
     AuthProfileCartCartIdSuccessRoute,
     AuthProfileCartCartIdIndexRoute,
   }),
-  AboutLazyRoute,
   ProductsProductIdRouteRoute,
   ProductsShowsRoute,
   UserLoginRoute,
@@ -328,7 +314,6 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/events",
         "/_auth",
-        "/about",
         "/products/$productId",
         "/products/shows",
         "/user/login",
@@ -356,9 +341,6 @@ export const routeTree = rootRoute.addChildren({
         "/_auth/profile/cart/$cartId/success",
         "/_auth/profile/cart/$cartId/"
       ]
-    },
-    "/about": {
-      "filePath": "about.lazy.tsx"
     },
     "/_auth/admin": {
       "filePath": "_auth/admin/route.tsx",

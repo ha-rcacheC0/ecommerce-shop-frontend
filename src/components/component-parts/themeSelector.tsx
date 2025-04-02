@@ -1,4 +1,4 @@
-import { useThemeProvider } from "../../providers/theme.provider";
+import { ThemeType, useThemeProvider } from "../../providers/theme.provider";
 
 const ThemeSelector = () => {
   type ThemeOption = { label: string; value: string };
@@ -41,11 +41,12 @@ const ThemeSelector = () => {
   ];
   const { theme, updateTheme } = useThemeProvider();
   return (
-    <label className="btn btn-secondary max-w-xs">
-      <span className="label text-lg text-base-100">Theme</span>
+    <fieldset className="fieldset">
+      <legend className="fieldset-legend">Pick a theme</legend>
       <select
         value={theme}
         onChange={(e) => updateTheme(e.target.value as ThemeType)}
+        className="select "
       >
         {themeOptions.map((option) => (
           <option key={option.value} value={option.value}>
@@ -53,7 +54,7 @@ const ThemeSelector = () => {
           </option>
         ))}
       </select>
-    </label>
+    </fieldset>
   );
 };
 

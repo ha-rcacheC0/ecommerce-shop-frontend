@@ -24,6 +24,7 @@ const Cart = ({
   shippingAddress: TAddress;
 }) => {
   const [isTerminalDestination, setIsTerminalDestination] = useState(false);
+  const [isUpdatingValues, setIsUpdatingValues] = useState(true);
   const [needLiftGate, setNeedLiftGate] = useState(false);
   const [shipping, setShipping] = useState(0);
   const [currentShippingAddress, setCurrentShippingAddress] = useState<
@@ -54,6 +55,7 @@ const Cart = ({
   const grandTotal = subtotal + shipping;
 
   useEffect(() => {
+    setIsUpdatingValues(true);
     const newShipping = calculateShipping({
       orderAmount: subtotal,
       orderType: orderType,
@@ -61,8 +63,10 @@ const Cart = ({
       needLiftGate,
     });
     setShipping(newShipping);
+    setIsUpdatingValues(false);
   }, [
     subtotal,
+    shipping,
     isTerminalDestination,
     needLiftGate,
     orderType,
@@ -78,6 +82,7 @@ const Cart = ({
     );
 
   useEffect(() => {
+    setIsUpdatingValues(true);
     if (isTerminalDestination && terminalData) {
       setCurrentShippingAddress({
         id: terminalData.Address.id,
@@ -93,6 +98,7 @@ const Cart = ({
         isObjectEmpty(shippingAddress) ? undefined : shippingAddress
       );
     }
+    setIsUpdatingValues(false);
   }, [isTerminalDestination, terminalData, shippingAddress]);
 
   const isShippingAddressSet =
@@ -243,7 +249,7 @@ const Cart = ({
         <HelcimPayButton
           cartId={user!.userInfo!.Cart.id}
           amount={grandTotal}
-          btnDisabled={!isShippingAddressSet}
+          btnDisabled={!isShippingAddressSet && !isUpdatingValues}
           userId={user!.userInfo!.Cart.userId!}
           shippingAddressId={
             isShippingAddressSet ? currentShippingAddress!.id : ""
