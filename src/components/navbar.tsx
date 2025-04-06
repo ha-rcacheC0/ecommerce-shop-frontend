@@ -25,7 +25,7 @@ export const Navbar = () => {
   const { data: cartInfo } = useQuery(cartItemsQueryOptions(cartId, !!cartId));
 
   const cartQty =
-    cartInfo?.CartProducts.reduce(
+    cartInfo?.cartProducts.reduce(
       (acc, elm) => acc + elm.caseQuantity + elm.unitQuantity,
       0
     ) || 0;

@@ -23,26 +23,62 @@ export const getAllProductsQuery = async (
     params.append("effects", effect)
   );
 
-  const response = await fetch(`${BASE_URL}?${params.toString()}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  try {
+    const response = await fetch(`${BASE_URL}?${params.toString()}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
   }
-
-  return response.json();
 };
+
 export const getOneProductQuery = async ({
   id,
 }: {
   id: string;
 }): Promise<TProduct> => {
-  return await fetch(`${BASE_URL}/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => response.json());
+  try {
+    const response = await fetch(`${BASE_URL}/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Error fetching product with ID ${id}:`, error);
+    throw error;
+  }
+};
+
+export const getProductMetadata = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/metadata/all`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching product metadata:", error);
+    throw error;
+  }
 };

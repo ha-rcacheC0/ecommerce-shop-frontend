@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const EffectsDisplay = {
+// Display mappings - we'll retain these for UI presentation
+export const EffectsDisplay: Record<string, string> = {
   BROCADE: "Brocade",
   CHRYSANTHEMUM: "Chrysanthemum",
   COMET: "Comet",
@@ -11,25 +12,30 @@ export const EffectsDisplay = {
   FLYING_FISH: "Flying Fish",
   GLITTER: "Glitter",
   GLOW: "Glow",
+  HELICOPTER: "Helicopter",
   LOUD_BANG: "Loud Bang",
   NISHIKI_KAMURO: "Nishiki Kamuro",
   PALM_TREE: "Palm Tree",
+  PARACHUTE: "Parachute",
   PEARLS: "Pearls",
   PEONY: "Peony",
   PISTIL: "Pistil",
+  REVEAL: "Reveal",
   RISING_TAIL: "Rising Tail",
   SIZZLES: "Sizzles",
   SMOKE: "Smoke",
   SNAKE: "Snake",
   SNAPS: "Snaps",
+  SPARKLES: "Sparkles",
+  SPINS: "Spins",
   STROBES: "Strobes",
   TOURBILLION: "Tourbillion",
   WATERFALL: "Waterfall",
   WHISTLE: "Whistle",
-  WILLOWS: "Willows",
+  WILLOW: "Willow",
 };
 
-export const ColorsDisplay = {
+export const ColorsDisplay: Record<string, string> = {
   BLACK: "Black",
   BLUE: "Blue",
   BROWN: "Brown",
@@ -44,7 +50,7 @@ export const ColorsDisplay = {
   YELLOW: "Yellow",
 };
 
-export const CategoryDisplay = {
+export const CategoryDisplay: Record<string, string> = {
   REPEATERS_200_GRAM: "200 Gram Cakes",
   REPEATERS_500_GRAM: "500 Gram Cakes",
   ASSORTMENT: "Assortments",
@@ -62,6 +68,7 @@ export const CategoryDisplay = {
   RELOADABLES: "Artillery Shells (Reloadables)",
   ROCKETS_MISSLES: "Rockets & Missiles",
   ROMAN_CANDLES: "Roman Candles",
+  SHELLS_MINES: "Shells & Mines",
   SNAKE_SMOKE: "Snake & Smoke",
   SPARKLERS: "Sparklers",
   SUPPLIES_VISIBILITY: "Supplies & Visibility",
@@ -69,19 +76,22 @@ export const CategoryDisplay = {
   TUBES: "Tubes (Finales)",
 };
 
-export const BrandDisplay = {
+export const BrandDisplay: Record<string, string> = {
   ALPHA_FIREWORKS: "Alpha Fireworks",
-  BEIHAI_POPPOP: "Beihai Poppop",
   BLACK_SCORPION: "Black Scorpion",
+  BLUE_DRAGON: "Blue Dragon",
   BOOM_WOW: "Boom Wow",
   BOOMER: "Boomer",
   BROTHERS: "Brothers",
   BUM_BUM: "Bum Bum",
   CRZ: "CRZ",
   CSS: "CSS",
+  DFS: "DFS",
+  DEMON_PYRO: "DEMON_PYRO",
   DOMINATOR: "Dominator",
   DUCK: "Duck",
   FIREHAWK: "Firehawk",
+  FISHERMAN: "Fisherman",
   FOX_FIREWORKS: "Fox Fireworks",
   GALAXY_FIREWORKS: "Galaxy Fireworks",
   GENERIC: "Generic",
@@ -114,119 +124,11 @@ export const BrandDisplay = {
   WISE_GUY: "Wise Guy",
 };
 
-export enum Effects {
-  BROCADE = "BROCADE",
-  CHRYSANTHEMUM = "CHRYSANTHEMUM",
-  COMET = "COMET",
-  CONFETTI = "CONFETTI",
-  CRACKLES = "CRACKLES",
-  CROSSETTE = "CROSSETTE",
-  FAN_EFFECTS = "FAN_EFFECTS",
-  FLYING_FISH = "FLYING_FISH",
-  GLITTER = "GLITTER",
-  GLOW = "GLOW",
-  LOUD_BANG = "LOUD_BANG",
-  NISHIKI_KAMURO = "NISHIKI_KAMURO",
-  PALM_TREE = "PALM_TREE",
-  PEARLS = "PEARLS",
-  PEONY = "PEONY",
-  PISTIL = "PISTIL",
-  RISING_TAIL = "RISING_TAIL",
-  SIZZLES = "SIZZLES",
-  SMOKE = "SMOKE",
-  SNAKE = "SNAKE",
-  SNAPS = "SNAPS",
-  STROBES = "STROBES",
-  TOURBILLION = "TOURBILLION",
-  WATERFALL = "WATERFALL",
-  WHISTLE = "WHISTLE",
-  WILLOWS = "WILLOWS",
-}
-
-export enum Colors {
-  BLACK = "BLACK",
-  BLUE = "BLUE",
-  BROWN = "BROWN",
-  GREEN = "GREEN",
-  GOLD = "GOLD",
-  ORANGE = "ORANGE",
-  PINK = "PINK",
-  PURPLE = "PURPLE",
-  RED = "RED",
-  SILVER = "SILVER",
-  WHITE = "WHITE",
-  YELLOW = "YELLOW",
-}
-
-export enum Category {
-  REPEATERS_200_GRAM = "REPEATERS_200_GRAM",
-  REPEATERS_500_GRAM = "REPEATERS_500_GRAM",
-  RELOADABLES = "RELOADABLES",
-  ASSORTMENT = "ASSORTMENT",
-  BOTTLE_ROCKETS = "BOTTLE_ROCKETS",
-  CONE_FLORAL = "CONE_FLORAL",
-  CONFETTI_SHOOTERS_AIR_COMPRESSED = "CONFETTI_SHOOTERS_AIR_COMPRESSED",
-  FIRECRACKERS = "FIRECRACKERS",
-  FLYING_HELICOPTERS = "FLYING_HELICOPTERS",
-  FOUNTAINS = "FOUNTAINS",
-  FUSE = "FUSE",
-  GENDER_REVEAL = "GENDER_REVEAL",
-  GROUND = "GROUND",
-  PARACHUTES = "PARACHUTES",
-  PINWHEELS = "PINWHEELS",
-  SNAKE_SMOKE = "SNAKE_SMOKE",
-  TOY_NOVELTIES_STROBES = "TOY_NOVELTIES_STROBES",
-  TUBES = "TUBES",
-  ROCKETS_MISSLES = "ROCKETS_MISSLES",
-  SPARKLERS = "SPARKLERS",
-  ROMAN_CANDLES = "ROMAN_CANDLES",
-  SUPPLIES_VISIBILITY = "SUPPLIES_VISIBILITY",
-}
-
-export enum Brand {
-  ALPHA_FIREWORKS = "ALPHA_FIREWORKS",
-  BEIHAI_POPPOP = "BEIHAI_POPPOP",
-  BLACK_SCORPION = "BLACK_SCORPION",
-  BOOM_WOW = "BOOM_WOW",
-  BOOMER = "BOOMER",
-  BROTHERS = "BROTHERS",
-  BUM_BUM = "BUM_BUM",
-  CRZ = "CRZ",
-  CSS = "CSS",
-  DOMINATOR = "DOMINATOR",
-  DUCK = "DUCK",
-  FIREHAWK = "FIREHAWK",
-  FOX_FIREWORKS = "FOX_FIREWORKS",
-  GALAXY_FIREWORKS = "GALAXY_FIREWORKS",
-  GENERIC = "GENERIC",
-  HAPPY_FAMILY = "HAPPY_FAMILY",
-  HOP_KEE = "HOP_KEE",
-  IRONMAN = "IRONMAN",
-  KRIPTON_FIREWORKS = "KRIPTON_FIREWORKS",
-  LEGEND = "LEGEND",
-  MAD_OX = "MAD_OX",
-  MC_FIREWORKS = "MC_FIREWORKS",
-  MIGHTY_MAX = "MIGHTY_MAX",
-  MIRACLE = "MIRACLE",
-  MUSCLE_PACK = "MUSCLE_PACK",
-  PYRO_DIABLO = "PYRO_DIABLO",
-  PYRO_MOOI = "PYRO_MOOI",
-  PYRO_PIRATE = "PYRO_PIRATE",
-  RACCOON = "RACCOON",
-  RED_LANTERN = "RED_LANTERN",
-  SHOGUN = "SHOGUN",
-  SIN_CITY = "SIN_CITY",
-  SKY_SLAM = "SKY_SLAM",
-  SKY_PAINTER = "SKY_PAINTER",
-  SKY_PIONEER = "SKY_PIONEER",
-  SKY_EAGLE = "SKY_EAGLE",
-  STARGET = "STARGET",
-  SUNS_FIREWORKS = "SUNS_FIREWORKS",
-  T_SKY = "T_SKY",
-  TOPGUN = "TOPGUN",
-  WINDA = "WINDA",
-  WISE_GUY = "WISE_GUY",
-}
+// Create string-based schemas instead of enums
+export const EffectsSchema = z.string();
+export const ColorsSchema = z.string();
+export const CategorySchema = z.string();
+export const BrandSchema = z.string();
 
 export const States = {
   AL: "AL",
@@ -296,6 +198,7 @@ const AddressSchema = z.object({
   state: StateEnum,
   postalCode: z.string(),
 });
+
 // Example of a schema that uses the StateEnum
 const UserProfileSchema = z.object({
   firstName: z.string().optional(),
@@ -307,9 +210,10 @@ const UserProfileSchema = z.object({
   canContact: z.boolean().optional(),
   userId: z.string(),
 });
+
 const TUserSchema = z.object({
   id: z.string(),
-  role: z.enum(["USER", "MANAGER", "ADMIN"]),
+  role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
   email: z.string().email(),
   lastLogin: z.string().datetime().nullable(),
 });
@@ -323,26 +227,21 @@ const TUnitProduct = z.object({
   availableStock: z.number(),
 });
 
+// Updated to use the new string-based models
 export const TProductSchema = z.object({
   id: z.string(),
   sku: z.number(),
   title: z.string(),
   description: z.string().nullable(),
   casePrice: z.string(),
-  Categories: z.object({ id: z.string(), name: z.string() }),
-  Brands: z.object({ id: z.string(), name: z.string() }),
-  ColorStrings: z
-    .object({ id: z.string(), name: z.string() })
-    .array()
-    .optional(),
-  EffectStrings: z
-    .object({ id: z.string(), name: z.string() })
-    .array()
-    .optional(),
+  category: z.object({ id: z.string(), name: z.string() }),
+  brand: z.object({ id: z.string(), name: z.string() }),
+  colors: z.object({ id: z.string(), name: z.string() }).array().optional(),
+  effects: z.object({ id: z.string(), name: z.string() }).array().optional(),
   image: z.string(),
   videoUrl: z.string().url().optional(),
   package: z.number().array(),
-  UnitProduct: TUnitProduct.optional().nullable(),
+  unitProduct: TUnitProduct.optional().nullable(),
 });
 
 const CartProductSchema = z.object({
@@ -350,19 +249,21 @@ const CartProductSchema = z.object({
   caseQuantity: z.number(),
   unitQuantity: z.number(),
   cartId: z.string(),
-  Product: TProductSchema,
+  product: TProductSchema,
 });
+
 const TCartSchema = z.object({
   id: z.string(),
   userId: z.string().optional(),
-  CartProducts: CartProductSchema.array(),
-  User: TUserSchema,
+  cartProducts: CartProductSchema.array(),
+  user: TUserSchema,
 });
 
 export const SignInRequestSchema = z.object({
   email: z.string(),
   password: z.string(),
 });
+
 export const createUserRequestSchema = z
   .object({
     email: z.string().email(),
@@ -375,13 +276,14 @@ export const SignInResponseSchema = z.object({
   userInfo: z
     .object({
       email: z.string(),
-      role: z.enum(["USER", "MANAGER", "ADMIN"]),
+      role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
       lastLogin: z.string().datetime().nullable(),
       Cart: TCartSchema,
     })
     .optional(),
-  message: z.string().optional(), // Assuming the message might be included in the response
+  message: z.string().optional(),
 });
+
 const ApprovedTerminalSchema = z.object({
   id: z.string(),
   acceptOutOfStateLicence: z.boolean(),
@@ -396,10 +298,10 @@ type ProductFilters = {
   page: number;
   pageSize: number;
   searchTitle?: string;
-  selectedBrands?: Brand[];
-  selectedCategories?: Category[];
-  selectedColors?: Colors[];
-  selectedEffects?: Effects[];
+  selectedBrands?: string[];
+  selectedCategories?: string[];
+  selectedColors?: string[];
+  selectedEffects?: string[];
 };
 
 // Define the response type from our API
@@ -420,6 +322,7 @@ type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
 type TAddress = z.infer<typeof AddressSchema>;
 type TApprovedTerminal = z.infer<typeof ApprovedTerminalSchema>;
+
 export type {
   SignInRequest,
   SignInResponse,

@@ -50,7 +50,7 @@ const ProfilePage = () => {
       </div>
       <div className="flex flex-col space-y-3 justify-center w-full lg:w-auto">
         <Cart
-          products={cart!.CartProducts}
+          products={cart!.cartProducts}
           shippingAddress={
             userProfile!.shippingAddress ?? {
               id: "",
@@ -61,7 +61,7 @@ const ProfilePage = () => {
             }
           }
         />
-        {cart!.CartProducts.length > 1 && (
+        {cart!.cartProducts.length > 1 && (
           <Link
             to="/profile/cart/$cartId"
             params={{ cartId: auth.user!.userInfo!.Cart.id }}

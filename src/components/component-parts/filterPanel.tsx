@@ -1,9 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Brand,
-  Category,
-  Colors,
-  Effects,
   BrandDisplay,
   CategoryDisplay,
   ColorsDisplay,
@@ -13,14 +9,14 @@ import {
 interface FilterPanelProps {
   searchTitle: string;
   setSearchTitle: (value: string) => void;
-  selectedBrands: Brand[];
-  setSelectedBrands: (brand: Brand) => void;
-  selectedCategories: Category[];
-  setSelectedCategories: (category: Category) => void;
-  selectedColors: Colors[];
-  setSelectedColors: (color: Colors) => void;
-  selectedEffects: Effects[];
-  setSelectedEffects: (effect: Effects) => void;
+  selectedBrands: string[];
+  setSelectedBrands: (brand: string) => void;
+  selectedCategories: string[];
+  setSelectedCategories: (category: string) => void;
+  selectedColors: string[];
+  setSelectedColors: (color: string) => void;
+  selectedEffects: string[];
+  setSelectedEffects: (effect: string) => void;
   isFetching: boolean;
   isPlaceholderData: boolean;
   setPage: React.Dispatch<React.SetStateAction<number>>;
@@ -28,6 +24,12 @@ interface FilterPanelProps {
   hasMore: boolean;
   pageSize: number;
   setPageAmount: (value: number) => void;
+}
+
+// Interface for our metadata
+interface Metadata {
+  id: string;
+  name: string;
 }
 
 const FilterPanel: React.FC<FilterPanelProps> = ({
@@ -42,6 +44,40 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   selectedEffects,
   setSelectedEffects,
 }) => {
+  // State for available options from the API
+  const [availableBrands, setAvailableBrands] = useState<Metadata[]>([]);
+  const [availableCategories, setAvailableCategories] = useState<Metadata[]>(
+    []
+  );
+  const [availableColors, setAvailableColors] = useState<Metadata[]>([]);
+  const [availableEffects, setAvailableEffects] = useState<Metadata[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch all metadata on component mount
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/products/metadata/all`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch metadata");
+        }
+        const data = await response.json();
+        setAvailableBrands(data.brands || []);
+        setAvailableCategories(data.categories || []);
+        setAvailableColors(data.colors || []);
+        setAvailableEffects(data.effects || []);
+      } catch (error) {
+        console.error("Error fetching metadata:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMetadata();
+  }, []);
+
   return (
     <>
       <label
@@ -72,17 +108,26 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 Categories
               </h3>
               <div className="grid grid-cols-2 gap-1">
-                {Object.values(Category).map((category) => (
-                  <label key={category} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => setSelectedCategories(category)}
-                      className="checkbox checkbox-sm"
-                    />
-                    <span>{CategoryDisplay[category]}</span>
-                  </label>
-                ))}
+                {isLoading ? (
+                  <div>Loading categories...</div>
+                ) : (
+                  availableCategories.map((category) => (
+                    <label
+                      key={category.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedCategories.includes(category.name)}
+                        onChange={() => setSelectedCategories(category.name)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span>
+                        {CategoryDisplay[category.name] || category.name}
+                      </span>
+                    </label>
+                  ))
+                )}
               </div>
             </div>
             <div className="divider"></div>
@@ -91,17 +136,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 Brands
               </h3>
               <div className="grid grid-cols-2 gap-1">
-                {Object.values(Brand).map((brand) => (
-                  <label key={brand} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedBrands.includes(brand)}
-                      onChange={() => setSelectedBrands(brand)}
-                      className="checkbox checkbox-sm"
-                    />
-                    <span>{BrandDisplay[brand]}</span>
-                  </label>
-                ))}
+                {isLoading ? (
+                  <div>Loading brands...</div>
+                ) : (
+                  availableBrands.map((brand) => (
+                    <label
+                      key={brand.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedBrands.includes(brand.name)}
+                        onChange={() => setSelectedBrands(brand.name)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span>{BrandDisplay[brand.name] || brand.name}</span>
+                    </label>
+                  ))
+                )}
               </div>
             </div>
             <div className="divider"></div>
@@ -110,17 +162,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 Colors
               </h3>
               <div className="grid grid-cols-2 gap-1">
-                {Object.values(Colors).map((color) => (
-                  <label key={color} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedColors.includes(color)}
-                      onChange={() => setSelectedColors(color)}
-                      className="checkbox checkbox-sm"
-                    />
-                    <span>{ColorsDisplay[color]}</span>
-                  </label>
-                ))}
+                {isLoading ? (
+                  <div>Loading colors...</div>
+                ) : (
+                  availableColors.map((color) => (
+                    <label
+                      key={color.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedColors.includes(color.name)}
+                        onChange={() => setSelectedColors(color.name)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span>{ColorsDisplay[color.name] || color.name}</span>
+                    </label>
+                  ))
+                )}
               </div>
             </div>
             <div className="divider"></div>
@@ -129,17 +188,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 Effects
               </h3>
               <div className="grid grid-cols-2 gap-1">
-                {Object.values(Effects).map((effect) => (
-                  <label key={effect} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedEffects.includes(effect)}
-                      onChange={() => setSelectedEffects(effect)}
-                      className="checkbox checkbox-sm"
-                    />
-                    <span>{EffectsDisplay[effect]}</span>
-                  </label>
-                ))}
+                {isLoading ? (
+                  <div>Loading effects...</div>
+                ) : (
+                  availableEffects.map((effect) => (
+                    <label
+                      key={effect.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedEffects.includes(effect.name)}
+                        onChange={() => setSelectedEffects(effect.name)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span>{EffectsDisplay[effect.name] || effect.name}</span>
+                    </label>
+                  ))
+                )}
               </div>
             </div>
           </div>

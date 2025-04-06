@@ -38,11 +38,11 @@ const Cart = ({
   let unitSubtotal = 0;
 
   const subtotal = products.reduce((acc, elm) => {
-    const parsed = TProductSchema.parse(elm.Product);
+    const parsed = TProductSchema.parse(elm.product);
 
     const productCaseSubtotal = parseFloat(parsed.casePrice) * elm.caseQuantity;
     const productUnitSubtotal =
-      parseFloat(parsed.UnitProduct?.unitPrice || "0") * elm.unitQuantity;
+      parseFloat(parsed.unitProduct?.unitPrice || "0") * elm.unitQuantity;
 
     caseSubtotal += productCaseSubtotal;
     unitSubtotal += productUnitSubtotal;

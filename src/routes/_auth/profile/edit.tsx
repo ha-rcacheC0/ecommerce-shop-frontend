@@ -29,13 +29,15 @@ export const ProfileForm = () => {
   const navigate = useNavigate();
   const mutation = useUserInfoPostMutation(
     auth.user!.token!,
-    () => {},
+    () => {
+      console.log("Success");
+    },
     () => {}
   );
   const form = useForm({
     validatorAdapter: zodValidator,
     defaultValues: userProfile,
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       mutation.mutate({ token: auth.user!.token!, body: value });
       navigate({ to: "/profile" });
     },
