@@ -8,10 +8,10 @@ import {
 import { TCartProduct, TProductSchema } from "../../types";
 
 const CartItem = ({ product }: { product: TCartProduct }) => {
-  const { title, sku, casePrice, UnitProduct } = TProductSchema.parse(
-    product.Product
+  const { title, sku, casePrice, unitProduct } = TProductSchema.parse(
+    product.product
   );
-  const unitPrice = UnitProduct ? parseFloat(UnitProduct.unitPrice) : 0;
+  const unitPrice = unitProduct ? parseFloat(unitProduct.unitPrice) : 0;
 
   const caseQuantity = product.caseQuantity || 0;
   const unitQuantity = product.unitQuantity || 0;
@@ -22,7 +22,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   const removeItem = useRemoveProductFromCartMutation(
     product.cartId,
     () => {
-      toast.success(`Removed ${product.Product.title} from cart`, {
+      toast.success(`Removed ${product.product.title} from cart`, {
         position: "bottom-right",
       });
     },
@@ -36,7 +36,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   const updateQuantity = useUpdateProductQuantityMutation(
     product.cartId,
     () => {
-      toast.success(`Updated quantity for ${product.Product.title}`, {
+      toast.success(`Updated quantity for ${product.product.title}`, {
         position: "bottom-right",
       });
     },
@@ -49,7 +49,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
 
   const incrementCaseQuantity = () => {
     updateQuantity.mutate({
-      productId: product.Product.id,
+      productId: product.product.id,
       cartId: product.cartId,
       quantity: product.caseQuantity + 1,
       isUnit: false,
@@ -59,7 +59,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   const decrementCaseQuantity = () => {
     if (product.caseQuantity > 0) {
       updateQuantity.mutate({
-        productId: product.Product.id,
+        productId: product.product.id,
         cartId: product.cartId,
         quantity: product.caseQuantity - 1,
         isUnit: false,
@@ -69,7 +69,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
 
   const incrementUnitQuantity = () => {
     updateQuantity.mutate({
-      productId: product.Product.id,
+      productId: product.product.id,
       cartId: product.cartId,
       quantity: product.unitQuantity + 1,
       isUnit: true,
@@ -79,7 +79,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   const decrementUnitQuantity = () => {
     if (product.unitQuantity > 0) {
       updateQuantity.mutate({
-        productId: product.Product.id,
+        productId: product.product.id,
         cartId: product.cartId,
         quantity: product.unitQuantity - 1,
         isUnit: true,
@@ -167,7 +167,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         <button
           onClick={() =>
             removeItem.mutate({
-              productId: product.Product.id,
+              productId: product.product.id,
               cartId: product.cartId,
             })
           }

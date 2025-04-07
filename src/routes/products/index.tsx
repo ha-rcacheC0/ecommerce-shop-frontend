@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ProductCard } from "../../components/product-card";
 import { getAllProductsQueryOptions } from "../../api/products/productsQueries";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Brand, TProduct, Category, Colors, Effects } from "../../types";
+import { TProduct } from "../../types";
 import { getAllProductsQuery } from "../../api/products/products";
 import FilterPanel from "../../components/component-parts/filterPanel";
 import { PageButtons } from "../../components/component-parts/pageButtons";
@@ -13,33 +13,33 @@ const Products: React.FC = () => {
   const navigate = useNavigate();
   const search = Route.useSearch();
 
-  const [selectedBrands, setSelectedBrands] = useState<Brand[]>(() =>
+  // Update states to use string arrays instead of enum arrays
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(() =>
     Array.isArray(search.brands)
-      ? (search.brands.filter(Boolean) as Brand[])
+      ? search.brands.filter(Boolean)
       : typeof search.brands === "string"
-        ? (search.brands.split(",").filter(Boolean) as Brand[])
+        ? search.brands.split(",").filter(Boolean)
         : []
   );
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>(
-    () =>
-      Array.isArray(search.categories)
-        ? (search.categories.filter(Boolean) as Category[])
-        : typeof search.categories === "string"
-          ? (search.categories.split(",").filter(Boolean) as Category[])
-          : []
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() =>
+    Array.isArray(search.categories)
+      ? search.categories.filter(Boolean)
+      : typeof search.categories === "string"
+        ? search.categories.split(",").filter(Boolean)
+        : []
   );
-  const [selectedColors, setSelectedColors] = useState<Colors[]>(() =>
+  const [selectedColors, setSelectedColors] = useState<string[]>(() =>
     Array.isArray(search.colors)
-      ? (search.colors.filter(Boolean) as Colors[])
+      ? search.colors.filter(Boolean)
       : typeof search.colors === "string"
-        ? (search.colors.split(",").filter(Boolean) as Colors[])
+        ? search.colors.split(",").filter(Boolean)
         : []
   );
-  const [selectedEffects, setSelectedEffects] = useState<Effects[]>(() =>
+  const [selectedEffects, setSelectedEffects] = useState<string[]>(() =>
     Array.isArray(search.effects)
-      ? (search.effects.filter(Boolean) as Effects[])
+      ? search.effects.filter(Boolean)
       : typeof search.effects === "string"
-        ? (search.effects.split(",").filter(Boolean) as Effects[])
+        ? search.effects.split(",").filter(Boolean)
         : []
   );
 
@@ -126,7 +126,7 @@ const Products: React.FC = () => {
   ]);
 
   const handleFilterChange = useCallback(
-    <T extends Brand | Category | Colors | Effects>(
+    <T extends string>(
       setter: React.Dispatch<React.SetStateAction<T[]>>,
       value: T
     ) => {
@@ -158,19 +158,19 @@ const Products: React.FC = () => {
             setPage(1);
           }}
           selectedBrands={selectedBrands}
-          setSelectedBrands={(brand: Brand) =>
+          setSelectedBrands={(brand: string) =>
             handleFilterChange(setSelectedBrands, brand)
           }
           selectedCategories={selectedCategories}
-          setSelectedCategories={(category: Category) =>
+          setSelectedCategories={(category: string) =>
             handleFilterChange(setSelectedCategories, category)
           }
           selectedColors={selectedColors}
-          setSelectedColors={(color: Colors) =>
+          setSelectedColors={(color: string) =>
             handleFilterChange(setSelectedColors, color)
           }
           selectedEffects={selectedEffects}
-          setSelectedEffects={(effect: Effects) =>
+          setSelectedEffects={(effect: string) =>
             handleFilterChange(setSelectedEffects, effect)
           }
           isFetching={isFetching}
@@ -187,7 +187,7 @@ const Products: React.FC = () => {
       </div>
       <div className="flex flex-col sm:p-4">
         <div className="bg-base-100 sm:p-4 ">
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:p-4">
             {products?.contents.map((product: TProduct) => (
               <ProductCard
                 key={product.id}
@@ -223,12 +223,10 @@ export const Route = createFileRoute("/products/")({
   validateSearch: z.object({
     page: z.coerce.number(),
     pageSize: z.coerce.number(),
-    brands: z.union([z.string(), z.array(z.nativeEnum(Brand))]).optional(),
-    categories: z
-      .union([z.string(), z.array(z.nativeEnum(Category))])
-      .optional(),
-    colors: z.union([z.string(), z.array(z.nativeEnum(Colors))]).optional(),
-    effects: z.union([z.string(), z.array(z.nativeEnum(Effects))]).optional(),
+    brands: z.union([z.string(), z.array(z.string())]).optional(),
+    categories: z.union([z.string(), z.array(z.string())]).optional(),
+    colors: z.union([z.string(), z.array(z.string())]).optional(),
+    effects: z.union([z.string(), z.array(z.string())]).optional(),
     searchTitle: z.string().optional(),
   }),
   loaderDeps: ({ search }) => search,
@@ -236,24 +234,24 @@ export const Route = createFileRoute("/products/")({
     const page = Number(deps.page) || 1;
     const pageSize = Number(deps.pageSize) || 25;
     const selectedBrands = Array.isArray(deps.brands)
-      ? (deps.brands.filter(Boolean) as Brand[])
+      ? deps.brands.filter(Boolean)
       : typeof deps.brands === "string"
-        ? (deps.brands.split(",").filter(Boolean) as Brand[])
+        ? deps.brands.split(",").filter(Boolean)
         : [];
     const selectedCategories = Array.isArray(deps.categories)
-      ? (deps.categories.filter(Boolean) as Category[])
+      ? deps.categories.filter(Boolean)
       : typeof deps.categories === "string"
-        ? (deps.categories.split(",").filter(Boolean) as Category[])
+        ? deps.categories.split(",").filter(Boolean)
         : [];
     const selectedColors = Array.isArray(deps.colors)
-      ? (deps.colors.filter(Boolean) as Colors[])
+      ? deps.colors.filter(Boolean)
       : typeof deps.colors === "string"
-        ? (deps.colors.split(",").filter(Boolean) as Colors[])
+        ? deps.colors.split(",").filter(Boolean)
         : [];
     const selectedEffects = Array.isArray(deps.effects)
-      ? (deps.effects.filter(Boolean) as Effects[])
+      ? deps.effects.filter(Boolean)
       : typeof deps.effects === "string"
-        ? (deps.effects.split(",").filter(Boolean) as Effects[])
+        ? deps.effects.split(",").filter(Boolean)
         : [];
     const searchTitle = deps.searchTitle || "";
     return queryClient.ensureQueryData(
