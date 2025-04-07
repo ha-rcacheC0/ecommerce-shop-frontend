@@ -85,12 +85,12 @@ const Cart = ({
     setIsUpdatingValues(true);
     if (isTerminalDestination && terminalData) {
       setCurrentShippingAddress({
-        id: terminalData.Address.id,
-        street1: terminalData.Address.street1,
-        street2: terminalData.Address.street2 || "",
-        city: terminalData.Address.city,
-        state: terminalData.Address.state,
-        postalCode: terminalData.Address.postalCode,
+        id: terminalData.address.id,
+        street1: terminalData.address.street1,
+        street2: terminalData.address.street2 || "",
+        city: terminalData.address.city,
+        state: terminalData.address.state,
+        postalCode: terminalData.address.postalCode,
       });
     } else if (!isTerminalDestination) {
       // When switching from terminal to user address
@@ -149,9 +149,7 @@ const Cart = ({
       <div className="mt-4 flex flex-col md:flex-row items-start md:items-center gap-4 justify-around">
         <div className="w-full md:w-1/2 bg-base-300 p-4 rounded-md text-center">
           <div>
-            <h3 className="text-lg font-semibold text-primary">
-              Shipping Address:
-            </h3>
+            <h3 className="text-lg font-semibold ">Shipping Address:</h3>
             {!isShippingAddressSet ? (
               <p>Please set your Address or Select a Terminal to ship to</p>
             ) : (
@@ -180,6 +178,7 @@ const Cart = ({
                 className="mr-2"
                 onChange={(e) => {
                   setIsTerminalDestination(e.target.checked);
+                  setNeedLiftGate(false);
                   setTerminalDestination("");
                 }}
               />
@@ -187,7 +186,7 @@ const Cart = ({
             </label>
 
             {isTerminalDestination && (
-              <div className="w-full">
+              <div className="items-center flex max-md:flex-col gap-4">
                 <StateZipInput
                   state={state}
                   zipcode={zipcode}
@@ -202,27 +201,26 @@ const Cart = ({
                 />
               </div>
             )}
-            <label
-              className={`flex items-center text-base-content ${
-                isTerminalDestination ? "line-through text-gray-300" : ""
-              }`}
-            >
-              <input
-                type="checkbox"
-                checked={needLiftGate}
-                className="mr-2"
-                onChange={(e) => setNeedLiftGate(e.target.checked)}
-                disabled={isTerminalDestination}
-              />
-              Need a liftgate? + $100 shipping.
-            </label>
+
+            {!isTerminalDestination && (
+              <label className={`flex items-center text-base-content`}>
+                <input
+                  type="checkbox"
+                  checked={needLiftGate}
+                  className="mr-2"
+                  onChange={(e) => setNeedLiftGate(e.target.checked)}
+                  disabled={isTerminalDestination}
+                />
+                Need a liftgate? + $100 shipping.
+              </label>
+            )}
           </div>
         </div>
 
         <div className="w-full md:w-1/2">
           <table className="table-auto w-full">
             <tfoot>
-              <tr className="h-12 border-b border-gray-300">
+              <tr className="h-12 border-b border-base-300">
                 <td className="text-right font-semibold">Subtotal:</td>
                 <td className="text-lg font-semibold">
                   ${subtotal.toFixed(2)}
@@ -236,7 +234,7 @@ const Cart = ({
                   ${shipping.toFixed(2)}
                 </td>
               </tr>
-              <tr className="h-12 border-y-4 border-double border-black">
+              <tr className="h-12 border-y-4 border-double border-base-300">
                 <td className="text-right font-bold">Grand Total:</td>
                 <td className="text-lg font-bold">${grandTotal.toFixed(2)}</td>
               </tr>

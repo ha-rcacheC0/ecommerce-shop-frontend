@@ -289,7 +289,7 @@ const ApprovedTerminalSchema = z.object({
   acceptOutOfStateLicence: z.boolean(),
   terminalName: z.string(),
   businessRequired: z.boolean(),
-  Address: AddressSchema,
+  address: AddressSchema,
   addressId: z.string(),
   company: TerminalCompanyEnum,
 });

@@ -23,12 +23,10 @@ const TerminalSelection: React.FC<TerminalSelectionProps> = ({
   } = useQuery(getTerminalsQueryOptions({ state, zipcode }));
 
   return (
-    <label className="form-control w-full max-w-xs">
-      <div className="label">
-        <span className="label-text">Pick Terminal to Ship to</span>
-      </div>
+    <fieldset className="fieldset">
+      <legend className="label">Pick Terminal to Ship to</legend>
       <select
-        className="select select-bordered text-base-content"
+        className="select"
         value={terminalDestination}
         onChange={(e) => onTerminalChange(e.target.value)}
       >
@@ -40,11 +38,11 @@ const TerminalSelection: React.FC<TerminalSelectionProps> = ({
         {filteredTerminals &&
           filteredTerminals.map((terminal: TApprovedTerminal) => (
             <option key={terminal.id} value={terminal.id}>
-              {terminal.terminalName}-{terminal.Address.city}
+              {terminal.terminalName}-{terminal.address.city}
             </option>
           ))}
       </select>
-    </label>
+    </fieldset>
   );
 };
 

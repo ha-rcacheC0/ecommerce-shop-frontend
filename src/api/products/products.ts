@@ -66,7 +66,8 @@ export const getOneProductQuery = async ({
 
 export const getProductMetadata = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/metadata/all`, {
+    const METADATA_URL = import.meta.env.VITE_API_BASE_URL! + "/api/metadata";
+    const response = await fetch(METADATA_URL, {
       headers: {
         "Content-Type": "application/json",
       },

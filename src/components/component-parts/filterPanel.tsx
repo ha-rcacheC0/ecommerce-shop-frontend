@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   BrandDisplay,
   CategoryDisplay,
   ColorsDisplay,
   EffectsDisplay,
 } from "../../types";
+import { getProductMetadataQueryOptions } from "../../api/products/productsQueries";
 
 interface FilterPanelProps {
   searchTitle: string;
@@ -26,12 +28,6 @@ interface FilterPanelProps {
   setPageAmount: (value: number) => void;
 }
 
-// Interface for our metadata
-interface Metadata {
-  id: string;
-  name: string;
-}
-
 const FilterPanel: React.FC<FilterPanelProps> = ({
   searchTitle,
   setSearchTitle,
@@ -44,39 +40,16 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   selectedEffects,
   setSelectedEffects,
 }) => {
-  // State for available options from the API
-  const [availableBrands, setAvailableBrands] = useState<Metadata[]>([]);
-  const [availableCategories, setAvailableCategories] = useState<Metadata[]>(
-    []
+  // Use the query options for product metadata
+  const { data: metadata, isLoading } = useQuery(
+    getProductMetadataQueryOptions()
   );
-  const [availableColors, setAvailableColors] = useState<Metadata[]>([]);
-  const [availableEffects, setAvailableEffects] = useState<Metadata[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch all metadata on component mount
-  useEffect(() => {
-    const fetchMetadata = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/products/metadata/all`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch metadata");
-        }
-        const data = await response.json();
-        setAvailableBrands(data.brands || []);
-        setAvailableCategories(data.categories || []);
-        setAvailableColors(data.colors || []);
-        setAvailableEffects(data.effects || []);
-      } catch (error) {
-        console.error("Error fetching metadata:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchMetadata();
-  }, []);
+  // Use the fetched metadata or empty arrays if still loading
+  const availableBrands = metadata?.brands || [];
+  const availableCategories = metadata?.categories || [];
+  const availableColors = metadata?.colors || [];
+  const availableEffects = metadata?.effects || [];
 
   return (
     <>
