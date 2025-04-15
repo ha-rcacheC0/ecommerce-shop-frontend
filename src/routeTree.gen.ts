@@ -15,13 +15,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as EventsRouteImport } from './routes/events/route'
+import { Route as ShowsIndexImport } from './routes/shows/index'
 import { Route as ProductsIndexImport } from './routes/products/index'
 import { Route as UserRegisterImport } from './routes/user/register'
 import { Route as UserLoginImport } from './routes/user/login'
-import { Route as ProductsShowsImport } from './routes/products/shows'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
 import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
 import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
+import { Route as ShowsShowIdRouteImport } from './routes/shows/$showId/route'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
 import { Route as AuthAdminRouteImport } from './routes/_auth/admin/route'
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
@@ -29,8 +30,13 @@ import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
 import { Route as AuthAdminUsersImport } from './routes/_auth/admin/users'
 import { Route as AuthAdminReportsImport } from './routes/_auth/admin/reports'
 import { Route as AuthAdminInventoryImport } from './routes/_auth/admin/inventory'
+import { Route as AuthAdminAdminImport } from './routes/_auth/admin/admin'
+import { Route as AuthAdminShowsRouteImport } from './routes/_auth/admin/shows/route'
+import { Route as AuthAdminShowsShowTypesImport } from './routes/_auth/admin/shows/showTypes'
+import { Route as AuthAdminShowsCreateImport } from './routes/_auth/admin/shows/create'
 import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
 import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/profile/cart/$cartId/success'
+import { Route as AuthAdminShowsShowIdEditImport } from './routes/_auth/admin/shows/$showId/edit'
 
 // Create Virtual Routes
 
@@ -53,6 +59,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const ShowsIndexRoute = ShowsIndexImport.update({
+  path: '/shows/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ProductsIndexRoute = ProductsIndexImport.update({
   path: '/products/',
   getParentRoute: () => rootRoute,
@@ -65,11 +76,6 @@ const UserRegisterRoute = UserRegisterImport.update({
 
 const UserLoginRoute = UserLoginImport.update({
   path: '/user/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProductsShowsRoute = ProductsShowsImport.update({
-  path: '/products/shows',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -86,6 +92,11 @@ const EventsGenderRevealRoute = EventsGenderRevealImport.update({
 const EventsFourthJulyRoute = EventsFourthJulyImport.update({
   path: '/fourth-july',
   getParentRoute: () => EventsRouteRoute,
+} as any)
+
+const ShowsShowIdRouteRoute = ShowsShowIdRouteImport.update({
+  path: '/shows/$showId',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
@@ -123,6 +134,26 @@ const AuthAdminInventoryRoute = AuthAdminInventoryImport.update({
   getParentRoute: () => AuthAdminRouteRoute,
 } as any)
 
+const AuthAdminAdminRoute = AuthAdminAdminImport.update({
+  path: '/admin',
+  getParentRoute: () => AuthAdminRouteRoute,
+} as any)
+
+const AuthAdminShowsRouteRoute = AuthAdminShowsRouteImport.update({
+  path: '/shows',
+  getParentRoute: () => AuthAdminRouteRoute,
+} as any)
+
+const AuthAdminShowsShowTypesRoute = AuthAdminShowsShowTypesImport.update({
+  path: '/showTypes',
+  getParentRoute: () => AuthAdminShowsRouteRoute,
+} as any)
+
+const AuthAdminShowsCreateRoute = AuthAdminShowsCreateImport.update({
+  path: '/create',
+  getParentRoute: () => AuthAdminShowsRouteRoute,
+} as any)
+
 const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
   {
     path: '/profile/cart/$cartId/',
@@ -135,6 +166,11 @@ const AuthProfileCartCartIdSuccessRoute =
     path: '/profile/cart/$cartId/success',
     getParentRoute: () => AuthRoute,
   } as any)
+
+const AuthAdminShowsShowIdEditRoute = AuthAdminShowsShowIdEditImport.update({
+  path: '/$showId/edit',
+  getParentRoute: () => AuthAdminShowsRouteRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -175,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsProductIdRouteImport
       parentRoute: typeof rootRoute
     }
+    '/shows/$showId': {
+      id: '/shows/$showId'
+      path: '/shows/$showId'
+      fullPath: '/shows/$showId'
+      preLoaderRoute: typeof ShowsShowIdRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/events/fourth-july': {
       id: '/events/fourth-july'
       path: '/fourth-july'
@@ -196,13 +239,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsNewYearsImport
       parentRoute: typeof EventsRouteImport
     }
-    '/products/shows': {
-      id: '/products/shows'
-      path: '/products/shows'
-      fullPath: '/products/shows'
-      preLoaderRoute: typeof ProductsShowsImport
-      parentRoute: typeof rootRoute
-    }
     '/user/login': {
       id: '/user/login'
       path: '/user/login'
@@ -223,6 +259,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/products'
       preLoaderRoute: typeof ProductsIndexImport
       parentRoute: typeof rootRoute
+    }
+    '/shows/': {
+      id: '/shows/'
+      path: '/shows'
+      fullPath: '/shows'
+      preLoaderRoute: typeof ShowsIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_auth/admin/shows': {
+      id: '/_auth/admin/shows'
+      path: '/shows'
+      fullPath: '/admin/shows'
+      preLoaderRoute: typeof AuthAdminShowsRouteImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
+    '/_auth/admin/admin': {
+      id: '/_auth/admin/admin'
+      path: '/admin'
+      fullPath: '/admin/admin'
+      preLoaderRoute: typeof AuthAdminAdminImport
+      parentRoute: typeof AuthAdminRouteImport
     }
     '/_auth/admin/inventory': {
       id: '/_auth/admin/inventory'
@@ -259,6 +316,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileIndexImport
       parentRoute: typeof AuthImport
     }
+    '/_auth/admin/shows/create': {
+      id: '/_auth/admin/shows/create'
+      path: '/create'
+      fullPath: '/admin/shows/create'
+      preLoaderRoute: typeof AuthAdminShowsCreateImport
+      parentRoute: typeof AuthAdminShowsRouteImport
+    }
+    '/_auth/admin/shows/showTypes': {
+      id: '/_auth/admin/shows/showTypes'
+      path: '/showTypes'
+      fullPath: '/admin/shows/showTypes'
+      preLoaderRoute: typeof AuthAdminShowsShowTypesImport
+      parentRoute: typeof AuthAdminShowsRouteImport
+    }
+    '/_auth/admin/shows/$showId/edit': {
+      id: '/_auth/admin/shows/$showId/edit'
+      path: '/$showId/edit'
+      fullPath: '/admin/shows/$showId/edit'
+      preLoaderRoute: typeof AuthAdminShowsShowIdEditImport
+      parentRoute: typeof AuthAdminShowsRouteImport
+    }
     '/_auth/profile/cart/$cartId/success': {
       id: '/_auth/profile/cart/$cartId/success'
       path: '/profile/cart/$cartId/success'
@@ -287,6 +365,12 @@ export const routeTree = rootRoute.addChildren({
   }),
   AuthRoute: AuthRoute.addChildren({
     AuthAdminRouteRoute: AuthAdminRouteRoute.addChildren({
+      AuthAdminShowsRouteRoute: AuthAdminShowsRouteRoute.addChildren({
+        AuthAdminShowsCreateRoute,
+        AuthAdminShowsShowTypesRoute,
+        AuthAdminShowsShowIdEditRoute,
+      }),
+      AuthAdminAdminRoute,
       AuthAdminInventoryRoute,
       AuthAdminReportsRoute,
       AuthAdminUsersRoute,
@@ -297,10 +381,11 @@ export const routeTree = rootRoute.addChildren({
     AuthProfileCartCartIdIndexRoute,
   }),
   ProductsProductIdRouteRoute,
-  ProductsShowsRoute,
+  ShowsShowIdRouteRoute,
   UserLoginRoute,
   UserRegisterRoute,
   ProductsIndexRoute,
+  ShowsIndexRoute,
 })
 
 /* prettier-ignore-end */
@@ -315,10 +400,11 @@ export const routeTree = rootRoute.addChildren({
         "/events",
         "/_auth",
         "/products/$productId",
-        "/products/shows",
+        "/shows/$showId",
         "/user/login",
         "/user/register",
-        "/products/"
+        "/products/",
+        "/shows/"
       ]
     },
     "/": {
@@ -346,6 +432,8 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_auth/admin/route.tsx",
       "parent": "/_auth",
       "children": [
+        "/_auth/admin/shows",
+        "/_auth/admin/admin",
         "/_auth/admin/inventory",
         "/_auth/admin/reports",
         "/_auth/admin/users"
@@ -353,6 +441,9 @@ export const routeTree = rootRoute.addChildren({
     },
     "/products/$productId": {
       "filePath": "products/$productId/route.tsx"
+    },
+    "/shows/$showId": {
+      "filePath": "shows/$showId/route.tsx"
     },
     "/events/fourth-july": {
       "filePath": "events/fourth-july.tsx",
@@ -366,9 +457,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "events/new-years.tsx",
       "parent": "/events"
     },
-    "/products/shows": {
-      "filePath": "products/shows.tsx"
-    },
     "/user/login": {
       "filePath": "user/login.tsx"
     },
@@ -377,6 +465,22 @@ export const routeTree = rootRoute.addChildren({
     },
     "/products/": {
       "filePath": "products/index.tsx"
+    },
+    "/shows/": {
+      "filePath": "shows/index.tsx"
+    },
+    "/_auth/admin/shows": {
+      "filePath": "_auth/admin/shows/route.tsx",
+      "parent": "/_auth/admin",
+      "children": [
+        "/_auth/admin/shows/create",
+        "/_auth/admin/shows/showTypes",
+        "/_auth/admin/shows/$showId/edit"
+      ]
+    },
+    "/_auth/admin/admin": {
+      "filePath": "_auth/admin/admin.tsx",
+      "parent": "/_auth/admin"
     },
     "/_auth/admin/inventory": {
       "filePath": "_auth/admin/inventory.tsx",
@@ -397,6 +501,18 @@ export const routeTree = rootRoute.addChildren({
     "/_auth/profile/": {
       "filePath": "_auth/profile/index.tsx",
       "parent": "/_auth"
+    },
+    "/_auth/admin/shows/create": {
+      "filePath": "_auth/admin/shows/create.tsx",
+      "parent": "/_auth/admin/shows"
+    },
+    "/_auth/admin/shows/showTypes": {
+      "filePath": "_auth/admin/shows/showTypes.tsx",
+      "parent": "/_auth/admin/shows"
+    },
+    "/_auth/admin/shows/$showId/edit": {
+      "filePath": "_auth/admin/shows/$showId/edit.tsx",
+      "parent": "/_auth/admin/shows"
     },
     "/_auth/profile/cart/$cartId/success": {
       "filePath": "_auth/profile/cart/$cartId/success.tsx",

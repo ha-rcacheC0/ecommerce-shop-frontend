@@ -10,7 +10,6 @@ export const postUserInfo = async (
   token: string,
   body: UserProfile
 ): Promise<UserProfile> => {
-  console.log("Inside postUserInfo", body);
   return await fetch(BASE_URL + "/userInfo", {
     headers: {
       Authorization: `Bearer ${token}`,

@@ -218,7 +218,7 @@ const TUserSchema = z.object({
   lastLogin: z.string().datetime().nullable(),
 });
 
-const TUnitProduct = z.object({
+const TUnitProductSchema = z.object({
   id: z.string(),
   sku: z.string(),
   productId: z.string(),
@@ -227,22 +227,59 @@ const TUnitProduct = z.object({
   availableStock: z.number(),
 });
 
-// Updated to use the new string-based models
-export const TProductSchema = z.object({
+export const ShowTypeSchema = z.object({
   id: z.string(),
-  sku: z.number(),
+  name: z.string(),
+  description: z.string().nullable(),
+});
+
+// eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
+export let TProductSchema: z.ZodType<any>;
+
+// Now define the schemas with circular references
+const ShowProductSchema = z.object({
+  id: z.string(),
+  showId: z.string(),
+  productId: z.string(),
+  quantity: z.number(),
+  notes: z.string().nullable(),
+  product: z.lazy(() => TProductSchema),
+});
+
+TProductSchema = z.object({
+  id: z.string(),
+  sku: z.string(),
   title: z.string(),
   description: z.string().nullable(),
   casePrice: z.string(),
+  isShow: z.boolean().optional(),
+  showTypeId: z.string().nullable().optional(),
   category: z.object({ id: z.string(), name: z.string() }),
   brand: z.object({ id: z.string(), name: z.string() }),
-  colors: z.object({ id: z.string(), name: z.string() }).array().optional(),
-  effects: z.object({ id: z.string(), name: z.string() }).array().optional(),
+  showType: ShowTypeSchema.nullable().optional(),
+  colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
   image: z.string(),
-  videoUrl: z.string().url().optional(),
-  package: z.number().array(),
-  unitProduct: TUnitProduct.optional().nullable(),
+  videoURL: z.string().url().optional(),
+  package: z.array(z.number()),
+  unitProduct: z
+    .lazy(() => TUnitProductSchema)
+    .optional()
+    .nullable(),
+  showProducts: z.array(z.lazy(() => ShowProductSchema)).optional(),
 });
+
+// Define the types from the schemas
+export type ShowType = z.infer<typeof ShowTypeSchema>;
+export type ShowProduct = z.infer<typeof ShowProductSchema>;
+export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
+
+// Enhanced type for a product that is a show
+export type ShowWithProducts = TProduct & {
+  isShow: true;
+  showType: ShowType;
+  showProducts: ShowProduct[];
+};
 
 const CartProductSchema = z.object({
   id: z.string(),
@@ -311,6 +348,8 @@ type ProductsResponse = {
   totalPages: number;
   currentPage: number;
 };
+
+// Types derived from the schemas
 
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;

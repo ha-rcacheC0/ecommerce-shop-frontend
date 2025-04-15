@@ -29,9 +29,7 @@ export const ProfileForm = () => {
   const navigate = useNavigate();
   const mutation = useUserInfoPostMutation(
     auth.user!.token!,
-    () => {
-      console.log("Success");
-    },
+    () => {},
     () => {}
   );
   const form = useForm({
