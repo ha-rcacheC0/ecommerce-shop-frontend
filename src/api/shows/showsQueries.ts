@@ -1,3 +1,4 @@
+// src/api/shows/showsQueries.ts
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
   getAllShows,
@@ -7,87 +8,140 @@ import {
   createShow,
   updateShow,
   deleteShow,
-  CreateShowData,
+  createShowType,
+  updateShowType,
+  deleteShowType,
 } from "./shows";
 import { queryClient } from "../../main";
+import { CreateShowData, UpdateShowData } from "../../types";
 
-// Query options for fetching all shows
 export const getAllShowsQueryOptions = () =>
   queryOptions({
     queryKey: ["shows"],
     queryFn: () => getAllShows(),
   });
 
-// Query options for fetching shows by type
 export const getShowsByTypeQueryOptions = (typeId: string) =>
   queryOptions({
     queryKey: ["shows", "type", typeId],
     queryFn: () => getShowsByType(typeId),
   });
 
-// Query options for fetching a single show
 export const getShowByIdQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["show", id],
     queryFn: () => getShowById(id),
   });
 
-// Query options for fetching all show types
 export const getAllShowTypesQueryOptions = () =>
   queryOptions({
     queryKey: ["showTypes"],
     queryFn: () => getAllShowTypes(),
   });
 
-// Mutation for creating a show
 export const useCreateShowMutation = (
-  onSuccessCallback: () => void,
-  onErrorCallback: (error: Error) => void
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
 ) => {
   return useMutation({
-    mutationFn: (data: CreateShowData) => createShow(data),
+    mutationFn: (data: CreateShowData) => createShow(data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shows"] });
-      onSuccessCallback();
+      if (onSuccess) onSuccess();
     },
     onError: (error: Error) => {
-      onErrorCallback(error);
+      if (onError) onError(error);
     },
   });
 };
 
-// Mutation for updating a show
 export const useUpdateShowMutation = (
   id: string,
-  onSuccessCallback: () => void,
-  onErrorCallback: (error: Error) => void
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
 ) => {
   return useMutation({
-    mutationFn: (data: Partial<CreateShowData>) => updateShow(id, data),
+    mutationFn: (data: UpdateShowData) => updateShow(id, data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shows"] });
       queryClient.invalidateQueries({ queryKey: ["show", id] });
-      onSuccessCallback();
+      if (onSuccess) onSuccess();
     },
     onError: (error: Error) => {
-      onErrorCallback(error);
+      if (onError) onError(error);
     },
   });
 };
 
-// Mutation for deleting a show
 export const useDeleteShowMutation = (
-  onSuccessCallback: () => void,
-  onErrorCallback: (error: Error) => void
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
 ) => {
   return useMutation({
-    mutationFn: (id: string) => deleteShow(id),
+    mutationFn: (id: string) => deleteShow(id, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["shows"] });
-      onSuccessCallback();
+      if (onSuccess) onSuccess();
     },
     onError: (error: Error) => {
-      onErrorCallback(error);
+      if (onError) onError(error);
+    },
+  });
+};
+
+export const useCreateShowTypeMutation = (
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
+) => {
+  return useMutation({
+    mutationFn: (data: { name: string; description?: string }) =>
+      createShowType(data, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["showTypes"] });
+      if (onSuccess) onSuccess();
+    },
+    onError: (error: Error) => {
+      if (onError) onError(error);
+    },
+  });
+};
+
+export const useUpdateShowTypeMutation = (
+  id: string,
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
+) => {
+  return useMutation({
+    mutationFn: (data: { name: string; description?: string }) =>
+      updateShowType(id, data, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["showTypes"] });
+      if (onSuccess) onSuccess();
+    },
+    onError: (error: Error) => {
+      if (onError) onError(error);
+    },
+  });
+};
+
+export const useDeleteShowTypeMutation = (
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
+) => {
+  return useMutation({
+    mutationFn: (id: string) => deleteShowType(id, token),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["showTypes"] });
+      if (onSuccess) onSuccess();
+    },
+    onError: (error: Error) => {
+      if (onError) onError(error);
     },
   });
 };

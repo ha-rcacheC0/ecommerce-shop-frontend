@@ -14,13 +14,13 @@ import {
   useDeleteShowMutation,
 } from "../api/shows/showsQueries";
 import { Link } from "@tanstack/react-router";
-import { Show } from "../types";
+import { ShowWithProducts } from "../types";
 import { toast } from "react-toastify";
 import ShowTypesManager from "./ShowTypesManager";
+import { useAuth } from "../providers/auth.provider";
 
-const ShowsTable: React.FC<{ selectedView: string | null }> = ({
-  selectedView,
-}) => {
+const ShowsTable = () => {
+  const auth = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
 
   const {
@@ -30,6 +30,7 @@ const ShowsTable: React.FC<{ selectedView: string | null }> = ({
   } = useQuery(getAllShowsQueryOptions());
 
   const deleteShowMutation = useDeleteShowMutation(
+    auth.user!.token!,
     () => {
       toast.success("Show deleted successfully");
     },
@@ -43,7 +44,7 @@ const ShowsTable: React.FC<{ selectedView: string | null }> = ({
     return <div className="text-center text-red-500">Error fetching shows</div>;
 
   // Filter shows based on search term and selectedView
-  const filteredShows = shows?.filter((show: Show) => {
+  const filteredShows = shows?.filter((show: ShowWithProducts) => {
     const matchesSearch =
       show.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       show.description?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -80,7 +81,7 @@ const ShowsTable: React.FC<{ selectedView: string | null }> = ({
             </tr>
           </thead>
           <tbody>
-            {filteredShows?.map((show: Show) => (
+            {filteredShows?.map((show: ShowWithProducts) => (
               <tr key={show.id}>
                 <td>
                   <div className="flex items-center space-x-3">
@@ -157,7 +158,7 @@ const ShowsPanel: React.FC = () => {
           {selectedItem === "manage-types" ? (
             <ShowTypesManager />
           ) : (
-            <ShowsTable selectedView={selectedItem} />
+            <ShowsTable />
           )}
         </div>
       )}

@@ -5,7 +5,7 @@ import {
   getAllShowTypesQueryOptions,
 } from "../../../../api/shows/showsQueries";
 
-export const Route = createFileRoute("/_auth/admin/shows")({
+export const Route = createFileRoute("/_auth/admin/shows/")({
   component: ShowsPanel,
   loader: ({ context: { queryClient } }) => {
     queryClient.ensureQueryData(getAllShowsQueryOptions());
