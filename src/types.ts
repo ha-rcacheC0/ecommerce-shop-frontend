@@ -259,7 +259,6 @@ interface TUnitProductInterface {
   id: string;
   sku: string;
   productId: string;
-  product: TProductInterface;
   unitPrice: string;
   package: number[];
   availableStock: number;
@@ -305,7 +304,6 @@ export const TUnitProductSchema: z.ZodType<TUnitProductInterface> = z.lazy(() =>
     id: z.string(),
     sku: z.string(),
     productId: z.string(),
-    product: TProductSchema,
     unitPrice: z.string(),
     package: z.array(z.number()),
     availableStock: z.number(),
