@@ -347,7 +347,7 @@ export type CreateShowProductData = {
 export type CreateShowData = {
   title: string;
   description?: string;
-  price: number;
+  casePrice: number;
   image?: string;
   videoURL?: string;
   inStock: boolean;

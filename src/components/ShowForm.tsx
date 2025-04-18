@@ -213,7 +213,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
     const showData = {
       title,
       description: description || undefined,
-      price: parseFloat(price),
+      casePrice: parseFloat(price),
       image: image || undefined,
       videoURL: videoURL || undefined,
       inStock,
@@ -534,7 +534,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                                 2
                               )}
                             </td>
-                            <td>
+                            <td className="flex gap-2 ">
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
@@ -553,10 +553,34 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                                       icon={faPlus}
                                       className="mr-1"
                                     />
-                                    Add
+                                    Add Case
                                   </>
                                 )}
                               </button>
+                              {product.isCaseBreakable && (
+                                <button
+                                  type="button"
+                                  className="btn btn-primary btn-sm"
+                                  onClick={() => handleAddProduct(product)}
+                                  disabled={selectedProducts.some(
+                                    (p) => p.productId === product.id
+                                  )}
+                                >
+                                  {selectedProducts.some(
+                                    (p) => p.productId === product.id
+                                  ) ? (
+                                    "Added"
+                                  ) : (
+                                    <>
+                                      <FontAwesomeIcon
+                                        icon={faPlus}
+                                        className="mr-1"
+                                      />
+                                      Add Units
+                                    </>
+                                  )}
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))}
