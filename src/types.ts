@@ -342,7 +342,7 @@ export type ShowType = z.infer<typeof ShowTypeSchema>;
 export type ShowProduct = z.infer<typeof ShowProductSchema>;
 export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
 export type TProduct = z.infer<typeof TProductSchema>;
-export type TInventoryProduct = z.infer<typeof TInventoryUnitProductSchema>;
+export type TInventoryUnitProduct = z.infer<typeof TInventoryUnitProductSchema>;
 
 // Product Types
 export type CreateProductData = {
