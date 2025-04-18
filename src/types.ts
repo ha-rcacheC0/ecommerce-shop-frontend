@@ -272,6 +272,15 @@ interface TUnitProductInterface {
   package: number[];
   availableStock: number;
 }
+interface TInventoryUnitProductInterface {
+  id: string;
+  sku: string;
+  product: TProductInterface;
+  productId: string;
+  unitPrice: string;
+  package: number[];
+  availableStock: number;
+}
 
 export const TProductSchema: z.ZodType<TProductInterface> = z.lazy(() =>
   z.object({
@@ -318,12 +327,25 @@ export const TUnitProductSchema: z.ZodType<TUnitProductInterface> = z.lazy(() =>
     availableStock: z.number(),
   })
 );
+export const TInventoryUnitProductSchema: z.ZodType<TInventoryUnitProductInterface> =
+  z.lazy(() =>
+    z.object({
+      id: z.string(),
+      sku: z.string(),
+      product: TProductSchema,
+      productId: z.string(),
+      unitPrice: z.string(),
+      package: z.array(z.number()),
+      availableStock: z.number(),
+    })
+  );
 
 // Define the types from the schemas
 export type ShowType = z.infer<typeof ShowTypeSchema>;
 export type ShowProduct = z.infer<typeof ShowProductSchema>;
 export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
 export type TProduct = z.infer<typeof TProductSchema>;
+export type TInventoryProduct = z.infer<typeof TInventoryUnitProductSchema>;
 
 // Product Types
 export type CreateProductData = {

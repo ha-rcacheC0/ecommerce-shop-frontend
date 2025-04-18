@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  TAddress,
-  TApprovedTerminal,
-  TCartProduct,
-  TProductSchema,
-} from "../types";
+import { TAddress, TApprovedTerminal, TCartProduct } from "../types";
 import { calculateShipping, checkOrderType } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
@@ -38,11 +33,10 @@ const Cart = ({
   let unitSubtotal = 0;
 
   const subtotal = products.reduce((acc, elm) => {
-    const parsed = TProductSchema.parse(elm.product);
-
-    const productCaseSubtotal = parseFloat(parsed.casePrice) * elm.caseQuantity;
+    const productCaseSubtotal =
+      parseFloat(elm.product.casePrice) * elm.caseQuantity;
     const productUnitSubtotal =
-      parseFloat(parsed.unitProduct?.unitPrice || "0") * elm.unitQuantity;
+      parseFloat(elm.product.unitProduct?.unitPrice || "0") * elm.unitQuantity;
 
     caseSubtotal += productCaseSubtotal;
     unitSubtotal += productUnitSubtotal;
