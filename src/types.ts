@@ -218,31 +218,120 @@ const TUserSchema = z.object({
   lastLogin: z.string().datetime().nullable(),
 });
 
-const TUnitProduct = z.object({
+export const ShowTypeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+});
+
+// eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
+export let TProductSchema: z.ZodType<any>;
+
+// Now define the schemas with circular references
+const ShowProductSchema = z.object({
+  id: z.string(),
+  showId: z.string(),
+  productId: z.string(),
+  quantity: z.number(),
+  notes: z.string().nullable(),
+  product: z.lazy(() => TProductSchema),
+});
+
+TProductSchema = z.object({
+  id: z.string(),
+  sku: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  casePrice: z.string(),
+  isShow: z.boolean().optional(),
+  showTypeId: z.string().nullable().optional(),
+  category: z.object({ id: z.string(), name: z.string() }),
+  brand: z.object({ id: z.string(), name: z.string() }),
+  showType: ShowTypeSchema.nullable().optional(),
+  colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  image: z.string(),
+  videoURL: z.string().url().optional(),
+  package: z.array(z.number()),
+  unitProduct: z
+    .lazy(() => TUnitProductSchema)
+    .optional()
+    .nullable(),
+  showProducts: z.array(z.lazy(() => ShowProductSchema)).optional(),
+});
+
+const TUnitProductSchema = z.object({
   id: z.string(),
   sku: z.string(),
   productId: z.string(),
+  product: TProductSchema,
   unitPrice: z.string(),
   package: z.number().array(),
   availableStock: z.number(),
 });
+// Define the types from the schemas
+export type ShowType = z.infer<typeof ShowTypeSchema>;
+export type ShowProduct = z.infer<typeof ShowProductSchema>;
+export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
+// Product Types
+export type CreateProductData = {
+  sku: string;
+  title: string;
+  description?: string;
+  image?: string;
+  casePrice: string;
+  inStock: boolean;
+  package: string; // Comma-separated list
+  isCaseBreakable: boolean;
+  videoURL?: string;
+  brandId: string;
+  categoryId: string;
+  colors: string[]; // Array of color IDs
+  effects: string[]; // Array of effect IDs
+};
 
-// Updated to use the new string-based models
-export const TProductSchema = z.object({
-  id: z.string(),
-  sku: z.number(),
-  title: z.string(),
-  description: z.string().nullable(),
-  casePrice: z.string(),
-  category: z.object({ id: z.string(), name: z.string() }),
-  brand: z.object({ id: z.string(), name: z.string() }),
-  colors: z.object({ id: z.string(), name: z.string() }).array().optional(),
-  effects: z.object({ id: z.string(), name: z.string() }).array().optional(),
-  image: z.string(),
-  videoUrl: z.string().url().optional(),
-  package: z.number().array(),
-  unitProduct: TUnitProduct.optional().nullable(),
-});
+export type UpdateProductData = Partial<CreateProductData>;
+
+// Show Types
+export type CreateShowProductData = {
+  productId: string;
+  quantity: number;
+  notes?: string;
+};
+
+export type CreateShowData = {
+  title: string;
+  description?: string;
+  price: number;
+  image?: string;
+  videoURL?: string;
+  inStock: boolean;
+  showTypeId: string;
+  brandId: string;
+  categoryId: string;
+  products: CreateShowProductData[];
+};
+
+export type UpdateShowData = Partial<CreateShowData>;
+
+// Update ProductFilters to include isShow
+export interface ProductFilters {
+  page: number;
+  pageSize: number;
+  searchTitle?: string;
+  selectedBrands?: string[];
+  selectedCategories?: string[];
+  selectedColors?: string[];
+  selectedEffects?: string[];
+  isShow?: boolean;
+}
+
+// Enhanced type for a product that is a show
+export type ShowWithProducts = TProduct & {
+  isShow: true;
+  showType: ShowType;
+  showProducts: ShowProduct[];
+};
 
 const CartProductSchema = z.object({
   id: z.string(),
@@ -294,23 +383,16 @@ const ApprovedTerminalSchema = z.object({
   company: TerminalCompanyEnum,
 });
 
-type ProductFilters = {
-  page: number;
-  pageSize: number;
-  searchTitle?: string;
-  selectedBrands?: string[];
-  selectedCategories?: string[];
-  selectedColors?: string[];
-  selectedEffects?: string[];
-};
-
 // Define the response type from our API
 type ProductsResponse = {
   contents: TProduct[];
   hasMore: boolean;
   totalPages: number;
+  totalItems: number;
   currentPage: number;
 };
+
+// Types derived from the schemas
 
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
@@ -335,5 +417,4 @@ export type {
   TAddress,
   TApprovedTerminal,
   ProductsResponse,
-  ProductFilters,
 };

@@ -8,6 +8,8 @@ import {
   faWarehouse,
   faBars,
   IconDefinition,
+  faBoxesPacking,
+  faBoxes,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, Outlet } from "@tanstack/react-router";
 import DashboardContent from "./DashboardContent";
@@ -21,6 +23,8 @@ interface MenuItem {
 const menuItems: MenuItem[] = [
   { icon: faHome, label: "Home", toDest: "/admin" },
   { icon: faUsers, label: "Users", toDest: "/admin/users" },
+  { icon: faBoxes, label: "Products", toDest: "/admin/products" },
+  { icon: faBoxesPacking, label: "Shows", toDest: "/admin/shows" },
   { icon: faFile, label: "Reports", toDest: "/admin/reports" },
   { icon: faWarehouse, label: "Inventory", toDest: "/admin/inventory" },
   { icon: faCog, label: "Settings", toDest: "/admin/settings" },
