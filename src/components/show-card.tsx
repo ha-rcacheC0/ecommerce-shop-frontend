@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ShowWithProducts } from "../types";
+import { ShowProduct, ShowWithProducts } from "../types";
 
 interface ShowCardProps {
   show: ShowWithProducts;
@@ -7,7 +7,7 @@ interface ShowCardProps {
 
 export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
   const totalProducts = show.ShowProducts.reduce(
-    (sum, product) => sum + product.quantity,
+    (sum: number, product: ShowProduct) => sum + product.quantity,
     0
   );
 

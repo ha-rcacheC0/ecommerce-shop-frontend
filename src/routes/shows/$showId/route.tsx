@@ -6,6 +6,7 @@ import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { ShowProduct } from "../../../types";
 
 export const Route = createFileRoute("/shows/$showId")({
   component: ShowDetailPage,
@@ -87,7 +88,7 @@ function ShowDetailPage() {
               <button
                 className="btn btn-primary btn-lg mt-4"
                 onClick={() => {
-                  // Placeholder for adding show to cart
+                  addToCart;
                   toast.info("Show add to cart functionality coming soon!");
                 }}
               >
@@ -114,31 +115,31 @@ function ShowDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {show?.ShowProducts.map((product) => (
-                  <tr key={product.id}>
+                {show?.ShowProducts.map((showProduct: ShowProduct) => (
+                  <tr key={showProduct.id}>
                     <td>
                       <div className="flex items-center space-x-3">
                         <div className="avatar">
                           <div className="mask mask-squircle w-12 h-12">
                             <img
-                              src={product.Product.image}
-                              alt={product.Product.title}
+                              src={showProduct.product.image}
+                              alt={showProduct.product.title}
                             />
                           </div>
                         </div>
                         <div>
                           <div className="font-bold">
-                            {product.Product.title}
+                            {showProduct.product.title}
                           </div>
                           <div className="text-sm opacity-50">
-                            {product.Product.brand?.name} -{" "}
-                            {product.Product.category?.name}
+                            {showProduct.product.brand?.name} -{" "}
+                            {showProduct.product.category?.name}
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td>{product.quantity}</td>
-                    <td>{product.notes || "N/A"}</td>
+                    <td>{showProduct.quantity}</td>
+                    <td>{showProduct.notes || "N/A"}</td>
                   </tr>
                 ))}
               </tbody>

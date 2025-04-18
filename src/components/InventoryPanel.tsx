@@ -8,15 +8,6 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 
-interface InventoryItem {
-  id: string;
-  sku: string;
-  product: { title: string };
-  unitPrice: number;
-  package: string[];
-  availableStock: number;
-}
-
 const InventoryTable: React.FC<{ selectedView: string | null }> = ({
   selectedView,
 }) => {
@@ -27,7 +18,7 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
     isError,
   } = useQuery(getAllItemsInInventoryQueryOptions());
   const filteredInventory = useMemo(() => {
-    return inventory.filter((item: InventoryItem) => {
+    return inventory?.filter((item) => {
       const matchesSearch =
         searchTerm === "" ||
         Object.values(item).some((value) =>
@@ -79,7 +70,7 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
                 </tr>
               </thead>
               <tbody>
-                {filteredInventory.map((item: InventoryItem) => (
+                {filteredInventory?.map((item) => (
                   <tr
                     key={item.id}
                     className="border-t border-gray-600 text-black hover:bg-gray-400 hover:text-white text-center"

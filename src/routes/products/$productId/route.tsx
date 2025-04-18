@@ -181,21 +181,25 @@ const SingleProductPage = () => {
             <div className="w-1/2">
               <h2 className="text-xl underline">Colors:</h2>
               <ul className="flex flex-wrap gap-1">
-                {product.data?.colors?.map((color) => (
-                  <li key={color.id} className="badge badge-outline mr-1">
-                    {color.name}
-                  </li>
-                ))}
+                {product.data?.colors?.map(
+                  (color: { id: string; name: string }) => (
+                    <li key={color.id} className="badge badge-outline mr-1">
+                      {color.name}
+                    </li>
+                  )
+                )}
               </ul>
             </div>
             <div className="w-1/2">
               <h2 className="text-xl underline">Effects:</h2>
               <ul className="flex flex-wrap gap-1">
-                {product.data?.effects?.map((effect) => (
-                  <li key={effect.id} className="badge badge-outline mr-1">
-                    {effect.name}
-                  </li>
-                ))}
+                {product.data?.effects?.map(
+                  (effect: { id: string; name: string }) => (
+                    <li key={effect.id} className="badge badge-outline mr-1">
+                      {effect.name}
+                    </li>
+                  )
+                )}
               </ul>
             </div>
           </div>

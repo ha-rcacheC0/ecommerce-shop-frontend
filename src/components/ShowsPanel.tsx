@@ -43,7 +43,6 @@ const ShowsTable = () => {
   if (isError)
     return <div className="text-center text-red-500">Error fetching shows</div>;
 
-  // Filter shows based on search term and selectedView
   const filteredShows = shows?.filter((show: ShowWithProducts) => {
     const matchesSearch =
       show.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

@@ -84,22 +84,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 {isLoading ? (
                   <div>Loading categories...</div>
                 ) : (
-                  availableCategories.map((category) => (
-                    <label
-                      key={category.id}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedCategories.includes(category.name)}
-                        onChange={() => setSelectedCategories(category.name)}
-                        className="checkbox checkbox-sm"
-                      />
-                      <span>
-                        {CategoryDisplay[category.name] || category.name}
-                      </span>
-                    </label>
-                  ))
+                  availableCategories.map(
+                    (category: { id: string; name: string }) => (
+                      <label
+                        key={category.id}
+                        className="flex items-center space-x-2"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedCategories.includes(category.name)}
+                          onChange={() => setSelectedCategories(category.name)}
+                          className="checkbox checkbox-sm"
+                        />
+                        <span>
+                          {CategoryDisplay[category.name] || category.name}
+                        </span>
+                      </label>
+                    )
+                  )
                 )}
               </div>
             </div>
@@ -112,7 +114,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 {isLoading ? (
                   <div>Loading brands...</div>
                 ) : (
-                  availableBrands.map((brand) => (
+                  availableBrands.map((brand: { id: string; name: string }) => (
                     <label
                       key={brand.id}
                       className="flex items-center space-x-2"
@@ -138,7 +140,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 {isLoading ? (
                   <div>Loading colors...</div>
                 ) : (
-                  availableColors.map((color) => (
+                  availableColors.map((color: { id: string; name: string }) => (
                     <label
                       key={color.id}
                       className="flex items-center space-x-2"
@@ -164,20 +166,24 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 {isLoading ? (
                   <div>Loading effects...</div>
                 ) : (
-                  availableEffects.map((effect) => (
-                    <label
-                      key={effect.id}
-                      className="flex items-center space-x-2"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedEffects.includes(effect.name)}
-                        onChange={() => setSelectedEffects(effect.name)}
-                        className="checkbox checkbox-sm"
-                      />
-                      <span>{EffectsDisplay[effect.name] || effect.name}</span>
-                    </label>
-                  ))
+                  availableEffects.map(
+                    (effect: { id: string; name: string }) => (
+                      <label
+                        key={effect.id}
+                        className="flex items-center space-x-2"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedEffects.includes(effect.name)}
+                          onChange={() => setSelectedEffects(effect.name)}
+                          className="checkbox checkbox-sm"
+                        />
+                        <span>
+                          {EffectsDisplay[effect.name] || effect.name}
+                        </span>
+                      </label>
+                    )
+                  )
                 )}
               </div>
             </div>
