@@ -84,6 +84,7 @@ export const BrandDisplay: Record<string, string> = {
   BOOMER: "Boomer",
   BROTHERS: "Brothers",
   BUM_BUM: "Bum Bum",
+  CANNON: "Cannon",
   CRZ: "CRZ",
   CSS: "CSS",
   DFS: "DFS",
@@ -96,18 +97,22 @@ export const BrandDisplay: Record<string, string> = {
   GALAXY_FIREWORKS: "Galaxy Fireworks",
   GENERIC: "Generic",
   HAPPY_FAMILY: "Happy Family",
+  HONEY_BOOM: "Honey Boom",
   HOP_KEE: "Hop Kee",
   IRONMAN: "Ironman",
   KRIPTON_FIREWORKS: "Kripton Fireworks",
   LEGEND: "Legend",
   MAD_OX: "Mad Ox",
   MC_FIREWORKS: "MC Fireworks",
+  MECHA: "Mecha",
   MIGHTY_MAX: "Mighty Max",
   MIRACLE: "Miracle",
+  MONKEY_MANIA: "Monkey Mania",
   MUSCLE_PACK: "Muscle Pack",
   PYRO_DIABLO: "Pyro Diablo",
   PYRO_MOOI: "Pyro Mooi",
   PYRO_PIRATE: "Pyro Pirate",
+  PYRO_SLUT: "Pyro Slut",
   RACCOON: "Raccoon",
   RED_LANTERN: "Red Lantern",
   SHOGUN: "Shogun",
@@ -120,15 +125,18 @@ export const BrandDisplay: Record<string, string> = {
   SUNS_FIREWORKS: "Suns Fireworks",
   T_SKY: "T-Sky",
   TOPGUN: "Topgun",
+  TWO_WINGS: "Two Wings",
   WINDA: "Winda",
   WISE_GUY: "Wise Guy",
 };
+
 
 // Create string-based schemas instead of enums
 export const EffectsSchema = z.string();
 export const ColorsSchema = z.string();
 export const CategorySchema = z.string();
 export const BrandSchema = z.string();
+
 
 export const States = {
   AL: "AL",

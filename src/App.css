@@ -15,6 +15,10 @@
   --color-base-200: #f8f8f8;
   --color-base-300: #dcdcdc;
   --color-base-content: #0f0f0f;
+  --color-info: #002868;
+  --color-info-content: #f9f9f9;
+  --color-error: #bf0a30;
+  --color-error-content: #f9f9f9;
 }
 
 @plugin "daisyui/theme" {
