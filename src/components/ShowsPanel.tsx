@@ -94,9 +94,9 @@ const ShowsTable = () => {
                     </div>
                   </div>
                 </td>
-                <td>{show.ShowType.name}</td>
-                <td>${parseFloat(show.price).toFixed(2)}</td>
-                <td>{show.ShowProducts.length} products</td>
+                <td>{show.showType.name}</td>
+                <td>${parseFloat(show.casePrice).toFixed(2)}</td>
+                <td>{show.showProducts.length} products</td>
                 <td>
                   <span
                     className={`badge ${show.inStock ? "badge-success" : "badge-error"}`}

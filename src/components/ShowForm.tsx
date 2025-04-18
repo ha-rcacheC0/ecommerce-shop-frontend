@@ -111,7 +111,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
       setPrice(parseFloat(showData.casePrice.toString()).toFixed(2)); // Use casePrice for the price
       setImage(showData.image);
       setVideoURL(showData.videoURL || "");
-      setInStock(showData.inStock);
+      setInStock(showData.inStock!);
       setShowTypeId(showData.showTypeId || "");
       setSelectedBrandId(showData.brand?.id || "");
       setSelectedCategoryId(showData.category?.id || "");
@@ -119,17 +119,11 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
       // Set show products
       if (showData.showProducts) {
         setSelectedProducts(
-          showData.showProducts.map(
-            (sp: {
-              product: { id: string };
-              quantity: number;
-              notes: string;
-            }) => ({
-              productId: sp.product.id,
-              quantity: sp.quantity,
-              notes: sp.notes || "",
-            })
-          )
+          showData.showProducts.map((sp) => ({
+            productId: sp.product.id,
+            quantity: sp.quantity,
+            notes: sp.notes || "",
+          }))
         );
       }
     }

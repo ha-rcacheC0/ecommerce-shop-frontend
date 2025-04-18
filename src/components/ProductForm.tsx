@@ -88,7 +88,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       setDescription(productData.description || "");
       setCasePrice(parseFloat(productData.casePrice.toString()).toFixed(2));
       setPackageString(productData.package.join(","));
-      setInStock(productData.inStock);
+      setInStock(productData.inStock!);
       setIsCaseBreakable(productData.isCaseBreakable);
       setImageUrl(productData.image);
       setVideoUrl(productData.videoURL || "");

@@ -6,7 +6,7 @@ interface ShowCardProps {
 }
 
 export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
-  const totalProducts = show.ShowProducts.reduce(
+  const totalProducts = show.showProducts.reduce(
     (sum: number, product: ShowProduct) => sum + product.quantity,
     0
   );
@@ -23,10 +23,10 @@ export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
       <div className="card-body">
         <div className="flex justify-between items-start">
           <h2 className="card-title">{show.title}</h2>
-          <div className="badge badge-secondary">{show.ShowType.name}</div>
+          <div className="badge badge-secondary">{show.showType.name}</div>
         </div>
         <p className="text-md font-semibold text-primary">
-          ${parseFloat(show.price).toFixed(2)}
+          ${parseFloat(show.casePrice).toFixed(2)}
         </p>
         <p className="text-sm">
           {show.description && show.description?.length > 100
