@@ -8,15 +8,6 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 
-interface InventoryItem {
-  id: string;
-  sku: string;
-  Product: { title: string };
-  unitPrice: number;
-  package: string[];
-  availableStock: number;
-}
-
 const InventoryTable: React.FC<{ selectedView: string | null }> = ({
   selectedView,
 }) => {
@@ -27,13 +18,13 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
     isError,
   } = useQuery(getAllItemsInInventoryQueryOptions());
   const filteredInventory = useMemo(() => {
-    return inventory.filter((item: InventoryItem) => {
+    return inventory?.filter((item) => {
       const matchesSearch =
         searchTerm === "" ||
         Object.values(item).some((value) =>
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
         ) ||
-        item.Product.title.toLowerCase().includes(searchTerm.toLowerCase());
+        item.product.title.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesView = selectedView
         ? (selectedView === "low-stock" &&
@@ -79,13 +70,13 @@ const InventoryTable: React.FC<{ selectedView: string | null }> = ({
                 </tr>
               </thead>
               <tbody>
-                {filteredInventory.map((item: InventoryItem) => (
+                {filteredInventory?.map((item) => (
                   <tr
                     key={item.id}
                     className="border-t border-gray-600 text-black hover:bg-gray-400 hover:text-white text-center"
                   >
                     <td className="py-2 px-4">{item.sku}</td>
-                    <td className="py-2 px-4">{item.Product.title}</td>
+                    <td className="py-2 px-4">{item.product.title}</td>
                     <td className="py-2 px-4">${item.unitPrice}</td>
                     <td className="py-2 px-4">{item.package.join(", ")}</td>
                     <td className="py-2 px-4">{item.availableStock}</td>

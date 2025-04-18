@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const EffectsDisplay = {
+// Display mappings - we'll retain these for UI presentation
+export const EffectsDisplay: Record<string, string> = {
   BROCADE: "Brocade",
   CHRYSANTHEMUM: "Chrysanthemum",
   COMET: "Comet",
@@ -34,7 +35,7 @@ export const EffectsDisplay = {
   WILLOW: "Willow",
 };
 
-export const ColorsDisplay = {
+export const ColorsDisplay: Record<string, string> = {
   BLACK: "Black",
   BLUE: "Blue",
   BROWN: "Brown",
@@ -49,7 +50,7 @@ export const ColorsDisplay = {
   YELLOW: "Yellow",
 };
 
-export const CategoryDisplay = {
+export const CategoryDisplay: Record<string, string> = {
   REPEATERS_200_GRAM: "200 Gram Cakes",
   REPEATERS_500_GRAM: "500 Gram Cakes",
   ASSORTMENT: "Assortments",
@@ -75,7 +76,7 @@ export const CategoryDisplay = {
   TUBES: "Tubes (Finales)",
 };
 
-export const BrandDisplay = {
+export const BrandDisplay: Record<string, string> = {
   ALPHA_FIREWORKS: "Alpha Fireworks",
   BLACK_SCORPION: "Black Scorpion",
   BLUE_DRAGON: "Blue Dragon",
@@ -129,134 +130,13 @@ export const BrandDisplay = {
   WISE_GUY: "Wise Guy",
 };
 
-export enum Effects {
-  BROCADE = "BROCADE",
-  CHRYSANTHEMUM = "CHRYSANTHEMUM",
-  COMET = "COMET",
-  CONFETTI = "CONFETTI",
-  CRACKLES = "CRACKLES",
-  CROSSETTE = "CROSSETTE",
-  FAN_EFFECTS = "FAN_EFFECTS",
-  FLYING_FISH = "FLYING_FISH",
-  GLITTER = "GLITTER",
-  GLOW = "GLOW",
-  HELICOPTER = "HELICOPTER",
-  LOUD_BANG = "LOUD_BANG",
-  NISHIKI_KAMURO = "NISHIKI_KAMURO",
-  PALM_TREE = "PALM_TREE",
-  PARACHUTE = "PARACHUTE",
-  PEARLS = "PEARLS",
-  PEONY = "PEONY",
-  PISTIL = "PISTIL",
-  REVEAL = "REVEAL",
-  RISING_TAIL = "RISING_TAIL",
-  SIZZLES = "SIZZLES",
-  SMOKE = "SMOKE",
-  SNAKE = "SNAKE",
-  SNAPS = "SNAPS",
-  SPARKLES = "SPARKLES",
-  SPINS = "SPINS",
-  STROBES = "STROBES",
-  TOURBILLION = "TOURBILLION",
-  WATERFALL = "WATERFALL",
-  WHISTLE = "WHISTLE",
-  WILLOW = "WILLOW",
-}
 
-export enum Colors {
-  BLACK = "BLACK",
-  BLUE = "BLUE",
-  BROWN = "BROWN",
-  GREEN = "GREEN",
-  GOLD = "GOLD",
-  ORANGE = "ORANGE",
-  PINK = "PINK",
-  PURPLE = "PURPLE",
-  RED = "RED",
-  SILVER = "SILVER",
-  WHITE = "WHITE",
-  YELLOW = "YELLOW",
-}
+// Create string-based schemas instead of enums
+export const EffectsSchema = z.string();
+export const ColorsSchema = z.string();
+export const CategorySchema = z.string();
+export const BrandSchema = z.string();
 
-export enum Category {
-  REPEATERS_200_GRAM = "REPEATERS_200_GRAM",
-  REPEATERS_500_GRAM = "REPEATERS_500_GRAM",
-  RELOADABLES = "RELOADABLES",
-  ASSORTMENT = "ASSORTMENT",
-  BOTTLE_ROCKETS = "BOTTLE_ROCKETS",
-  CONE_FLORAL = "CONE_FLORAL",
-  CONFETTI_SHOOTERS_AIR_COMPRESSED = "CONFETTI_SHOOTERS_AIR_COMPRESSED",
-  FIRECRACKERS = "FIRECRACKERS",
-  FLYING_HELICOPTERS = "FLYING_HELICOPTERS",
-  FOUNTAINS = "FOUNTAINS",
-  FUSE = "FUSE",
-  GENDER_REVEAL = "GENDER_REVEAL",
-  GROUND = "GROUND",
-  PARACHUTES = "PARACHUTES",
-  PINWHEELS = "PINWHEELS",
-  SHELLS_MINES = "SHELLS_MINES",
-  SNAKE_SMOKE = "SNAKE_SMOKE",
-  TOY_NOVELTIES_STROBES = "TOY_NOVELTIES_STROBES",
-  TUBES = "TUBES",
-  ROCKETS_MISSLES = "ROCKETS_MISSLES",
-  SPARKLERS = "SPARKLERS",
-  ROMAN_CANDLES = "ROMAN_CANDLES",
-  SUPPLIES_VISIBILITY = "SUPPLIES_VISIBILITY",
-}
-
-export enum Brand {
-  ALPHA_FIREWORKS = "ALPHA_FIREWORKS",
-  BLACK_SCORPION = "BLACK_SCORPION",
-  BLUE_DRAGON = "BLUE_DRAGON",
-  BOOM_WOW = "BOOM_WOW",
-  BOOMER = "BOOMER",
-  BROTHERS = "BROTHERS",
-  BUM_BUM = "BUM_BUM",
-  CANNON = "CANNON",
-  CRZ = "CRZ",
-  CSS = "CSS",
-  DEMON_PYRO = "DEMON_PYRO",
-  DFS = "DFS",
-  DOMINATOR = "DOMINATOR",
-  DUCK = "DUCK",
-  FIREHAWK = "FIREHAWK",
-  FISHERMAN = "FISHERMAN",
-  FOX_FIREWORKS = "FOX_FIREWORKS",
-  GALAXY_FIREWORKS = "GALAXY_FIREWORKS",
-  GENERIC = "GENERIC",
-  HAPPY_FAMILY = "HAPPY_FAMILY",
-  HONEY_BOOM = "HONEY_BOOM",
-  HOP_KEE = "HOP_KEE",
-  IRONMAN = "IRONMAN",
-  KRIPTON_FIREWORKS = "KRIPTON_FIREWORKS",
-  LEGEND = "LEGEND",
-  MAD_OX = "MAD_OX",
-  MC_FIREWORKS = "MC_FIREWORKS",
-  MIGHTY_MAX = "MIGHTY_MAX",
-  MECHA = "MECHA",
-  MONKEY_MANIA = "MONKEY_MANIA",
-  MIRACLE = "MIRACLE",
-  MUSCLE_PACK = "MUSCLE_PACK",
-  PYRO_DIABLO = "PYRO_DIABLO",
-  PYRO_MOOI = "PYRO_MOOI",
-  PYRO_PIRATE = "PYRO_PIRATE",
-  PYRO_SLUT = "PYRO_SLUT",
-  RACCOON = "RACCOON",
-  RED_LANTERN = "RED_LANTERN",
-  SHOGUN = "SHOGUN",
-  SIN_CITY = "SIN_CITY",
-  SKY_SLAM = "SKY_SLAM",
-  SKY_PAINTER = "SKY_PAINTER",
-  SKY_PIONEER = "SKY_PIONEER",
-  SKY_EAGLE = "SKY_EAGLE",
-  STARGET = "STARGET",
-  SUNS_FIREWORKS = "SUNS_FIREWORKS",
-  T_SKY = "T_SKY",
-  TOPGUN = "TOPGUN",
-  TWO_WINGS = "TWO_WINGS",
-  WINDA = "WINDA",
-  WISE_GUY = "WISE_GUY",
-}
 
 export const States = {
   AL: "AL",
@@ -326,6 +206,7 @@ const AddressSchema = z.object({
   state: StateEnum,
   postalCode: z.string(),
 });
+
 // Example of a schema that uses the StateEnum
 const UserProfileSchema = z.object({
   firstName: z.string().optional(),
@@ -337,62 +218,192 @@ const UserProfileSchema = z.object({
   canContact: z.boolean().optional(),
   userId: z.string(),
 });
+
 const TUserSchema = z.object({
   id: z.string(),
-  role: z.enum(["USER", "MANAGER", "ADMIN"]),
+  role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
   email: z.string().email(),
   lastLogin: z.string().datetime().nullable(),
 });
 
-const TUnitProduct = z.object({
+export const ShowTypeSchema = z.object({
   id: z.string(),
-  sku: z.string(),
-  productId: z.string(),
-  unitPrice: z.string(),
-  package: z.number().array(),
-  availableStock: z.number(),
+  name: z.string(),
+  description: z.string().nullable(),
 });
 
-export const TProductSchema = z.object({
-  id: z.string(),
-  sku: z.number(),
-  title: z.string(),
-  description: z.string().nullable(),
-  casePrice: z.string(),
-  Categories: z.object({ id: z.string(), name: z.string() }),
-  Brands: z.object({ id: z.string(), name: z.string() }),
-  ColorStrings: z
-    .object({ id: z.string(), name: z.string() })
-    .array()
-    .optional(),
-  EffectStrings: z
-    .object({ id: z.string(), name: z.string() })
-    .array()
-    .optional(),
-  image: z.string(),
-  videoUrl: z.string().url().optional(),
-  package: z.number().array(),
-  UnitProduct: TUnitProduct.optional().nullable(),
-});
+interface TProductInterface {
+  id: string;
+  sku: string;
+  title: string;
+  description: string | null;
+  casePrice: string;
+  isShow?: boolean;
+  inStock?: boolean;
+  isCaseBreakable: boolean;
+  showTypeId?: string | null;
+  category: { id: string; name: string };
+  brand: { id: string; name: string };
+  showType?: { id: string; name: string; description: string | null } | null;
+  colors?: { id: string; name: string }[];
+  effects?: { id: string; name: string }[];
+  image: string;
+  videoURL?: string | null;
+  package: number[];
+  unitProduct?: TUnitProductInterface | null;
+  showProducts?: ShowProductInterface[];
+}
+
+interface ShowProductInterface {
+  id: string;
+  showId: string;
+  productId: string;
+  quantity: number;
+  notes: string | null;
+  product: TProductInterface;
+}
+
+interface TUnitProductInterface {
+  id: string;
+  sku: string;
+  productId: string;
+  unitPrice: string;
+  package: number[];
+  availableStock: number;
+}
+
+export const TProductSchema: z.ZodType<TProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    sku: z.string(),
+    title: z.string(),
+    description: z.string().nullable(),
+    casePrice: z.string(),
+    isShow: z.boolean().optional(),
+    isCaseBreakable: z.boolean(),
+    inStock: z.boolean(),
+    showTypeId: z.string().nullable().optional(),
+    category: z.object({ id: z.string(), name: z.string() }),
+    brand: z.object({ id: z.string(), name: z.string() }),
+    showType: ShowTypeSchema.nullable().optional(),
+    colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+    effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+    image: z.string(),
+    videoURL: z.string().url().nullable().optional(),
+    package: z.array(z.number()),
+    unitProduct: TUnitProductSchema.optional().nullable(),
+    showProducts: z.array(ShowProductSchema).optional(),
+  })
+);
+
+export const ShowProductSchema: z.ZodType<ShowProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    showId: z.string(),
+    productId: z.string(),
+    quantity: z.number(),
+    notes: z.string().nullable(),
+    product: TProductSchema,
+  })
+);
+
+export const TUnitProductSchema: z.ZodType<TUnitProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    sku: z.string(),
+    productId: z.string(),
+    unitPrice: z.string(),
+    package: z.array(z.number()),
+    availableStock: z.number(),
+  })
+);
+
+// Define the types from the schemas
+export type ShowType = z.infer<typeof ShowTypeSchema>;
+export type ShowProduct = z.infer<typeof ShowProductSchema>;
+export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
+export type TProduct = z.infer<typeof TProductSchema>;
+
+// Product Types
+export type CreateProductData = {
+  sku: string;
+  title: string;
+  description?: string;
+  image?: string;
+  casePrice: string;
+  inStock: boolean;
+  package: string; // Comma-separated list
+  isCaseBreakable: boolean;
+  videoURL?: string;
+  brandId: string;
+  categoryId: string;
+  colors: string[]; // Array of color IDs
+  effects: string[]; // Array of effect IDs
+};
+
+export type UpdateProductData = Partial<CreateProductData>;
+
+// Show Types
+export type CreateShowProductData = {
+  productId: string;
+  quantity: number;
+  notes?: string;
+};
+
+export type CreateShowData = {
+  title: string;
+  description?: string;
+  casePrice: number;
+  image?: string;
+  videoURL?: string;
+  inStock: boolean;
+  showTypeId: string;
+  brandId: string;
+  categoryId: string;
+  products: CreateShowProductData[];
+};
+
+export type UpdateShowData = Partial<CreateShowData>;
+
+// Update ProductFilters to include isShow
+export interface ProductFilters {
+  page: number;
+  pageSize: number;
+  searchTitle?: string;
+  selectedBrands?: string[];
+  selectedCategories?: string[];
+  selectedColors?: string[];
+  selectedEffects?: string[];
+  isShow?: boolean;
+}
+
+// Enhanced type for a product that is a show
+export type ShowWithProducts = TProduct & {
+  isShow: true;
+  showType: ShowType;
+  showProducts: ShowProduct[];
+};
 
 const CartProductSchema = z.object({
   id: z.string(),
   caseQuantity: z.number(),
   unitQuantity: z.number(),
   cartId: z.string(),
-  Product: TProductSchema,
+  product: TProductSchema,
 });
+
 const TCartSchema = z.object({
   id: z.string(),
   userId: z.string().optional(),
-  CartProducts: CartProductSchema.array(),
-  User: TUserSchema,
+  cartProducts: CartProductSchema.array(),
+  user: TUserSchema,
 });
 
 export const SignInRequestSchema = z.object({
   email: z.string(),
   password: z.string(),
 });
+
 export const createUserRequestSchema = z
   .object({
     email: z.string().email(),
@@ -405,62 +416,53 @@ export const SignInResponseSchema = z.object({
   userInfo: z
     .object({
       email: z.string(),
-      role: z.enum(["USER", "MANAGER", "ADMIN"]),
+      role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
       lastLogin: z.string().datetime().nullable(),
       Cart: TCartSchema,
     })
     .optional(),
-  message: z.string().optional(), // Assuming the message might be included in the response
+  message: z.string().optional(),
 });
+
 const ApprovedTerminalSchema = z.object({
   id: z.string(),
   acceptOutOfStateLicence: z.boolean(),
   terminalName: z.string(),
   businessRequired: z.boolean(),
-  Address: AddressSchema,
+  address: AddressSchema,
   addressId: z.string(),
   company: TerminalCompanyEnum,
 });
-
-type ProductFilters = {
-  page: number;
-  pageSize: number;
-  searchTitle?: string;
-  selectedBrands?: Brand[];
-  selectedCategories?: Category[];
-  selectedColors?: Colors[];
-  selectedEffects?: Effects[];
-};
 
 // Define the response type from our API
 type ProductsResponse = {
   contents: TProduct[];
   hasMore: boolean;
   totalPages: number;
+  totalItems: number;
   currentPage: number;
 };
 
+// Types derived from the schemas
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 type User = z.infer<typeof SignInResponseSchema>;
 type UserProfile = z.infer<typeof UserProfileSchema>;
-type TProduct = z.infer<typeof TProductSchema>;
 type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
 type TAddress = z.infer<typeof AddressSchema>;
 type TApprovedTerminal = z.infer<typeof ApprovedTerminalSchema>;
+
 export type {
   SignInRequest,
   SignInResponse,
   UserCreateRequest,
   User,
   UserProfile,
-  TProduct,
   TCartProduct,
   TCart,
   TAddress,
   TApprovedTerminal,
   ProductsResponse,
-  ProductFilters,
 };

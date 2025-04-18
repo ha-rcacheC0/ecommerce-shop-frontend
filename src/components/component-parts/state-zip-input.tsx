@@ -15,38 +15,33 @@ const StateZipInput: React.FC<StateZipInputProps> = ({
   onZipcodeChange,
 }) => {
   return (
-    <>
-      <label className="form-control w-full max-w-xs">
-        <div className="label">
-          <span className="label-text">State</span>
-        </div>
-        <select
-          className="select select-bordered text-base-content"
-          value={state}
-          onChange={(e) => onStateChange(e.target.value)}
-        >
-          <option disabled value="">
-            Select a State
+    <fieldset className="fieldset max-md:grid-cols-4 bg-base-200 border border-primary p-4 rounded-box">
+      <legend className="fieldset-legend text-primary ">Find a Terminal</legend>
+
+      <label className="fieldset-label">State</label>
+      <select
+        className="select "
+        value={state}
+        onChange={(e) => onStateChange(e.target.value)}
+      >
+        <option disabled value="">
+          Select a State
+        </option>
+        {Object.entries(States).map(([code, name]) => (
+          <option key={code} value={code}>
+            {name}
           </option>
-          {Object.entries(States).map(([code, name]) => (
-            <option key={code} value={code}>
-              {name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="form-control w-full max-w-xs">
-        <div className="label">
-          <span className="label-text">Zip Code</span>
-        </div>
-        <input
-          type="text"
-          className="input input-bordered text-base-content"
-          value={zipcode}
-          onChange={(e) => onZipcodeChange(e.target.value)}
-        />
-      </label>
-    </>
+        ))}
+      </select>
+
+      <label className="fieldset-label">Zip Code</label>
+      <input
+        type="text"
+        className="input input-bordered text-base-content"
+        value={zipcode}
+        onChange={(e) => onZipcodeChange(e.target.value)}
+      />
+    </fieldset>
   );
 };
 

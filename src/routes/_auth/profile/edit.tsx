@@ -35,7 +35,7 @@ export const ProfileForm = () => {
   const form = useForm({
     validatorAdapter: zodValidator,
     defaultValues: userProfile,
-    onSubmit: async ({ value }) => {
+    onSubmit: ({ value }) => {
       mutation.mutate({ token: auth.user!.token!, body: value });
       navigate({ to: "/profile" });
     },
