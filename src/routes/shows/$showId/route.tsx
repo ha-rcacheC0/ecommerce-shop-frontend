@@ -62,11 +62,11 @@ function ShowDetailPage() {
           </div>
           <div className="p-6 md:w-1/2">
             <div className="badge badge-secondary mb-2">
-              {show?.ShowType.name}
+              {show?.showType.name}
             </div>
             <h1 className="text-3xl font-bold mb-2">{show?.title}</h1>
             <p className="text-xl font-semibold text-primary mb-4">
-              ${parseFloat(show?.price || "0.00").toFixed(2)}
+              ${parseFloat(show?.casePrice || "0.00").toFixed(2)}
             </p>
             <p className="mb-6">{show?.description}</p>
 
@@ -115,7 +115,7 @@ function ShowDetailPage() {
                 </tr>
               </thead>
               <tbody>
-                {show?.ShowProducts.map((showProduct: ShowProduct) => (
+                {show?.showProducts.map((showProduct: ShowProduct) => (
                   <tr key={showProduct.id}>
                     <td>
                       <div className="flex items-center space-x-3">

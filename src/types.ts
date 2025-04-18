@@ -224,55 +224,100 @@ export const ShowTypeSchema = z.object({
   description: z.string().nullable(),
 });
 
-// eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
-export let TProductSchema: z.ZodType<any>;
+interface TProductInterface {
+  id: string;
+  sku: string;
+  title: string;
+  description: string | null;
+  casePrice: string;
+  isShow?: boolean;
+  inStock?: boolean;
+  isCaseBreakable: boolean;
+  showTypeId?: string | null;
+  category: { id: string; name: string };
+  brand: { id: string; name: string };
+  showType?: { id: string; name: string; description: string | null } | null;
+  colors?: { id: string; name: string }[];
+  effects?: { id: string; name: string }[];
+  image: string;
+  videoURL?: string | null;
+  package: number[];
+  unitProduct?: TUnitProductInterface | null;
+  showProducts?: ShowProductInterface[];
+}
 
-// Now define the schemas with circular references
-const ShowProductSchema = z.object({
-  id: z.string(),
-  showId: z.string(),
-  productId: z.string(),
-  quantity: z.number(),
-  notes: z.string().nullable(),
-  product: z.lazy(() => TProductSchema),
-});
+interface ShowProductInterface {
+  id: string;
+  showId: string;
+  productId: string;
+  quantity: number;
+  notes: string | null;
+  product: TProductInterface;
+}
 
-TProductSchema = z.object({
-  id: z.string(),
-  sku: z.string(),
-  title: z.string(),
-  description: z.string().nullable(),
-  casePrice: z.string(),
-  isShow: z.boolean().optional(),
-  showTypeId: z.string().nullable().optional(),
-  category: z.object({ id: z.string(), name: z.string() }),
-  brand: z.object({ id: z.string(), name: z.string() }),
-  showType: ShowTypeSchema.nullable().optional(),
-  colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-  effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-  image: z.string(),
-  videoURL: z.string().url().optional(),
-  package: z.array(z.number()),
-  unitProduct: z
-    .lazy(() => TUnitProductSchema)
-    .optional()
-    .nullable(),
-  showProducts: z.array(z.lazy(() => ShowProductSchema)).optional(),
-});
+interface TUnitProductInterface {
+  id: string;
+  sku: string;
+  productId: string;
+  product: TProductInterface;
+  unitPrice: string;
+  package: number[];
+  availableStock: number;
+}
 
-const TUnitProductSchema = z.object({
-  id: z.string(),
-  sku: z.string(),
-  productId: z.string(),
-  product: TProductSchema,
-  unitPrice: z.string(),
-  package: z.number().array(),
-  availableStock: z.number(),
-});
+export const TProductSchema: z.ZodType<TProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    sku: z.string(),
+    title: z.string(),
+    description: z.string().nullable(),
+    casePrice: z.string(),
+    isShow: z.boolean().optional(),
+    isCaseBreakable: z.boolean(),
+    inStock: z.boolean(),
+    showTypeId: z.string().nullable().optional(),
+    category: z.object({ id: z.string(), name: z.string() }),
+    brand: z.object({ id: z.string(), name: z.string() }),
+    showType: ShowTypeSchema.nullable().optional(),
+    colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+    effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+    image: z.string(),
+    videoURL: z.string().url().nullable().optional(),
+    package: z.array(z.number()),
+    unitProduct: TUnitProductSchema.optional().nullable(),
+    showProducts: z.array(ShowProductSchema).optional(),
+  })
+);
+
+export const ShowProductSchema: z.ZodType<ShowProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    showId: z.string(),
+    productId: z.string(),
+    quantity: z.number(),
+    notes: z.string().nullable(),
+    product: TProductSchema,
+  })
+);
+
+export const TUnitProductSchema: z.ZodType<TUnitProductInterface> = z.lazy(() =>
+  z.object({
+    id: z.string(),
+    sku: z.string(),
+    productId: z.string(),
+    product: TProductSchema,
+    unitPrice: z.string(),
+    package: z.array(z.number()),
+    availableStock: z.number(),
+  })
+);
+
 // Define the types from the schemas
 export type ShowType = z.infer<typeof ShowTypeSchema>;
 export type ShowProduct = z.infer<typeof ShowProductSchema>;
 export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
+export type TProduct = z.infer<typeof TProductSchema>;
+
 // Product Types
 export type CreateProductData = {
   sku: string;
@@ -302,7 +347,7 @@ export type CreateShowProductData = {
 export type CreateShowData = {
   title: string;
   description?: string;
-  price: number;
+  casePrice: number;
   image?: string;
   videoURL?: string;
   inStock: boolean;
@@ -393,13 +438,11 @@ type ProductsResponse = {
 };
 
 // Types derived from the schemas
-
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
 type User = z.infer<typeof SignInResponseSchema>;
 type UserProfile = z.infer<typeof UserProfileSchema>;
-type TProduct = z.infer<typeof TProductSchema>;
 type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
 type TAddress = z.infer<typeof AddressSchema>;
@@ -411,7 +454,6 @@ export type {
   UserCreateRequest,
   User,
   UserProfile,
-  TProduct,
   TCartProduct,
   TCart,
   TAddress,

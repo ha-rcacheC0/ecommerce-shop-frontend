@@ -111,7 +111,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
       setPrice(parseFloat(showData.casePrice.toString()).toFixed(2)); // Use casePrice for the price
       setImage(showData.image);
       setVideoURL(showData.videoURL || "");
-      setInStock(showData.inStock);
+      setInStock(showData.inStock!);
       setShowTypeId(showData.showTypeId || "");
       setSelectedBrandId(showData.brand?.id || "");
       setSelectedCategoryId(showData.category?.id || "");
@@ -119,17 +119,11 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
       // Set show products
       if (showData.showProducts) {
         setSelectedProducts(
-          showData.showProducts.map(
-            (sp: {
-              product: { id: string };
-              quantity: number;
-              notes: string;
-            }) => ({
-              productId: sp.product.id,
-              quantity: sp.quantity,
-              notes: sp.notes || "",
-            })
-          )
+          showData.showProducts.map((sp) => ({
+            productId: sp.product.id,
+            quantity: sp.quantity,
+            notes: sp.notes || "",
+          }))
         );
       }
     }
@@ -219,7 +213,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
     const showData = {
       title,
       description: description || undefined,
-      price: parseFloat(price),
+      casePrice: parseFloat(price),
       image: image || undefined,
       videoURL: videoURL || undefined,
       inStock,
@@ -540,7 +534,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                                 2
                               )}
                             </td>
-                            <td>
+                            <td className="flex gap-2 ">
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
@@ -559,10 +553,34 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                                       icon={faPlus}
                                       className="mr-1"
                                     />
-                                    Add
+                                    Add Case
                                   </>
                                 )}
                               </button>
+                              {product.isCaseBreakable && (
+                                <button
+                                  type="button"
+                                  className="btn btn-primary btn-sm"
+                                  onClick={() => handleAddProduct(product)}
+                                  disabled={selectedProducts.some(
+                                    (p) => p.productId === product.id
+                                  )}
+                                >
+                                  {selectedProducts.some(
+                                    (p) => p.productId === product.id
+                                  ) ? (
+                                    "Added"
+                                  ) : (
+                                    <>
+                                      <FontAwesomeIcon
+                                        icon={faPlus}
+                                        className="mr-1"
+                                      />
+                                      Add Units
+                                    </>
+                                  )}
+                                </button>
+                              )}
                             </td>
                           </tr>
                         ))}
