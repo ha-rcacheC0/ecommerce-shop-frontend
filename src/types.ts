@@ -195,6 +195,23 @@ export const TerminalCompany = {
   FEDEX: "FedEx",
 };
 
+// Define report status enum
+export enum ReportStatus {
+  PENDING = "PENDING",
+  PROCESSING = "PROCESSING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
+// Define report type enum
+export enum ReportType {
+  SALES = "SALES",
+  INVENTORY = "INVENTORY",
+  USER_ACTIVITY = "USER_ACTIVITY",
+  FINANCIAL = "FINANCIAL",
+  PRODUCT_PERFORMANCE = "PRODUCT_PERFORMANCE",
+}
+
 // Create a Zod enum schema from the states enum
 const StateEnum = z.nativeEnum(States);
 const TerminalCompanyEnum = z.nativeEnum(TerminalCompany);
@@ -208,7 +225,6 @@ const AddressSchema = z.object({
   postalCode: z.string(),
 });
 
-// Example of a schema that uses the StateEnum
 const UserProfileSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
@@ -398,6 +414,7 @@ export interface ProductFilters {
   selectedColors?: string[];
   selectedEffects?: string[];
   isShow?: boolean;
+  inStock?: boolean;
 }
 
 // Enhanced type for a product that is a show
@@ -447,6 +464,76 @@ export const SignInResponseSchema = z.object({
   message: z.string().optional(),
 });
 
+// Zod schema for a report
+export const ReportSchema = z.object({
+  id: z.string(),
+  type: z.nativeEnum(ReportType),
+  name: z.string(),
+  description: z.string().optional(),
+  status: z.nativeEnum(ReportStatus),
+  createdAt: z.string().datetime(),
+  completedAt: z.string().datetime().nullable(),
+  parameters: z.record(z.string(), z.any()).optional(),
+  createdBy: z.string(), // userId
+  fileUrl: z.string().nullable(),
+  errorMessage: z.string().nullable(),
+});
+
+// TypeScript type derived from the schema
+export type Report = z.infer<typeof ReportSchema>;
+
+// Define report configuration for available report types
+export const reportConfigurations = {
+  [ReportType.SALES]: {
+    name: "Sales Report",
+    description: "Overview of sales within a specified time period",
+    parameterSchema: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+      includeShowDetails: z.boolean().optional().default(true),
+      includeProductBreakdown: z.boolean().optional().default(true),
+    }),
+  },
+  [ReportType.INVENTORY]: {
+    name: "Inventory Report",
+    description: "Current inventory levels and product status",
+    parameterSchema: z.object({
+      includeZeroStock: z.boolean().optional().default(true),
+      includeNotes: z.boolean().optional().default(true),
+    }),
+  },
+  [ReportType.USER_ACTIVITY]: {
+    name: "User Activity Report",
+    description: "User login and activity tracking",
+    parameterSchema: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+      includeAdminActivity: z.boolean().optional().default(true),
+    }),
+  },
+  [ReportType.FINANCIAL]: {
+    name: "Financial Report",
+    description:
+      "Financial overview including revenue, costs, and profit margins",
+    parameterSchema: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+      includeBreakdownByProduct: z.boolean().optional().default(true),
+      includeBreakdownByCategory: z.boolean().optional().default(true),
+    }),
+  },
+  [ReportType.PRODUCT_PERFORMANCE]: {
+    name: "Product Performance Report",
+    description: "Analysis of product sales performance and trends",
+    parameterSchema: z.object({
+      startDate: z.string(),
+      endDate: z.string(),
+      topPerformersCount: z.number().optional().default(10),
+      includeCategoryAnalysis: z.boolean().optional().default(true),
+    }),
+  },
+};
+
 const ApprovedTerminalSchema = z.object({
   id: z.string(),
   acceptOutOfStateLicence: z.boolean(),
@@ -456,6 +543,29 @@ const ApprovedTerminalSchema = z.object({
   addressId: z.string(),
   company: TerminalCompanyEnum,
 });
+
+export interface User {
+  id: string;
+  role: string;
+  email: string;
+  hashedPassword: string;
+  createdOn: string;
+  lastLogin: string | null;
+  profile: UserProfile;
+}
+
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
+export type UsersResponse = PaginatedResponse<User>;
 
 // Define the response type from our API
 type ProductsResponse = {
@@ -470,7 +580,7 @@ type ProductsResponse = {
 type SignInRequest = z.infer<typeof SignInRequestSchema>;
 type SignInResponse = z.infer<typeof SignInResponseSchema>;
 type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
-type User = z.infer<typeof SignInResponseSchema>;
+
 type UserProfile = z.infer<typeof UserProfileSchema>;
 type TCartProduct = z.infer<typeof CartProductSchema>;
 type TCart = z.infer<typeof TCartSchema>;
@@ -481,7 +591,6 @@ export type {
   SignInRequest,
   SignInResponse,
   UserCreateRequest,
-  User,
   UserProfile,
   TCartProduct,
   TCart,

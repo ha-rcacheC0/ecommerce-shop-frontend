@@ -36,7 +36,7 @@ export const ThemeTypeSchema = z.enum([
   "autumn",
   "business",
   "acid",
-  "lemondade",
+  "lemonade",
   "night",
   "winter",
   "dim",

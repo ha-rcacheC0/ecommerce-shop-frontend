@@ -1,5 +1,11 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
-import { getAllUsers, getUserInfo, postUserInfo } from "./userInfo.api";
+import {
+  getAllUsers,
+  getUserInfo,
+  getUsers,
+  postUserInfo,
+  UsersQueryParams,
+} from "./userInfo.api";
 import { UserProfile } from "../../types";
 import { queryClient } from "../../main";
 
@@ -29,8 +35,20 @@ export const useUserInfoPostMutation = (
   });
 };
 
-export const getAllUsersQueryOptions = (token: string) =>
-  queryOptions({
-    queryKey: ["allUsers", token],
+export const getUsersQueryOptions = (
+  token: string,
+  params: UsersQueryParams = {}
+) => {
+  return queryOptions({
+    queryKey: ["users", params],
+    queryFn: () => getUsers(token, params),
+  });
+};
+
+// For backwards compatibility
+export const getAllUsersQueryOptions = (token: string) => {
+  return queryOptions({
+    queryKey: ["users", "all"],
     queryFn: () => getAllUsers(token),
   });
+};

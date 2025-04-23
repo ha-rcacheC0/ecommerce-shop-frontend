@@ -65,6 +65,9 @@ function checkOrderType(caseSubtotal: number, unitSubtotal: number): OrderType {
   if (unitSubtotal / combinedSubTotal < 0.25) return "wholesale";
   return "combo";
 }
+export function calcUnitPrice(casePrice: number, qty: number): number {
+  return Math.ceil((casePrice / 1.53 / qty) * 2.42) - 0.01; // 2.2*
+}
 
 function calculateShipping(options: ShippingOptions): number {
   const { orderAmount, orderType, destination, needLiftGate } = options;

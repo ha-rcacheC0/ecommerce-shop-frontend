@@ -1,6 +1,7 @@
-import { FieldApi, useForm } from "@tanstack/react-form";
+import { useForm } from "@tanstack/react-form";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-form-adapter";
+import { useState, useEffect } from "react";
 
 import { States, UserProfile } from "../../../types";
 import {
@@ -8,18 +9,7 @@ import {
   userInfoQueryOptions,
 } from "../../../api/users/userQueryOptions.api";
 import { useQuery } from "@tanstack/react-query";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
-  return (
-    <>
-      {field.state.meta.touchedErrors ? (
-        <em>{field.state.meta.touchedErrors}</em>
-      ) : null}
-      {field.state.meta.isValidating ? "Validating..." : null}
-    </>
-  );
-}
+import { FieldError } from "../../../components/component-parts/ErrorMessage";
 
 export const ProfileForm = () => {
   const { auth } = Route.useRouteContext();
@@ -27,241 +17,254 @@ export const ProfileForm = () => {
     queryKey: ["userInfo", auth.user?.token],
   });
   const navigate = useNavigate();
+  const [sameAddress, setSameAddress] = useState(true);
+
   const mutation = useUserInfoPostMutation(
     auth.user!.token!,
-    () => {},
-    () => {}
+    () => {
+      navigate({ to: "/profile" });
+    },
+    (error) => {
+      console.error("Error updating profile:", error);
+    }
   );
+
   const form = useForm({
     validatorAdapter: zodValidator,
     defaultValues: userProfile,
     onSubmit: ({ value }) => {
+      if (sameAddress && value.billingAddress) {
+        value.shippingAddress = { ...value.billingAddress };
+      }
       mutation.mutate({ token: auth.user!.token!, body: value });
-      navigate({ to: "/profile" });
     },
   });
 
+  useEffect(() => {
+    if (userProfile) {
+      const billing = userProfile.billingAddress;
+      const shipping = userProfile.shippingAddress;
+
+      // Check if addresses exist and are the same
+      if (billing && shipping) {
+        const isSame =
+          billing.street1 === shipping.street1 &&
+          billing.street2 === shipping.street2 &&
+          billing.city === shipping.city &&
+          billing.state === shipping.state &&
+          billing.postalCode === shipping.postalCode;
+
+        setSameAddress(isSame);
+      }
+    }
+  }, [userProfile]);
+
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center min-h-screen bg-base-200 py-8 px-4">
       <form
         onSubmit={(e) => {
           e.preventDefault();
           e.stopPropagation();
           form.handleSubmit();
         }}
-        className="bg-white p-8 rounded-lg shadow-md w-4/5 max-w-4xl "
+        className="bg-base-100 p-6 rounded-lg shadow-lg w-full max-w-4xl"
       >
-        <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4 text-base-300">
-            Personal Info
+        <h1 className="text-2xl font-bold mb-6 text-base-content">
+          Edit Profile
+        </h1>
+
+        {/* Personal Information Section */}
+        <div className="border-b border-base-300 pb-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-base-content">
+            Personal Information
           </h2>
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-2">
-              <form.Field name="firstName">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      First Name:
-                      <input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="grow"
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-              <form.Field name="lastName">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      Last Name:
-                      <input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="grow"
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-            </div>
-            <div className="flex gap-2">
-              <form.Field name="dateOfBirth">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      Date of Birth:
-                      <input
-                        type="date"
-                        id={field.name}
-                        name={field.name}
-                        value={
-                          field.state.value
-                            ? new Date(field.state.value)
-                                .toISOString()
-                                .split("T")[0]
-                            : ""
-                        }
-                        onBlur={field.handleBlur}
-                        onChange={(e) => {
-                          const dateValue = e.target.value
-                            ? new Date(e.target.value)
-                            : undefined;
-                          field.handleChange(dateValue);
-                        }}
-                        className="grow"
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-              <form.Field name="phoneNumber">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      Phone Number:
-                      <input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                        className="grow"
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-              <form.Field name="canContact">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="flex items-center font-semibold text-base-300"
-                    >
-                      Can Contact:
-                      <input
-                        type="checkbox"
-                        id={field.name}
-                        name={field.name}
-                        checked={field.state.value ?? false}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.checked)}
-                        className="checkbox checkbox-primary"
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* First Name */}
+            <form.Field name="firstName">
+              {(field) => (
+                <div>
+                  <label className="floating-label">
+                    <span>First Name</span>
+                    <input
+                      type="text"
+                      className="input input-bordered w-full"
+                      value={field.state.value ?? ""}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                    />
+                  </label>
+                  <FieldError field={field} />
+                </div>
+              )}
+            </form.Field>
+
+            {/* Last Name */}
+            <form.Field name="lastName">
+              {(field) => (
+                <div>
+                  <label className="floating-label">
+                    <span>Last Name</span>
+                    <input
+                      type="text"
+                      className="input input-bordered w-full"
+                      value={field.state.value ?? ""}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                    />
+                  </label>
+                  <FieldError field={field} />
+                </div>
+              )}
+            </form.Field>
+
+            {/* Date of Birth */}
+            <form.Field name="dateOfBirth">
+              {(field) => (
+                <div>
+                  <label className="floating-label">
+                    <span>Date of Birth</span>
+                    <input
+                      type="date"
+                      className="input input-bordered w-full"
+                      value={
+                        field.state.value
+                          ? new Date(field.state.value)
+                              .toISOString()
+                              .split("T")[0]
+                          : ""
+                      }
+                      onChange={(e) => {
+                        const dateValue = e.target.value
+                          ? new Date(e.target.value)
+                          : undefined;
+                        field.handleChange(dateValue);
+                      }}
+                      onBlur={field.handleBlur}
+                    />
+                  </label>
+                  <FieldError field={field} />
+                </div>
+              )}
+            </form.Field>
+
+            {/* Phone Number */}
+            <form.Field name="phoneNumber">
+              {(field) => (
+                <div>
+                  <label className="floating-label">
+                    <span>Phone Number</span>
+                    <input
+                      type="tel"
+                      className="input input-bordered w-full"
+                      value={field.state.value ?? ""}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                    />
+                  </label>
+                  <FieldError field={field} />
+                </div>
+              )}
+            </form.Field>
+          </div>
+
+          {/* Contact Preference */}
+          <div className="mt-4">
+            <form.Field name="canContact">
+              {(field) => (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="canContact"
+                    className="checkbox checkbox-primary"
+                    checked={field.state.value ?? false}
+                    onChange={(e) => field.handleChange(e.target.checked)}
+                  />
+                  <label htmlFor="canContact" className="cursor-pointer">
+                    I would like to receive promotional emails and updates
+                  </label>
+                </div>
+              )}
+            </form.Field>
           </div>
         </div>
 
-        <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4 text-base-300">
+        {/* Billing Address Section */}
+        <div className="border-b border-base-300 pb-6 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-base-content">
             Billing Address
           </h2>
+
           <div className="grid grid-cols-1 gap-4">
+            {/* Street 1 */}
             <form.Field name="billingAddress.street1">
               {(field) => (
-                <>
-                  <label
-                    htmlFor={field.name}
-                    className="font-semibold input input-bordered flex items-center gap-2"
-                  >
-                    Street 1:
+                <div>
+                  <label className="floating-label">
+                    <span>Street Address</span>
                     <input
-                      id={field.name}
-                      name={field.name}
+                      type="text"
+                      className="input input-bordered w-full"
                       value={field.state.value ?? ""}
-                      onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
                     />
                   </label>
-                  <FieldInfo field={field} />
-                </>
+                  <FieldError field={field} />
+                </div>
               )}
             </form.Field>
+
+            {/* Street 2 */}
             <form.Field name="billingAddress.street2">
               {(field) => (
-                <>
-                  <label
-                    htmlFor={field.name}
-                    className="font-semibold input input-bordered flex items-center gap-2"
-                  >
-                    Street 2:
+                <div>
+                  <label className="floating-label">
+                    <span>Apartment, Suite, etc. (optional)</span>
                     <input
-                      id={field.name}
-                      name={field.name}
+                      type="text"
+                      className="input input-bordered w-full"
                       value={field.state.value ?? ""}
-                      onBlur={field.handleBlur}
                       onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
                     />
                   </label>
-                  <FieldInfo field={field} />
-                </>
+                  <FieldError field={field} />
+                </div>
               )}
             </form.Field>
-            <div className="flex gap-2">
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* City */}
               <form.Field name="billingAddress.city">
                 {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered w-2/5 flex items-center mb-2"
-                    >
-                      City:
+                  <div>
+                    <label className="floating-label">
+                      <span>City</span>
                       <input
-                        id={field.name}
-                        name={field.name}
+                        type="text"
+                        className="input input-bordered w-full"
                         value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className=" "
+                        onBlur={field.handleBlur}
                       />
                     </label>
-                    <FieldInfo field={field} />
-                  </>
+                    <FieldError field={field} />
+                  </div>
                 )}
               </form.Field>
+
+              {/* State */}
               <form.Field name="billingAddress.state">
                 {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="w-1/5 font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      State:
+                  <div>
+                    <label className="floating-label">
+                      <span>State</span>
                       <select
-                        id={field.name}
-                        name={field.name}
+                        className="select select-bordered w-full"
                         value={field.state.value ?? ""}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className="select grow"
+                        onBlur={field.handleBlur}
                       >
                         <option value="" disabled>
                           Select a state
@@ -273,159 +276,189 @@ export const ProfileForm = () => {
                         ))}
                       </select>
                     </label>
-                    <FieldInfo field={field} />
-                  </>
+                    <FieldError field={field} />
+                  </div>
                 )}
               </form.Field>
+
+              {/* Postal Code */}
               <form.Field name="billingAddress.postalCode">
                 {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="w-2/5 font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      Postal Code:
+                  <div>
+                    <label className="floating-label">
+                      <span>Postal Code</span>
                       <input
-                        id={field.name}
-                        name={field.name}
+                        type="text"
+                        className="input input-bordered w-full"
                         value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
+                        onBlur={field.handleBlur}
                       />
                     </label>
-                    <FieldInfo field={field} />
-                  </>
+                    <FieldError field={field} />
+                  </div>
                 )}
               </form.Field>
             </div>
           </div>
+
+          {/* Same Address Checkbox */}
+          <div className="mt-4 flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="sameAddress"
+              className="checkbox checkbox-primary"
+              checked={sameAddress}
+              onChange={(e) => setSameAddress(e.target.checked)}
+            />
+            <label htmlFor="sameAddress" className="cursor-pointer">
+              Use the same address for shipping
+            </label>
+          </div>
         </div>
 
-        <div className="border-b pb-4 mb-4">
-          <h2 className="text-xl font-bold mb-4 text-base-300">
-            Shipping Address
-          </h2>
-          <div className="flex flex-col gap-4">
-            <form.Field name="shippingAddress.street1">
-              {(field) => (
-                <>
-                  <label
-                    htmlFor={field.name}
-                    className="font-semibold input input-bordered flex items-center gap-2"
-                  >
-                    Street 1:
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value ?? ""}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="grow"
-                    />
-                  </label>
-                  <FieldInfo field={field} />
-                </>
-              )}
-            </form.Field>
-            <form.Field name="shippingAddress.street2">
-              {(field) => (
-                <>
-                  <label
-                    htmlFor={field.name}
-                    className="font-semibold input input-bordered flex items-center gap-2"
-                  >
-                    Street 2:
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      value={field.state.value ?? ""}
-                      onBlur={field.handleBlur}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      className="grow"
-                    />
-                  </label>
-                  <FieldInfo field={field} />
-                </>
-              )}
-            </form.Field>
-            <div className="flex gap-2">
-              <form.Field name="shippingAddress.city">
+        {/* Shipping Address Section - Only show if not using same address */}
+        {!sameAddress && (
+          <div className="border-b border-base-300 pb-6 mb-6">
+            <h2 className="text-xl font-semibold mb-4 text-base-content">
+              Shipping Address
+            </h2>
+
+            <div className="grid grid-cols-1 gap-4">
+              {/* Street 1 */}
+              <form.Field name="shippingAddress.street1">
                 {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="font-semibold input input-bordered w-2/5 flex items-center mb-2"
-                    >
-                      City:
+                  <div>
+                    <label className="floating-label">
+                      <span>Street Address</span>
                       <input
-                        id={field.name}
-                        name={field.name}
+                        type="text"
+                        className="input input-bordered w-full"
                         value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className=" "
+                        onBlur={field.handleBlur}
                       />
                     </label>
-                    <FieldInfo field={field} />
-                  </>
+                    <FieldError field={field} />
+                  </div>
                 )}
               </form.Field>
-              <form.Field name="shippingAddress.state">
+
+              {/* Street 2 */}
+              <form.Field name="shippingAddress.street2">
                 {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="w-1/5 font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      State:
-                      <select
-                        id={field.name}
-                        name={field.name}
+                  <div>
+                    <label className="floating-label">
+                      <span>Apartment, Suite, etc. (optional)</span>
+                      <input
+                        type="text"
+                        className="input input-bordered w-full"
                         value={field.state.value ?? ""}
                         onChange={(e) => field.handleChange(e.target.value)}
-                        className="select grow"
-                      >
-                        <option value="" disabled>
-                          Select a state
-                        </option>
-                        {Object.entries(States).map(([code, name]) => (
-                          <option key={code} value={code}>
-                            {name}
+                        onBlur={field.handleBlur}
+                      />
+                    </label>
+                    <FieldError field={field} />
+                  </div>
+                )}
+              </form.Field>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* City */}
+                <form.Field name="shippingAddress.city">
+                  {(field) => (
+                    <div>
+                      <label className="floating-label">
+                        <span>City</span>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          value={field.state.value ?? ""}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                        />
+                      </label>
+                      <FieldError field={field} />
+                    </div>
+                  )}
+                </form.Field>
+
+                {/* State */}
+                <form.Field name="shippingAddress.state">
+                  {(field) => (
+                    <div>
+                      <label className="floating-label">
+                        <span>State</span>
+                        <select
+                          className="select select-bordered w-full"
+                          value={field.state.value ?? ""}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                        >
+                          <option value="" disabled>
+                            Select a state
                           </option>
-                        ))}
-                      </select>
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
-              <form.Field name="shippingAddress.postalCode">
-                {(field) => (
-                  <>
-                    <label
-                      htmlFor={field.name}
-                      className="w-2/5 font-semibold input input-bordered flex items-center gap-2"
-                    >
-                      Postal Code:
-                      <input
-                        id={field.name}
-                        name={field.name}
-                        value={field.state.value ?? ""}
-                        onBlur={field.handleBlur}
-                        onChange={(e) => field.handleChange(e.target.value)}
-                      />
-                    </label>
-                    <FieldInfo field={field} />
-                  </>
-                )}
-              </form.Field>
+                          {Object.entries(States).map(([code, name]) => (
+                            <option key={code} value={code}>
+                              {name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <FieldError field={field} />
+                    </div>
+                  )}
+                </form.Field>
+
+                {/* Postal Code */}
+                <form.Field name="shippingAddress.postalCode">
+                  {(field) => (
+                    <div>
+                      <label className="floating-label">
+                        <span>Postal Code</span>
+                        <input
+                          type="text"
+                          className="input input-bordered w-full"
+                          value={field.state.value ?? ""}
+                          onChange={(e) => field.handleChange(e.target.value)}
+                          onBlur={field.handleBlur}
+                        />
+                      </label>
+                      <FieldError field={field} />
+                    </div>
+                  )}
+                </form.Field>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        <button type="submit" className="btn btn-primary w-full">
-          Save
-        </button>
+        {/* Form Buttons */}
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            className="btn btn-outline"
+            onClick={() => navigate({ to: "/profile" })}
+            disabled={mutation.isPending}
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Saving...
+              </>
+            ) : (
+              "Save Profile"
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );
