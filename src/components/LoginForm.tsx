@@ -6,29 +6,33 @@ import { useState } from "react";
 import { flushSync } from "react-dom";
 import { signInUser } from "../api/users/auth.api";
 import { SignInRequest } from "../types";
-import { ErrorMessage } from "./component-parts/ErrorMessage";
-import { TextInput } from "./component-parts/TextInput";
 import {
   validateEmailInput,
   validatePasswordInput,
 } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
 import { PasswordIconSwap } from "./component-parts/showPasswordSwap";
+import { toast } from "react-toastify";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [serverMessage, setServerMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const emailValidState = validateEmailInput(email);
   const passwordValidState = validatePasswordInput(password);
   const navigate = useNavigate();
   const authContext = useAuth();
 
-  const usernameErrorMessage = emailValidState.error?.flatten().formErrors[0];
+  const emailErrorMessage =
+    isSubmitted && !emailValidState.success
+      ? emailValidState.error?.flatten().formErrors[0]
+      : null;
+
   const passwordErrorMessage =
-    passwordValidState.error?.flatten().formErrors[0];
+    isSubmitted && !passwordValidState.success
+      ? passwordValidState.error?.flatten().formErrors[0]
+      : null;
 
   const mutation = useMutation({
     mutationKey: ["signInUser"],
@@ -48,85 +52,123 @@ export const Login = () => {
       navigate({ to: "/products", search: { page: 1, pageSize: 25 } });
     },
     onError: (error) => {
-      setServerMessage(error.message || "An error occurred");
+      toast.error(
+        error.message || "Sign in failed. Please check your credentials."
+      );
     },
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsSubmitted(true);
-    setServerMessage("");
+
     if (emailValidState.success && passwordValidState.success) {
       const requestBody: SignInRequest = { email, password };
       mutation.mutate(requestBody);
-    } else {
-      console.log("Something isn't sending correctly");
     }
   };
 
   return (
-    <div className="flex flex-col content-center px-4 sm:px-0">
-      <img
-        src="/imgs/crew-logo.png"
-        className="w-full max-w-xs sm:max-w-md md:max-w-lg my-5 self-center"
-        alt="Crew Fireworks Logo"
-      />
-
-      <form
-        onSubmit={handleSubmit}
-        className="bg-base-100 text-primary p-4 sm:p-8 card gap-4 form-control shadow-2xl shadow-base-300 mb-10 w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto flex flex-col items-center"
-      >
-        {serverMessage && (
-          <ErrorMessage
-            message={serverMessage}
-            show={serverMessage.length > 0}
+    <div className="flex min-h-screen bg-base-200 justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-8 bg-base-100 p-8 rounded-lg shadow-lg">
+        <div className="text-center">
+          <img
+            src="/imgs/crew-logo.png"
+            className="h-24 mx-auto"
+            alt="Crew Fireworks Logo"
           />
-        )}
-        <TextInput
-          labelText={"Email: "}
-          inputAttr={{
-            name: "email",
-            placeholder: "Email",
-            value: email,
-            onChange: (e) => setEmail(e.target.value),
-          }}
-        />
-        <ErrorMessage
-          message={usernameErrorMessage || ""}
-          show={isSubmitted && !emailValidState.success}
-        />
-
-        <div className="form-control w-full max-w-sm">
-          <label className="input input-bordered flex items-center gap-2 text-base-content">
-            Password:
-            <input
-              type={!showPassword ? "password" : "text"}
-              className="grow"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <PasswordIconSwap
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
-          </label>
+          <h2 className="mt-6 text-3xl font-bold text-base-content">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-sm text-base-content/70">
+            Access your account to view our premium fireworks selection
+          </p>
         </div>
-        <ErrorMessage
-          message={passwordErrorMessage || ""}
-          show={isSubmitted && !passwordValidState.success}
-        />
 
-        <button
-          type="submit"
-          className="btn btn-primary btn-wide disabled:bg-gray-600 w-full"
-        >
-          {"Login"} <FontAwesomeIcon icon={faRightToBracket} />
-        </button>
-        <Link to={"/user/register"} className="text-base-content underline">
-          Create a New Account
-        </Link>
-      </form>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="space-y-4">
+            {/* Email Field */}
+            <div>
+              <label className="floating-label">
+                <span>Email Address</span>
+                <input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  className={`input input-bordered w-full ${
+                    emailErrorMessage ? "input-error" : ""
+                  }`}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </label>
+              {emailErrorMessage && (
+                <p className="validator-hint mt-1">{emailErrorMessage}</p>
+              )}
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label className="floating-label relative">
+                <span>Password</span>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  className={`input input-bordered w-full pr-10 ${
+                    passwordErrorMessage ? "input-error" : ""
+                  }`}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/70"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <PasswordIconSwap
+                    showPassword={showPassword}
+                    setShowPassword={setShowPassword}
+                  />
+                </button>
+              </label>
+              {passwordErrorMessage && (
+                <p className="validator-hint mt-1">{passwordErrorMessage}</p>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={mutation.isPending}
+            >
+              {mutation.isPending ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Signing In...
+                </>
+              ) : (
+                <>
+                  Sign In
+                  <FontAwesomeIcon icon={faRightToBracket} />
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="text-center mt-4">
+            <span className="text-base-content/70">Don't have an account?</span>
+            <Link
+              to="/user/register"
+              className="ml-2 text-primary hover:underline"
+            >
+              Create Account
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -16,10 +16,12 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
+    "@tailwindcss/vite": "^4.1.4",
     "@tanstack/react-form": "^0.21.0",
     "@tanstack/react-query": "^5.40.0",
     "@tanstack/react-query-devtools": "^5.40.0",
     "@tanstack/react-router": "^1.34.7",
+    "@tanstack/react-table": "^8.21.3",
     "@tanstack/zod-form-adapter": "^0.21.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -42,7 +44,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "postcss": "^8.4.38",
-    "tailwindcss": "^4.0.0",
+    "tailwindcss": "^4.1.4",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   }

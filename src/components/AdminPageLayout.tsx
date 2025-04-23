@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
@@ -12,18 +12,35 @@ interface AdminPageLayoutProps {
   title: string;
   sidebarItems: SidebarItem[];
   children: (selectedItem: string | null) => ReactNode;
+  onSidebarItemSelect?: (itemId: string | null) => void;
 }
 
 const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
   title,
   sidebarItems,
   children,
+  onSidebarItemSelect,
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(
+    sidebarItems.length > 0 ? sidebarItems[0].id : null
+  );
+
+  useEffect(() => {
+    if (onSidebarItemSelect && selectedItem) {
+      onSidebarItemSelect(selectedItem);
+    }
+  }, [selectedItem, onSidebarItemSelect]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
+  };
+
+  const handleItemSelect = (itemId: string) => {
+    setSelectedItem(itemId);
+    if (sidebarOpen) {
+      setSidebarOpen(false);
+    }
   };
 
   return (
@@ -43,7 +60,7 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
                 <button
                   className={`tooltip ${selectedItem === item.id ? "bg-primary-focus" : ""}`}
                   data-tip={item.label}
-                  onClick={() => setSelectedItem(item.id)}
+                  onClick={() => handleItemSelect(item.id)}
                 >
                   <FontAwesomeIcon icon={item.icon} />
                   <span className="hidden xl:inline ml-2">{item.label}</span>
@@ -54,7 +71,7 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-1 bg-slate-100">
+      <div className="flex flex-1 ">
         {/* Sidebar for mobile */}
         <aside
           className={`lg:hidden fixed inset-y-0 left-0 z-50 w-64 bg-primary text-base-content transform ${
@@ -71,10 +88,7 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
             {sidebarItems.map((item) => (
               <li key={item.id}>
                 <button
-                  onClick={() => {
-                    setSelectedItem(item.id);
-                    setSidebarOpen(false);
-                  }}
+                  onClick={() => handleItemSelect(item.id)}
                   className={`flex items-center gap-4 ${selectedItem === item.id ? "bg-base-200" : ""}`}
                 >
                   <FontAwesomeIcon icon={item.icon} />

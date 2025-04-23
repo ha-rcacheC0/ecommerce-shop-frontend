@@ -1,12 +1,13 @@
-const errorStyle =
-  "text-red-600 text-l bg-neutral-400 p-2 rounded-lg border-2 border-red-600 ";
+// Field error display component
 
-export const ErrorMessage = ({
-  message,
-  show,
-}: {
-  message: string;
-  show: boolean;
-}) => {
-  return show ? <div className={errorStyle}>{message}</div> : <div></div>;
-};
+import { FieldApi } from "@tanstack/react-form";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function FieldError({ field }: { field: FieldApi<any, any, any, any> }) {
+  if (!field.state.meta.touchedErrors) return null;
+  return (
+    <p className="validator-hint text-error text-sm mt-1">
+      {field.state.meta.touchedErrors}
+    </p>
+  );
+}

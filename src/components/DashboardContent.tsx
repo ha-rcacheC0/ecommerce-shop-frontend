@@ -14,7 +14,7 @@ import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getAllUsersQueryOptions } from "../api/users/userQueryOptions.api";
 import { useAuth } from "../providers/auth.provider";
-import { getAllItemsInInventoryQueryOptions } from "../api/admin/inventoryQueries";
+import { getInventoryQueryOptions } from "../api/admin/inventoryQueries";
 import { getAllProductsQueryOptions } from "../api/products/productsQueries";
 import { getAllShowsQueryOptions } from "../api/shows/showsQueries";
 
@@ -41,7 +41,13 @@ const DashboardContent: React.FC = () => {
     isLoading: inventoryIsLoading,
     isError: inventoryIsError,
     refetch: refetchInventory,
-  } = useQuery(getAllItemsInInventoryQueryOptions());
+  } = useQuery({
+    ...getInventoryQueryOptions({
+      page: 1,
+      pageSize: 1000, // Large number to get all items for counting
+    }),
+    queryKey: ["inventory", "dashboard"], // Unique key for dashboard use
+  });
 
   const {
     data: productsData,
@@ -67,7 +73,7 @@ const DashboardContent: React.FC = () => {
   } = useQuery(getAllShowsQueryOptions());
 
   const inventoryCount =
-    inventory?.reduce((acc, elm) => (acc += elm.availableStock), 0) || 0;
+    inventory?.items.reduce((acc, elm) => (acc += elm.availableStock), 0) || 0;
 
   const dashboardCards: DashboardCard[] = [
     {
@@ -158,7 +164,7 @@ const DashboardContent: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 bg-base-100">
       {dashboardCards.map((card, index) => (
         <Link
           key={index}

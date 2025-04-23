@@ -1,47 +1,46 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import AdminPageLayout from "./AdminPageLayout";
 import {
   faTheaterMasks,
   faBoxes,
-  faPlus,
   faEdit,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
   getAllShowsQueryOptions,
   useDeleteShowMutation,
 } from "../api/shows/showsQueries";
-import { Link } from "@tanstack/react-router";
+
 import { ShowWithProducts } from "../types";
 import { toast } from "react-toastify";
 import ShowTypesManager from "./ShowTypesManager";
 import { useAuth } from "../providers/auth.provider";
+import { ActionButton, DataTable } from "./component-parts/data-table";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+interface ShowTableItem extends ShowWithProducts, Record<string, unknown> {}
 
-const ShowsTable = () => {
+const ShowsPanel = () => {
   const auth = useAuth();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedView, setSelectedView] = useState<string | null>("all-shows");
 
   const {
     data: shows,
     isLoading,
     isError,
+    isFetching,
+    isPlaceholderData,
   } = useQuery(getAllShowsQueryOptions());
 
   const deleteShowMutation = useDeleteShowMutation(
     auth.user!.token!,
-    () => {
-      toast.success("Show deleted successfully");
-    },
-    (error) => {
-      toast.error(`Error deleting show: ${error.message}`);
-    }
+    () => toast.success("Show deleted successfully"),
+    (error) => toast.error(`Error deleting show: ${error.message}`)
   );
-
-  if (isLoading) return <div className="text-center">Loading...</div>;
-  if (isError)
-    return <div className="text-center text-red-500">Error fetching shows</div>;
 
   const filteredShows = shows?.filter((show: ShowWithProducts) => {
     const matchesSearch =
@@ -51,118 +50,146 @@ const ShowsTable = () => {
     return matchesSearch;
   });
 
-  return (
-    <div className="mx-auto my-4 w-full">
-      <div className="flex justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Search shows..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="input input-bordered w-1/3"
-        />
-        <Link to="/admin/shows/create" className="btn btn-primary">
-          <FontAwesomeIcon icon={faPlus} className="mr-2" />
-          Create New Show
-        </Link>
-      </div>
+  const columnHelper = createColumnHelper<ShowTableItem>();
 
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Price</th>
-              <th>Products</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredShows?.map((show: ShowWithProducts) => (
-              <tr key={show.id}>
-                <td>
-                  <div className="flex items-center space-x-3">
-                    <div className="avatar">
-                      <div className="mask mask-squircle w-12 h-12">
-                        <img src={show.image} alt={show.title} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="font-bold">{show.title}</div>
-                    </div>
-                  </div>
-                </td>
-                <td>{show.showType.name}</td>
-                <td>${parseFloat(show.casePrice).toFixed(2)}</td>
-                <td>{show.showProducts.length} products</td>
-                <td>
-                  <span
-                    className={`badge ${show.inStock ? "badge-success" : "badge-error"}`}
-                  >
-                    {show.inStock ? "In Stock" : "Out of Stock"}
-                  </span>
-                </td>
-                <td>
-                  <div className="flex space-x-2">
-                    <Link
-                      to="/admin/shows/$showId/edit"
-                      params={{ showId: show.id }}
-                      className="btn btn-sm btn-warning"
-                    >
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Link>
-                    <button
-                      className="btn btn-sm btn-error"
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Are you sure you want to delete this show?"
-                          )
-                        ) {
-                          deleteShowMutation.mutate(show.id);
-                        }
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-};
+  const columns = [
+    columnHelper.accessor((show) => show, {
+      id: "image",
+      header: "Image",
+      cell: (info) => {
+        const show = info.getValue();
+        return (
+          <div className="avatar">
+            <div className="mask mask-squircle w-12 h-12">
+              <img
+                src={show.image}
+                alt={show.title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/vite.svg";
+                }}
+              />
+            </div>
+          </div>
+        );
+      },
+    }),
+    columnHelper.accessor("sku", {
+      header: "SKU",
+      cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("title", {
+      header: "Show Title",
+      cell: (info) => info.getValue(),
+      meta: { className: "font-bold " },
+    }),
+    columnHelper.accessor((row) => row.showType.name, {
+      header: "Show Type",
+      cell: (info) => info.getValue(),
+      meta: { className: "font-bold" },
+    }),
+    columnHelper.accessor("casePrice", {
+      header: "Price",
+      cell: (info) => `$${parseFloat(info.getValue().toString()).toFixed(2)}`,
+    }),
+    columnHelper.accessor((row) => row.showProducts.length, {
+      header: "Show Products",
+      cell: (info) => info.getValue(),
+      meta: { className: "text-center" },
+    }),
+    columnHelper.accessor((row) => row.inStock, {
+      header: "Stock Status",
+      cell: (info) => (
+        <span
+          className={`badge ${
+            info.getValue()
+              ? "badge-success group-hover:ring-2 group-hover:ring-white group-hover:ring-opacity-70"
+              : "badge-error group-hover:ring-2 group-hover:ring-white group-hover:ring-opacity-70"
+          }`}
+        >
+          {info.getValue() ? "In Stock" : "Out of Stock"}
+        </span>
+      ),
+      meta: { className: "text-center" },
+    }),
+  ] as ColumnDef<ShowTableItem>[];
 
-const ShowsPanel: React.FC = () => {
+  const actions: ActionButton<ShowWithProducts>[] = [
+    {
+      icon: faEdit,
+      color: "warning",
+      to: "/admin/shows/$showId/edit",
+      getParams: (show) => ({ showId: show.id }),
+    },
+    {
+      icon: faTrash,
+      color: "error",
+      onClick: (show) => {
+        if (window.confirm("Are you sure you want to delete this show?")) {
+          deleteShowMutation.mutate(show.id);
+        }
+      },
+    },
+  ];
   const showsSidebarItems = [
     { icon: faTheaterMasks, label: "All Shows", id: "all-shows" },
     { icon: faBoxes, label: "Manage Types", id: "manage-types" },
   ];
+  const handleSidebarItemSelect = (itemId: string | null) => {
+    setSelectedView(itemId);
+  };
 
   return (
-    <AdminPageLayout title="Shows Management" sidebarItems={showsSidebarItems}>
-      {(selectedItem) => (
-        <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4 text-gray-700">
-            {selectedItem === "manage-types"
-              ? "Manage Show Types"
-              : "All Shows"}
-          </h2>
-
-          {selectedItem === "manage-types" ? (
-            <ShowTypesManager />
-          ) : (
-            <ShowsTable />
-          )}
-        </div>
-      )}
+    <AdminPageLayout
+      title="Shows Management"
+      sidebarItems={showsSidebarItems}
+      onSidebarItemSelect={handleSidebarItemSelect}
+    >
+      {(selectedItem) => {
+        const viewTitle = selectedItem
+          ? selectedItem
+              .replace(/-/g, " ")
+              .replace(/\b\w/g, (l) => l.toUpperCase())
+          : "All Shows";
+        if (selectedView === "manage-types") {
+          return <ShowTypesManager />;
+        }
+        return (
+          <div className="p-6">
+            <DataTable
+              title={viewTitle}
+              data={filteredShows as ShowTableItem[]}
+              columns={columns}
+              actions={actions}
+              isLoading={isLoading}
+              isError={isError}
+              errorMessage="Error fetching shows"
+              createButton={{
+                label: "Create New Show",
+                to: "/admin/shows/create",
+              }}
+              searchConfig={{
+                placeholder: "Search shows...",
+                searchTerm: searchTerm,
+                onSearch: setSearchTerm,
+              }}
+              pagination={{
+                currentPage: page,
+                pageSize: pageSize,
+                setPage: setPage,
+                setPageSize: setPageSize,
+                hasMore: false,
+                isFetching,
+                isPlaceholderData,
+                totalRows: filteredShows?.length,
+                manualPagination: true,
+              }}
+              manualSorting={true}
+              initialSorting={[{ id: "title", desc: false }]}
+            />
+          </div>
+        );
+      }}
     </AdminPageLayout>
   );
 };
-
 export default ShowsPanel;

@@ -13,6 +13,7 @@ import {
   useUpdateProductMutation,
 } from "../api/products/productsQueries";
 import { toast } from "react-toastify";
+import { calcUnitPrice } from "../utils/utils";
 
 interface ProductFormProps {
   productId?: string;
@@ -116,14 +117,12 @@ const ProductForm: React.FC<ProductFormProps> = ({
           !isNaN(packageNums[0]) &&
           packageNums[0] > 0
         ) {
-          // Use the calcUnitPrice function from your utils
-          const unitPrice =
-            Math.ceil((casePriceNum / 1.53 / packageNums[0]) * 2.42) - 0.01;
+          const unitPrice = calcUnitPrice(casePriceNum, packageNums[0]);
           setEstimatedUnitPrice(unitPrice);
         } else {
           setEstimatedUnitPrice(null);
         }
-      } catch (e) {
+      } catch (_e) {
         setEstimatedUnitPrice(null);
       }
     } else {
@@ -168,7 +167,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
         );
         return;
       }
-    } catch (e) {
+    } catch (_e) {
       toast.error("Invalid package format");
       return;
     }
@@ -245,41 +244,38 @@ const ProductForm: React.FC<ProductFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="bg-base-200 p-4 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+          <h2 className="text-xl font-semibold mb-4 ">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">SKU *</span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={sku}
+                  onChange={(e) => setSku(e.target.value)}
+                  required
+                  disabled={isEditing} // SKU cannot be changed if editing
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={sku}
-                onChange={(e) => setSku(e.target.value)}
-                required
-                disabled={isEditing} // SKU cannot be changed if editing
-              />
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Title *</span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Case Price *</span>
-              </label>
-              <div className="input-group">
-                <span>$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -289,38 +285,32 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   onChange={(e) => setCasePrice(e.target.value)}
                   required
                 />
-              </div>
+              </label>
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Package (comma-separated) *</span>
-              </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={packageString}
-                onChange={(e) => setPackageString(e.target.value)}
-                placeholder="e.g., 6,8,12"
-                required
-              />
-              <label className="label">
-                <span className="label-text-alt">
-                  First number is quantity per case
-                </span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={packageString}
+                  onChange={(e) => setPackageString(e.target.value)}
+                  required
+                />
               </label>
             </div>
           </div>
 
-          <div className="form-control mt-4">
-            <label className="label">
+          <div className="mt-4">
+            <label className="floating-label">
               <span className="label-text">Description</span>
+              <textarea
+                className="textarea textarea-bordered h-24 w-full col-span-2"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
             </label>
-            <textarea
-              className="textarea textarea-bordered h-24"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
           </div>
         </div>
 
@@ -371,30 +361,28 @@ const ProductForm: React.FC<ProductFormProps> = ({
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Media</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Image URL</span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={imageUrl}
+                  onChange={(e) => setImageUrl(e.target.value)}
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-              />
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Video URL</span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-              />
             </div>
           </div>
 
@@ -412,56 +400,69 @@ const ProductForm: React.FC<ProductFormProps> = ({
               </div>
             </div>
           )}
+          {videoUrl && (
+            <div className="mt-4 flex justify-center">
+              <div className="w-40 h-40 rounded-md overflow-hidden">
+                <iframe
+                  src={videoUrl}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/placeholder.png";
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Classification */}
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-xl font-semibold mb-4">Classification</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Brand *</span>
+                <select
+                  className="select select-bordered w-full"
+                  value={selectedBrandId}
+                  onChange={(e) => setSelectedBrandId(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Brand
+                  </option>
+                  {metadata?.brands?.map(
+                    (brand: { id: string; name: string }) => (
+                      <option key={brand.id} value={brand.id}>
+                        {brand.name}
+                      </option>
+                    )
+                  )}
+                </select>
               </label>
-              <select
-                className="select select-bordered"
-                value={selectedBrandId}
-                onChange={(e) => setSelectedBrandId(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Brand
-                </option>
-                {metadata?.brands?.map(
-                  (brand: { id: string; name: string }) => (
-                    <option key={brand.id} value={brand.id}>
-                      {brand.name}
-                    </option>
-                  )
-                )}
-              </select>
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Category *</span>
+                <select
+                  className="select select-bordered w-full"
+                  value={selectedCategoryId}
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {metadata?.categories?.map(
+                    (category: { id: string; name: string }) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    )
+                  )}
+                </select>
               </label>
-              <select
-                className="select select-bordered"
-                value={selectedCategoryId}
-                onChange={(e) => setSelectedCategoryId(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Category
-                </option>
-                {metadata?.categories?.map(
-                  (category: { id: string; name: string }) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  )
-                )}
-              </select>
             </div>
           </div>
         </div>
