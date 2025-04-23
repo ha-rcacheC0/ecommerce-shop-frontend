@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faX, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import {
   useRemoveProductFromCartMutation,
   useUpdateProductQuantityMutation,
@@ -88,82 +88,101 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   };
 
   const QuantityControl = ({
+    label,
+    price,
     quantity,
-    onIncrement,
     onDecrement,
-    isDisabled = false,
+    onIncrement,
   }: {
+    label: string;
+    price: number;
     quantity: number;
-    onIncrement: () => void;
     onDecrement: () => void;
-    isDisabled: boolean;
+    onIncrement: () => void;
   }) => (
-    <div className="flex flex-col-reverse items-center justify-center gap-2 md:flex-row">
-      <button
-        onClick={onDecrement}
-        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-6"
-        disabled={isDisabled}
-      >
-        <FontAwesomeIcon icon={faMinus} />
-      </button>
-      <span className="my-1 md:my-0">{quantity}</span>
-      <button
-        onClick={onIncrement}
-        className="btn btn-outline btn-xs md:btn-sm md:w-auto w-full h-6"
-      >
-        <FontAwesomeIcon icon={faPlus} />
-      </button>
+    <div className="flex items-center mb-2 gap-2 justify-around w-full">
+      <div className="w-1/2 flex justify-center gap-4">
+        <div className="badge badge-primary mr-2">{label}</div>
+        <div className="text-md text-center font-medium">
+          ${price.toFixed(2)}
+        </div>
+      </div>
+
+      <div className="flex items-center">
+        <button
+          onClick={onDecrement}
+          className="btn btn-sm btn-primary btn-circle btn-ghost"
+          disabled={quantity === 0}
+        >
+          <FontAwesomeIcon icon={faMinus} size="sm" />
+        </button>
+        <span className="w-8 text-center">{quantity}</span>
+        <button
+          onClick={onIncrement}
+          className="btn btn-sm btn-primary btn-circle btn-ghost"
+        >
+          <FontAwesomeIcon icon={faPlus} size="sm" />
+        </button>
+      </div>
     </div>
   );
 
   return (
-    <tr className="w-full align-middle border-b">
-      <td className="text-center py-2">
-        <div className="font-semibold">{title}</div>
-        <div className="text-sm text-base-content md:hidden mt-1">
-          SKU: {sku}
-        </div>
-      </td>
-      <td className="hidden md:table-cell text-center">{sku}</td>
-      <td className="hidden md:table-cell text-center">
-        ${parseFloat(casePrice).toFixed(2)}
-      </td>
-      <td className="text-center">
-        <div className="text-sm text-base-content md:hidden mt-1">
-          Case: ${parseFloat(casePrice).toFixed(2)}
-        </div>
-        <QuantityControl
-          quantity={product.caseQuantity}
-          onIncrement={incrementCaseQuantity}
-          onDecrement={decrementCaseQuantity}
-          isDisabled={product.caseQuantity === 0}
-        />
-      </td>
-      <td className="hidden md:table-cell text-center">
-        {!unitPrice ? "-" : `$${unitPrice.toFixed(2)}`}
-      </td>
-      <td className="text-center">
-        {!unitPrice ? (
-          <span className="text-sm">Not sold as unit</span>
-        ) : (
-          <div>
-            <div className="text-sm text-base-content md:hidden mt-1">
-              Unit: ${unitPrice.toFixed(2)}
+    <tr className="border-b border-base-300 hover:bg-base-200/40 ">
+      {/* Product column */}
+      <td className="py-4 ">
+        <div className=" flex items-center justify-center gap-3  ">
+          <div className="avatar  ">
+            <div className="mask mask-squircle w-12 h-12">
+              <img
+                src={product.product.image}
+                alt={title}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "/placeholder.png";
+                }}
+              />
             </div>
-            <QuantityControl
-              quantity={product.unitQuantity}
-              onIncrement={incrementUnitQuantity}
-              onDecrement={decrementUnitQuantity}
-              isDisabled={product.unitQuantity === 0}
-            />
           </div>
-        )}
+          <div>
+            <div className="font-medium text-center truncate max-w-[120px] md:max-w-[200px]">
+              {title}
+            </div>
+          </div>
+        </div>
       </td>
-      <td className="text-right md:text-center font-semibold">
-        ${subtotal.toFixed(2)}
-        <div className="text-sm text-base-content md:hidden mt-1">Subtotal</div>
+
+      {/* SKU column */}
+      <td className="py-4 text-center">{sku}</td>
+
+      <td className="py-4 px-2">
+        <div className="flex flex-col">
+          <QuantityControl
+            key={`Cases-${product.id}`}
+            label="Case"
+            price={parseFloat(casePrice)}
+            quantity={caseQuantity}
+            onDecrement={decrementCaseQuantity}
+            onIncrement={incrementCaseQuantity}
+          />
+
+          {unitPrice > 0 && (
+            <QuantityControl
+              key={`Units-${product.id}`}
+              label="Unit"
+              price={unitPrice}
+              quantity={unitQuantity}
+              onDecrement={decrementUnitQuantity}
+              onIncrement={incrementUnitQuantity}
+            />
+          )}
+        </div>
       </td>
-      <td className="text-center">
+
+      {/* Subtotal column */}
+      <td className="py-4 text-center font-medium">${subtotal.toFixed(2)}</td>
+
+      {/* Remove column */}
+      <td className="py-4 text-center">
         <button
           onClick={() =>
             removeItem.mutate({
@@ -171,9 +190,10 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
               cartId: product.cartId,
             })
           }
-          className="btn btn-error btn-outline btn-sm"
+          className="btn btn-ghost btn-md btn-error"
+          aria-label="Remove item"
         >
-          <FontAwesomeIcon icon={faX} />
+          <FontAwesomeIcon icon={faTrash} />
         </button>
       </td>
     </tr>

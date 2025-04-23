@@ -100,13 +100,15 @@ const Cart = ({
 
   if (products.length === 0) {
     return (
-      <div className="text-center mt-10 p-4">
-        <h2 className="text-2xl font-bold">Your cart is empty</h2>
-        <p className="mt-4">Add some items to your cart to get started.</p>
+      <div className="text-center p-6 bg-base-200 rounded-lg">
+        <h2 className="text-xl font-semibold mb-2">Your cart is empty</h2>
+        <p className="mb-4 text-base-content/70">
+          Add some items to your cart to get started.
+        </p>
         <Link
           to="/products"
           search={{ page: 1, pageSize: 25 }}
-          className="mt-4 inline-block text-blue-500 underline"
+          className="btn btn-primary"
         >
           Go to Product Catalog
         </Link>
@@ -115,21 +117,17 @@ const Cart = ({
   }
 
   return (
-    <div className="card bg-base-100 shadow-xl mx-auto p-4 md:p-6 text-base-content">
-      <h2 className="text-2xl text-center font-bold mb-4">Shopping Cart</h2>
-
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full border-b-2 mb-4">
-          <thead className="hidden md:table-header-group">
-            <tr>
-              <th className="px-2 py-2">Product</th>
-              <th className="px-2 py-2">SKU</th>
-              <th className="px-2 py-2">Case Price</th>
-              <th className="px-2 py-2">Case Qty</th>
-              <th className="px-2 py-2">Unit Price</th>
-              <th className="px-2 py-2">Unit Qty</th>
-              <th className="px-2 py-2">Subtotal</th>
-              <th className="px-2 py-2">Actions</th>
+    <div className="bg-base-100 p-0 rounded-lg overflow-hidden">
+      {/* Cart table with fixed styling to match design */}
+      <div className="overflow-x-auto w-full">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="bg-base-200 text-base-content">
+              <th className=" py-3 px-4 ">Product</th>
+              <th className=" py-3 px-4 ">SKU</th>
+              <th className=" py-3 px-4 ">Quantity</th>
+              <th className=" py-3 px-4 ">Subtotal</th>
+              <th className=" py-3 px-4 ">Remove</th>
             </tr>
           </thead>
           <tbody>
@@ -140,134 +138,131 @@ const Cart = ({
         </table>
       </div>
 
-      <div className="mt-4 flex flex-col md:flex-row items-start md:items-center gap-4 justify-around">
-        <div className="w-full md:w-1/2 bg-base-300 p-4 rounded-md text-center">
-          <div>
-            <h3 className="text-lg font-semibold ">Shipping Address:</h3>
-            {!isShippingAddressSet ? (
-              <p>Please set your Address or Select a Terminal to ship to</p>
-            ) : (
-              <>
-                <p className="text-base-content">
-                  {currentShippingAddress!.street1}
-                </p>
-                <p className="text-base-content">
-                  {currentShippingAddress!.street2}
-                </p>
-                <p className="text-base-content">
-                  {currentShippingAddress!.city},{" "}
-                  {currentShippingAddress!.state}
-                </p>
-                <p className="text-base-content">
-                  {currentShippingAddress!.postalCode}
-                </p>
-              </>
-            )}
-          </div>
-          <div className="mt-4 flex flex-col items-start gap-2">
-            <label className="flex items-center text-base-content">
+      {/* Cart bottom section with shipping and summary */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 mt-4 bg-base-100">
+        {/* Shipping Options */}
+        <div className="bg-base-200 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-4">Shipping Options</h3>
+
+          <div className="form-control mb-4">
+            <label className="flex items-center cursor-pointer gap-3">
               <input
                 type="checkbox"
+                className="checkbox checkbox-primary"
                 checked={isTerminalDestination}
-                className="mr-2"
                 onChange={(e) => {
                   setIsTerminalDestination(e.target.checked);
                   setNeedLiftGate(false);
                   setTerminalDestination("");
                 }}
               />
-              Ship to terminal
+              <span>Ship to terminal</span>
             </label>
+          </div>
 
-            {isTerminalDestination && (
-              <div className="items-center flex max-md:flex-col gap-4">
-                <StateZipInput
-                  state={state}
-                  zipcode={zipcode}
-                  onStateChange={setState}
-                  onZipcodeChange={setZipcode}
-                />
+          {isTerminalDestination ? (
+            <div className="space-y-3">
+              <StateZipInput
+                state={state}
+                zipcode={zipcode}
+                onStateChange={setState}
+                onZipcodeChange={setZipcode}
+              />
+
+              {(state || zipcode) && (
                 <TerminalSelection
                   state={state}
                   zipcode={zipcode}
                   terminalDestination={terminalDestination}
                   onTerminalChange={setTerminalDestination}
                 />
-              </div>
-            )}
-
-            {!isTerminalDestination && (
-              <label className={`flex items-center text-base-content`}>
+              )}
+            </div>
+          ) : (
+            <div className="form-control mb-4">
+              <label className="flex items-center cursor-pointer gap-3">
                 <input
                   type="checkbox"
+                  className="checkbox checkbox-primary"
                   checked={needLiftGate}
-                  className="mr-2"
                   onChange={(e) => setNeedLiftGate(e.target.checked)}
                   disabled={isTerminalDestination}
                 />
-                Need a liftgate? + $100 shipping.
+                <span>Need a liftgate? (+$100)</span>
               </label>
+            </div>
+          )}
+
+          <div className="mt-4">
+            <h4 className="font-medium mb-2">Shipping Address:</h4>
+            {!isShippingAddressSet ? (
+              <div className="p-3 bg-base-300 rounded text-warning">
+                Please set your address or select a terminal
+              </div>
+            ) : (
+              <div className="p-3 bg-base-300 rounded">
+                <p>
+                  {currentShippingAddress!.street1}
+                  {currentShippingAddress!.street2 && (
+                    <span>
+                      <br />
+                      {currentShippingAddress!.street2}
+                    </span>
+                  )}
+                </p>
+                <p>
+                  {currentShippingAddress!.city},{" "}
+                  {currentShippingAddress!.state}{" "}
+                  {currentShippingAddress!.postalCode}
+                </p>
+              </div>
             )}
           </div>
         </div>
 
-        <div className="w-full md:w-1/2">
-          <table className="table-auto w-full">
-            <tfoot>
-              <tr className="h-12 border-b border-base-300">
-                <td className="text-right font-semibold">Subtotal:</td>
-                <td className="text-lg font-semibold">
-                  ${subtotal.toFixed(2)}
-                </td>
-              </tr>
-              <tr className="h-12">
-                <td className="text-right font-semibold">
-                  {orderType} Shipping:
-                </td>
-                <td className="text-lg font-semibold">
-                  ${shipping.toFixed(2)}
-                </td>
-              </tr>
-              <tr className="h-12 border-y-4 border-double border-base-300">
-                <td className="text-right font-bold">Grand Total:</td>
-                <td className="text-lg font-bold">${grandTotal.toFixed(2)}</td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
-      </div>
+        {/* Order Summary */}
+        <div className="bg-base-200 p-4 rounded-lg">
+          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
 
-      <div className="mt-4 text-center flex flex-col gap-4 justify-center items-center">
-        <HelcimPayButton
-          cartId={user!.userInfo!.Cart.id}
-          amount={grandTotal}
-          btnDisabled={!isShippingAddressSet && !isUpdatingValues}
-          userId={user!.userInfo!.Cart.userId!}
-          shippingAddressId={
-            isShippingAddressSet ? currentShippingAddress!.id : ""
-          }
-        />
-        {!isShippingAddressSet && (
-          <div role="alert" className="alert alert-warning">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 shrink-0 stroke-current"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-              />
-            </svg>
-            <span>
-              Warning: Please update your shipping address to continue to
-              Checkout
-            </span>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span>Subtotal:</span>
+              <span className="font-medium">${subtotal.toFixed(2)}</span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span>{orderType} Shipping:</span>
+              <span className="font-medium">${shipping.toFixed(2)}</span>
+            </div>
+
+            <div className="h-px bg-base-300 my-2"></div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-lg font-bold">Total:</span>
+              <span className="text-lg font-bold">
+                ${grandTotal.toFixed(2)}
+              </span>
+            </div>
           </div>
-        )}
+
+          <div className="mt-6">
+            <HelcimPayButton
+              cartId={user!.userInfo!.Cart.id}
+              amount={grandTotal}
+              btnDisabled={!isShippingAddressSet && !isUpdatingValues}
+              userId={user!.userInfo!.Cart.userId!}
+              shippingAddressId={
+                isShippingAddressSet ? currentShippingAddress!.id : ""
+              }
+            />
+
+            {!isShippingAddressSet && (
+              <div className="mt-3 text-warning text-sm">
+                Please update your shipping address to proceed to checkout
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

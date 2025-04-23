@@ -5,14 +5,14 @@ import {
   useEffect,
   useContext,
 } from "react";
-import { SignInResponseSchema, User } from "../types";
+import { SignInResponse, SignInResponseSchema } from "../types";
 
 type AuthState = "authenticated" | "unauthenticated" | "loading";
 
 export type AuthContextType = {
   authState: AuthState;
-  user: User | null;
-  login: (user: User) => void;
+  user: SignInResponse | null;
+  login: (user: SignInResponse) => void;
   logout: () => void;
 };
 
@@ -20,7 +20,7 @@ const deriveAuthState = ({
   user,
   isLoading,
 }: {
-  user: User | null;
+  user: SignInResponse | null;
   isLoading: boolean;
 }): AuthState => {
   if (isLoading) return "loading";
@@ -34,7 +34,7 @@ const clearUser = () => {
   localStorage.removeItem("tokenExpiration");
 };
 
-const getUserFromLocalStorage = (): User | null => {
+const getUserFromLocalStorage = (): SignInResponse | null => {
   const userFromLocalStorage = localStorage.getItem("user");
   const tokenExpiration = localStorage.getItem("tokenExpiration");
 
@@ -50,7 +50,7 @@ const getUserFromLocalStorage = (): User | null => {
 
   try {
     return SignInResponseSchema.parse(JSON.parse(userFromLocalStorage));
-  } catch (e) {
+  } catch (_e) {
     clearUser();
     return null;
   }
@@ -59,7 +59,7 @@ const getUserFromLocalStorage = (): User | null => {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<null | User>(null);
+  const [user, setUser] = useState<null | SignInResponse>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const authState = deriveAuthState({ user, isLoading });
@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   };
 
-  const login = (data: User) => {
+  const login = (data: SignInResponse) => {
     setIsLoading(false);
     setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
@@ -116,6 +116,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext);
 

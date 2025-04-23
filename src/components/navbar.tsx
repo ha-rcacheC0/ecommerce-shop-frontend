@@ -107,6 +107,11 @@ export const Navbar = () => {
               Fireworks
             </Link>
           </li>
+          <li>
+            <Link to={"/shows"} search={{ page: 1, pageSize: 25 }}>
+              Shows
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="navbar-end flex gap-2 flex-1">
