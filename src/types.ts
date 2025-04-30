@@ -277,6 +277,7 @@ interface ShowProductInterface {
   productId: string;
   quantity: number;
   notes: string | null;
+  isUnit: boolean;
   product: TProductInterface;
 }
 
@@ -328,6 +329,7 @@ export const ShowProductSchema: z.ZodType<ShowProductInterface> = z.lazy(() =>
     showId: z.string(),
     productId: z.string(),
     quantity: z.number(),
+    isUnit: z.boolean(),
     notes: z.string().nullable(),
     product: TProductSchema,
   })
@@ -386,6 +388,7 @@ export type UpdateProductData = Partial<CreateProductData>;
 export type CreateShowProductData = {
   productId: string;
   quantity: number;
+  isUnit: boolean;
   notes?: string;
 };
 

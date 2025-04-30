@@ -222,7 +222,44 @@ export function DataTable<T extends Record<string, unknown>>({
 
   // Handle empty data
   if (!data || data.length === 0) {
-    return <div className="text-center py-8">{emptyMessage}</div>;
+    return (
+      <div className="text-center py-8">
+        {(title || createButton || searchConfig) && (
+          <div className="flex justify-between items-center mb-4">
+            {title && <h2 className="text-2xl font-bold">{title}</h2>}
+
+            <div className="flex gap-4 items-center">
+              {/* Search input */}
+              {searchConfig && (
+                <div className="form-control">
+                  <div className="input-group flex gap-2">
+                    <input
+                      type="text"
+                      placeholder={searchConfig.placeholder}
+                      className="input input-bordered"
+                      value={globalFilter}
+                      onChange={(e) => table.setGlobalFilter(e.target.value)}
+                    />
+                    <button className="btn btn-square">
+                      <FontAwesomeIcon icon={faSearch} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Create button */}
+              {createButton && (
+                <Link to={createButton.to} className="btn btn-primary">
+                  <FontAwesomeIcon icon={faPlus} className="mr-2" />
+                  {createButton.label}
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+        {emptyMessage}
+      </div>
+    );
   }
 
   return (

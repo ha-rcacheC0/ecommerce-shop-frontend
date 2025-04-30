@@ -1,6 +1,7 @@
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
   addProductToCart,
+  addShowToCart,
   getCartItems,
   makePurchase,
   removeProductFromCart,
@@ -123,8 +124,29 @@ export const useMakePurchaseMutation = (
     }) => makePurchase(userId, shippingAddressId),
     onSuccess: async () => {
       onSuccessCallback();
-      // Invalidate the cart query to ensure it is refetched
       queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (e: Error) => {
+      onErrorCallback(e);
+    },
+  });
+};
+export const useAddShowToCartMutation = (
+  cartId: string,
+  onSuccessCallback: () => void,
+  onErrorCallback: (error: Error) => void
+) => {
+  return useMutation({
+    mutationKey: ["addShowToCart"],
+    mutationFn: ({ showId, cartId }: { showId: string; cartId: string }) =>
+      addShowToCart({ showId, cartId }),
+    onSuccess: async () => {
+      onSuccessCallback();
+    },
+    onSettled: async () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cart", cartId],
+      });
     },
     onError: (e: Error) => {
       onErrorCallback(e);

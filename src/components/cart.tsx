@@ -10,6 +10,15 @@ import { useAuth } from "../providers/auth.provider";
 import StateZipInput from "./component-parts/state-zip-input";
 import TerminalSelection from "./component-parts/terminal-selection";
 import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faShoppingBag,
+  faStore,
+  faTheaterMasks,
+  faTruck,
+  faWarehouse,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Cart = ({
   products,
@@ -29,6 +38,7 @@ const Cart = ({
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
   const { user } = useAuth();
+
   let caseSubtotal = 0;
   let unitSubtotal = 0;
 
@@ -44,7 +54,11 @@ const Cart = ({
     return acc + productCaseSubtotal + productUnitSubtotal;
   }, 0);
 
-  const orderType = checkOrderType(caseSubtotal, unitSubtotal);
+  // Check if there's any show product in the cart
+  const hasShow = !!products.find((elm) => elm.product.isShow);
+
+  // Pass the hasShow flag to checkOrderType
+  const orderType = checkOrderType(caseSubtotal, unitSubtotal, hasShow);
 
   const grandTotal = subtotal + shipping;
 
@@ -141,126 +155,212 @@ const Cart = ({
       {/* Cart bottom section with shipping and summary */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 mt-4 bg-base-100">
         {/* Shipping Options */}
-        <div className="bg-base-200 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">Shipping Options</h3>
-
-          <div className="form-control mb-4">
-            <label className="flex items-center cursor-pointer gap-3">
-              <input
-                type="checkbox"
-                className="checkbox checkbox-primary"
-                checked={isTerminalDestination}
-                onChange={(e) => {
-                  setIsTerminalDestination(e.target.checked);
-                  setNeedLiftGate(false);
-                  setTerminalDestination("");
-                }}
-              />
-              <span>Ship to terminal</span>
-            </label>
-          </div>
-
-          {isTerminalDestination ? (
-            <div className="space-y-3">
-              <StateZipInput
-                state={state}
-                zipcode={zipcode}
-                onStateChange={setState}
-                onZipcodeChange={setZipcode}
-              />
-
-              {(state || zipcode) && (
-                <TerminalSelection
-                  state={state}
-                  zipcode={zipcode}
-                  terminalDestination={terminalDestination}
-                  onTerminalChange={setTerminalDestination}
-                />
-              )}
+        <div className="card bg-base-200 shadow-xl w-full max-w-lg overflow-hidden rounded-lg">
+          <div className="bg-primary text-primary-content p-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold">Shipping Options</h2>
+              <Link to="/profile/edit" className="btn btn-sm btn-ghost">
+                <FontAwesomeIcon icon={faEdit} className="mr-2" /> Update
+                Profile info
+              </Link>
             </div>
-          ) : (
+          </div>
+          <div className="p-6">
+            {hasShow && (
+              <div className="alert alert-success mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="stroke-current shrink-0 h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <div>
+                  <h3 className="font-bold">Free Shipping!</h3>
+                  <div className="text-sm">
+                    Your cart contains a show package, so you get free shipping!
+                  </div>
+                </div>
+                <FontAwesomeIcon
+                  icon={faTheaterMasks}
+                  className="ml-auto h-6 w-6 shrink-0"
+                />
+              </div>
+            )}
+
             <div className="form-control mb-4">
               <label className="flex items-center cursor-pointer gap-3">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-primary"
-                  checked={needLiftGate}
-                  onChange={(e) => setNeedLiftGate(e.target.checked)}
-                  disabled={isTerminalDestination}
+                  checked={isTerminalDestination}
+                  onChange={(e) => {
+                    setIsTerminalDestination(e.target.checked);
+                    setNeedLiftGate(false);
+                    setTerminalDestination("");
+                  }}
                 />
-                <span>Need a liftgate? (+$100)</span>
+                <span>Ship to terminal</span>
               </label>
             </div>
-          )}
 
-          <div className="mt-4">
-            <h4 className="font-medium mb-2">Shipping Address:</h4>
-            {!isShippingAddressSet ? (
-              <div className="p-3 bg-base-300 rounded text-warning">
-                Please set your address or select a terminal
+            {isTerminalDestination ? (
+              <div className="space-y-3">
+                <StateZipInput
+                  state={state}
+                  zipcode={zipcode}
+                  onStateChange={setState}
+                  onZipcodeChange={setZipcode}
+                />
+
+                {(state || zipcode) && (
+                  <TerminalSelection
+                    state={state}
+                    zipcode={zipcode}
+                    terminalDestination={terminalDestination}
+                    onTerminalChange={setTerminalDestination}
+                  />
+                )}
               </div>
             ) : (
-              <div className="p-3 bg-base-300 rounded">
-                <p>
-                  {currentShippingAddress!.street1}
-                  {currentShippingAddress!.street2 && (
-                    <span>
-                      <br />
-                      {currentShippingAddress!.street2}
+              <div className="form-control mb-4">
+                <label className="flex items-center cursor-pointer gap-3">
+                  <input
+                    type="checkbox"
+                    className="checkbox checkbox-primary"
+                    checked={needLiftGate}
+                    onChange={(e) => setNeedLiftGate(e.target.checked)}
+                    disabled={isTerminalDestination}
+                  />
+                  <span>Need a liftgate? (+$100)</span>
+                  {hasShow && needLiftGate && (
+                    <span className="text-xs text-success ml-2">
+                      (Liftgate fee waived with show package)
                     </span>
                   )}
-                </p>
-                <p>
-                  {currentShippingAddress!.city},{" "}
-                  {currentShippingAddress!.state}{" "}
-                  {currentShippingAddress!.postalCode}
-                </p>
+                </label>
               </div>
             )}
+
+            <div className="mt-4">
+              <h4 className="font-medium mb-2">Shipping Address:</h4>
+              {!isShippingAddressSet ? (
+                <div className="p-3 bg-base-300 rounded text-warning">
+                  Please set your address or select a terminal
+                </div>
+              ) : (
+                <div className="p-3 bg-base-300 rounded">
+                  <p>
+                    {currentShippingAddress!.street1}
+                    {currentShippingAddress!.street2 && (
+                      <span>
+                        <br />
+                        {currentShippingAddress!.street2}
+                      </span>
+                    )}
+                  </p>
+                  <p>
+                    {currentShippingAddress!.city},{" "}
+                    {currentShippingAddress!.state}{" "}
+                    {currentShippingAddress!.postalCode}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Order Summary */}
-        <div className="bg-base-200 p-4 rounded-lg">
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
-
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span>Subtotal:</span>
-              <span className="font-medium">${subtotal.toFixed(2)}</span>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span>{orderType} Shipping:</span>
-              <span className="font-medium">${shipping.toFixed(2)}</span>
-            </div>
-
-            <div className="h-px bg-base-300 my-2"></div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-lg font-bold">Total:</span>
-              <span className="text-lg font-bold">
-                ${grandTotal.toFixed(2)}
-              </span>
-            </div>
+        <div className="card bg-base-200 shadow-xl w-full max-w-lg overflow-hidden rounded-lg">
+          <div className="bg-primary text-primary-content p-4">
+            <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
           </div>
-
-          <div className="mt-6">
-            <HelcimPayButton
-              cartId={user!.userInfo!.Cart.id}
-              amount={grandTotal}
-              btnDisabled={!isShippingAddressSet && !isUpdatingValues}
-              userId={user!.userInfo!.Cart.userId!}
-              shippingAddressId={
-                isShippingAddressSet ? currentShippingAddress!.id : ""
-              }
-            />
-
-            {!isShippingAddressSet && (
-              <div className="mt-3 text-warning text-sm">
-                Please update your shipping address to proceed to checkout
+          <div className="p-6">
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span>Subtotal:</span>
+                <span className="font-medium">${subtotal.toFixed(2)}</span>
               </div>
-            )}
+
+              <div className="flex justify-between items-center">
+                <span className="flex items-center gap-2">
+                  {orderType === "show" && (
+                    <>
+                      <FontAwesomeIcon
+                        icon={faTheaterMasks}
+                        className="text-success"
+                      />
+                      <span>Show Package Shipping</span>
+                      <span className="badge badge-success badge-sm">FREE</span>
+                    </>
+                  )}
+                  {orderType === "retail" && (
+                    <>
+                      <FontAwesomeIcon icon={faShoppingBag} />
+                      <span>Retail Shipping</span>
+                    </>
+                  )}
+                  {orderType === "wholesale" && (
+                    <>
+                      <FontAwesomeIcon icon={faWarehouse} />
+                      <span>Wholesale Shipping</span>
+                    </>
+                  )}
+                  {orderType === "combo" && (
+                    <>
+                      <FontAwesomeIcon icon={faStore} />
+                      <span>Combo Shipping</span>
+                    </>
+                  )}
+                </span>
+                <span className="font-medium flex items-center">
+                  {shipping > 0 ? (
+                    `$${shipping.toFixed(2)}`
+                  ) : (
+                    <>
+                      <span className="text-success font-bold">FREE</span>
+                      <FontAwesomeIcon
+                        icon={faTruck}
+                        className="ml-2 text-success"
+                      />
+                    </>
+                  )}
+                </span>
+              </div>
+
+              <div className="h-px bg-base-300 my-2"></div>
+
+              <div className="flex justify-between items-center">
+                <span className="text-lg font-bold">Total:</span>
+                <span className="text-lg font-bold">
+                  ${grandTotal.toFixed(2)}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <HelcimPayButton
+                cartId={user!.userInfo!.Cart.id}
+                amount={grandTotal}
+                btnDisabled={!isShippingAddressSet && !isUpdatingValues}
+                userId={user!.userInfo!.Cart.userId!}
+                shippingAddressId={
+                  isShippingAddressSet ? currentShippingAddress!.id : ""
+                }
+              />
+
+              {!isShippingAddressSet && (
+                <div className="mt-3 text-warning text-sm">
+                  Please update your shipping address to proceed to checkout
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -10,6 +10,8 @@ import {
   faTimes,
   faSpinner,
   faSearch,
+  faBox,
+  faBoxes,
 } from "@fortawesome/free-solid-svg-icons";
 import { getAllShowTypesQueryOptions } from "../api/shows/showsQueries";
 import { getAllProductsQueryOptions } from "../api/products/productsQueries";
@@ -21,7 +23,7 @@ import {
   useUpdateShowMutation,
 } from "../api/shows/showsQueries";
 import { getProductMetadataQueryOptions } from "../api/products/productsQueries";
-import { TProduct } from "../types";
+import { CreateShowProductData, TProduct } from "../types";
 
 interface ShowFormProps {
   showId?: string;
@@ -41,11 +43,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
   const [inStock, setInStock] = useState(true);
   const [showTypeId, setShowTypeId] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<
-    Array<{
-      productId: string;
-      quantity: number;
-      notes: string;
-    }>
+    CreateShowProductData[]
   >([]);
   const [selectedBrandId, setSelectedBrandId] = useState("");
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
@@ -123,6 +121,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
             productId: sp.product.id,
             quantity: sp.quantity,
             notes: sp.notes || "",
+            isUnit: sp.isUnit,
           }))
         );
       }
@@ -130,10 +129,18 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
   }, [isEditing, showData]);
 
   // Handle adding a product to the show
-  const handleAddProduct = (product: TProduct) => {
+  const handleAddProduct = (product: TProduct, isUnit: boolean) => {
     // Check if product is already in the show
-    if (selectedProducts.some((p) => p.productId === product.id)) {
-      toast.warning(`"${product.title}" is already in the show`);
+    const existingProduct = selectedProducts.find(
+      (p) => p.productId === product.id && p.isUnit === isUnit
+    );
+
+    if (existingProduct) {
+      toast.warning(
+        `"${product.title}" is already in the show as a ${
+          isUnit ? "unit" : "case"
+        }`
+      );
       return;
     }
 
@@ -142,6 +149,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
       {
         productId: product.id,
         quantity: 1,
+        isUnit,
         notes: "",
       },
     ]);
@@ -150,17 +158,23 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
   };
 
   // Handle removing a product from the show
-  const handleRemoveProduct = (productId: string) => {
+  const handleRemoveProduct = (productId: string, isUnit: boolean) => {
     setSelectedProducts(
-      selectedProducts.filter((p) => p.productId !== productId)
+      selectedProducts.filter(
+        (p) => !(p.productId === productId && p.isUnit === isUnit)
+      )
     );
   };
 
   // Handle updating product quantity
-  const handleUpdateQuantity = (productId: string, quantity: number) => {
+  const handleUpdateQuantity = (
+    productId: string,
+    isUnit: boolean,
+    quantity: number
+  ) => {
     setSelectedProducts(
       selectedProducts.map((p) =>
-        p.productId === productId
+        p.productId === productId && p.isUnit === isUnit
           ? { ...p, quantity: Math.max(1, quantity) }
           : p
       )
@@ -168,10 +182,14 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
   };
 
   // Handle updating product notes
-  const handleUpdateNotes = (productId: string, notes: string) => {
+  const handleUpdateNotes = (
+    productId: string,
+    isUnit: boolean,
+    notes: string
+  ) => {
     setSelectedProducts(
       selectedProducts.map((p) =>
-        p.productId === productId ? { ...p, notes } : p
+        p.productId === productId && p.isUnit === isUnit ? { ...p, notes } : p
       )
     );
   };
@@ -264,46 +282,43 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Title *</span>
+                <input
+                  type="text"
+                  className="input input-bordered w-full"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  required
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Show Type *</span>
-              </label>
-              <select
-                className="select select-bordered"
-                value={showTypeId}
-                onChange={(e) => setShowTypeId(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Show Type
-                </option>
-                {showTypes?.map((type: { id: string; name: string }) => (
-                  <option key={type.id} value={type.id}>
-                    {type.name}
+                <select
+                  className="select select-bordered w-full"
+                  value={showTypeId}
+                  onChange={(e) => setShowTypeId(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Show Type
                   </option>
-                ))}
-              </select>
+                  {showTypes?.map((type: { id: string; name: string }) => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Price *</span>
-              </label>
-              <div className="input-group">
-                <span>$</span>
                 <input
                   type="number"
                   step="0.01"
@@ -313,15 +328,15 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                   onChange={(e) => setPrice(e.target.value)}
                   required
                 />
-              </div>
+              </label>
             </div>
 
-            <div className="form-control">
-              <label className="label">
+            <div className="flex gap-2 justify-between">
+              <label className="floating-label">
                 <span className="label-text">Brand *</span>
               </label>
               <select
-                className="select select-bordered"
+                className="select select-bordered w-full"
                 value={selectedBrandId}
                 onChange={(e) => setSelectedBrandId(e.target.value)}
                 required
@@ -337,45 +352,46 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                   )
                 )}
               </select>
-            </div>
 
-            <div className="form-control">
-              <label className="label">
+              <label className="floating-label">
                 <span className="label-text">Category *</span>
+                <select
+                  className="select select-bordered w-full"
+                  value={selectedCategoryId}
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Category
+                  </option>
+                  {metadata?.categories?.map(
+                    (category: { id: string; name: string }) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    )
+                  )}
+                </select>
               </label>
-              <select
-                className="select select-bordered"
-                value={selectedCategoryId}
-                onChange={(e) => setSelectedCategoryId(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Category
-                </option>
-                {metadata?.categories?.map(
-                  (category: { id: string; name: string }) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  )
-                )}
-              </select>
             </div>
 
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">In Stock</span>
-              </label>
-              <label className="cursor-pointer label justify-start gap-4">
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={inStock}
-                  onChange={(e) => setInStock(e.target.checked)}
-                />
-                <span className="label-text">Available for purchase</span>
-              </label>
+            <div>
+              <fieldset className="fieldset bg-base-100 border-base-300 rounded-box w-64 border p-4">
+                <legend className="fieldset-legend">In Stock</legend>
+                <label className="label">
+                  <input type="checkbox" defaultChecked className="checkbox" />
+                  Available for purchase
+                </label>
+              </fieldset>
             </div>
+            <label className="floating-label">
+              <span className="label-text">Description</span>
+              <textarea
+                className="textarea textarea-bordered h-24"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              ></textarea>
+            </label>
           </div>
         </div>
 
@@ -383,58 +399,57 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
         <div className="bg-base-200 p-4 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Media</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Image URL</span>
+                <input
+                  type="text"
+                  className="input input-bordered"
+                  value={image}
+                  onChange={(e) => setImage(e.target.value)}
+                  placeholder="https://example.com/image.jpg"
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={image}
-                onChange={(e) => setImage(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-              />
             </div>
-
-            <div className="form-control">
-              <label className="label">
+            <div>
+              <label className="floating-label">
                 <span className="label-text">Video URL</span>
+                <input
+                  type="text"
+                  className="input input-bordered"
+                  value={videoURL}
+                  onChange={(e) => setVideoURL(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                />
               </label>
-              <input
-                type="text"
-                className="input input-bordered"
-                value={videoURL}
-                onChange={(e) => setVideoURL(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-              />
             </div>
-          </div>
-
-          {image && (
-            <div className="mt-4 flex justify-center">
+            {image && (
               <div className="w-40 h-40 rounded-md overflow-hidden">
                 <img
                   src={image}
                   alt="Show Preview"
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/placeholder.png";
+                    (e.target as HTMLImageElement).src = "";
                   }}
                 />
               </div>
-            </div>
-          )}
-        </div>
+            )}
 
-        <div className="form-control bg-base-200 p-4 rounded-lg">
-          <label className="label">
-            <span className="label-text">Description</span>
-          </label>
-          <textarea
-            className="textarea textarea-bordered h-24"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+            {videoURL && (
+              <div className="mt-4 flex justify-center">
+                <div className="w-40 h-40 rounded-md overflow-hidden">
+                  <iframe
+                    src={videoURL}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "/placeholder.png";
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Products Section */}
@@ -534,53 +549,61 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                                 2
                               )}
                             </td>
-                            <td className="flex gap-2 ">
+                            <td className="flex flex-col gap-2">
+                              {/* Case button */}
                               <button
                                 type="button"
                                 className="btn btn-primary btn-sm"
-                                onClick={() => handleAddProduct(product)}
+                                onClick={() => handleAddProduct(product, false)}
                                 disabled={selectedProducts.some(
-                                  (p) => p.productId === product.id
+                                  (p) => p.productId === product.id && !p.isUnit
                                 )}
                               >
                                 {selectedProducts.some(
-                                  (p) => p.productId === product.id
+                                  (p) => p.productId === product.id && !p.isUnit
                                 ) ? (
-                                  "Added"
+                                  "Added as Case"
                                 ) : (
                                   <>
                                     <FontAwesomeIcon
-                                      icon={faPlus}
+                                      icon={faBoxes}
                                       className="mr-1"
                                     />
-                                    Add Case
+                                    Add as Case
                                   </>
                                 )}
                               </button>
-                              {product.isCaseBreakable && (
-                                <button
-                                  type="button"
-                                  className="btn btn-primary btn-sm"
-                                  onClick={() => handleAddProduct(product)}
-                                  disabled={selectedProducts.some(
-                                    (p) => p.productId === product.id
-                                  )}
-                                >
-                                  {selectedProducts.some(
-                                    (p) => p.productId === product.id
-                                  ) ? (
-                                    "Added"
-                                  ) : (
-                                    <>
-                                      <FontAwesomeIcon
-                                        icon={faPlus}
-                                        className="mr-1"
-                                      />
-                                      Add Units
-                                    </>
-                                  )}
-                                </button>
-                              )}
+
+                              {/* Unit button - only show if the product is case breakable */}
+                              {product.isCaseBreakable &&
+                                product.unitProduct && (
+                                  <button
+                                    type="button"
+                                    className="btn btn-secondary btn-sm"
+                                    onClick={() =>
+                                      handleAddProduct(product, true)
+                                    }
+                                    disabled={selectedProducts.some(
+                                      (p) =>
+                                        p.productId === product.id && p.isUnit
+                                    )}
+                                  >
+                                    {selectedProducts.some(
+                                      (p) =>
+                                        p.productId === product.id && p.isUnit
+                                    ) ? (
+                                      "Added as Unit"
+                                    ) : (
+                                      <>
+                                        <FontAwesomeIcon
+                                          icon={faBox}
+                                          className="mr-1"
+                                        />
+                                        Add as Unit
+                                      </>
+                                    )}
+                                  </button>
+                                )}
                             </td>
                           </tr>
                         ))}
@@ -618,20 +641,23 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
               <thead>
                 <tr>
                   <th>Product</th>
+                  <th>Type</th>
                   <th>Quantity</th>
                   <th>Notes</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {selectedProducts.map((selectedProduct) => {
+                {selectedProducts.map((selectedProduct, index) => {
                   // Find the product details
                   const product = getProductDetails(selectedProduct.productId);
 
                   if (!product) return null;
 
                   return (
-                    <tr key={selectedProduct.productId}>
+                    <tr
+                      key={`${selectedProduct.productId}-${selectedProduct.isUnit}-${index}`}
+                    >
                       <td>
                         <div className="flex items-center space-x-3">
                           <div className="avatar">
@@ -655,6 +681,13 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                         </div>
                       </td>
                       <td>
+                        <span
+                          className={`badge ${selectedProduct.isUnit ? "badge-secondary" : "badge-primary"}`}
+                        >
+                          {selectedProduct.isUnit ? "Unit" : "Case"}
+                        </span>
+                      </td>
+                      <td>
                         <input
                           type="number"
                           min="1"
@@ -663,6 +696,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                           onChange={(e) =>
                             handleUpdateQuantity(
                               selectedProduct.productId,
+                              selectedProduct.isUnit,
                               parseInt(e.target.value) || 1
                             )
                           }
@@ -676,6 +710,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                           onChange={(e) =>
                             handleUpdateNotes(
                               selectedProduct.productId,
+                              selectedProduct.isUnit,
                               e.target.value
                             )
                           }
@@ -687,7 +722,10 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
                           type="button"
                           className="btn btn-error btn-sm"
                           onClick={() =>
-                            handleRemoveProduct(selectedProduct.productId)
+                            handleRemoveProduct(
+                              selectedProduct.productId,
+                              selectedProduct.isUnit
+                            )
                           }
                         >
                           <FontAwesomeIcon icon={faTrash} />
