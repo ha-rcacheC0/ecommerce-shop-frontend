@@ -1,6 +1,13 @@
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faPlus,
+  faMinus,
+  faTheaterMasks,
+  faBox,
+  faBoxes,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   useRemoveProductFromCartMutation,
   useUpdateProductQuantityMutation,
@@ -8,7 +15,7 @@ import {
 import { TCartProduct, TProductSchema } from "../../types";
 
 const CartItem = ({ product }: { product: TCartProduct }) => {
-  const { title, sku, casePrice, unitProduct } = TProductSchema.parse(
+  const { title, sku, casePrice, unitProduct, isShow } = TProductSchema.parse(
     product.product
   );
   const unitPrice = unitProduct ? parseFloat(unitProduct.unitPrice) : 0;
@@ -93,16 +100,21 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
     quantity,
     onDecrement,
     onIncrement,
+    icon,
   }: {
     label: string;
     price: number;
     quantity: number;
     onDecrement: () => void;
     onIncrement: () => void;
+    icon?: React.ReactNode;
   }) => (
     <div className="flex items-center mb-2 gap-2 justify-around w-full">
       <div className="w-1/2 flex justify-center gap-4">
-        <div className="badge badge-primary mr-2">{label}</div>
+        <div className="badge badge-primary mr-2">
+          {icon && <span className="mr-1">{icon}</span>}
+          {label}
+        </div>
         <div className="text-md text-center font-medium">
           ${price.toFixed(2)}
         </div>
@@ -112,7 +124,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         <button
           onClick={onDecrement}
           className="btn btn-sm btn-primary btn-circle btn-ghost"
-          disabled={quantity === 0}
+          disabled={quantity <= 1}
         >
           <FontAwesomeIcon icon={faMinus} size="sm" />
         </button>
@@ -147,6 +159,9 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
             <div className="font-medium text-center truncate max-w-[120px] md:max-w-[200px]">
               {title}
             </div>
+            {isShow && (
+              <div className="badge badge-secondary badge-sm">Show Package</div>
+            )}
           </div>
         </div>
       </td>
@@ -156,24 +171,41 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
 
       <td className="py-4 px-2">
         <div className="flex flex-col">
-          <QuantityControl
-            key={`Cases-${product.id}`}
-            label="Case"
-            price={parseFloat(casePrice)}
-            quantity={caseQuantity}
-            onDecrement={decrementCaseQuantity}
-            onIncrement={incrementCaseQuantity}
-          />
-
-          {unitPrice > 0 && (
+          {/* Show special display for shows */}
+          {isShow ? (
             <QuantityControl
-              key={`Units-${product.id}`}
-              label="Unit"
-              price={unitPrice}
-              quantity={unitQuantity}
-              onDecrement={decrementUnitQuantity}
-              onIncrement={incrementUnitQuantity}
+              key={`Show-${product.id}`}
+              label="Show"
+              icon={<FontAwesomeIcon icon={faTheaterMasks} />}
+              price={parseFloat(casePrice)}
+              quantity={caseQuantity}
+              onDecrement={decrementCaseQuantity}
+              onIncrement={incrementCaseQuantity}
             />
+          ) : (
+            <>
+              <QuantityControl
+                key={`Cases-${product.id}`}
+                label="Case"
+                icon={<FontAwesomeIcon icon={faBoxes} />}
+                price={parseFloat(casePrice)}
+                quantity={caseQuantity}
+                onDecrement={decrementCaseQuantity}
+                onIncrement={incrementCaseQuantity}
+              />
+
+              {unitPrice > 0 && (
+                <QuantityControl
+                  key={`Units-${product.id}`}
+                  label="Unit"
+                  icon={<FontAwesomeIcon icon={faBox} />}
+                  price={unitPrice}
+                  quantity={unitQuantity}
+                  onDecrement={decrementUnitQuantity}
+                  onIncrement={incrementUnitQuantity}
+                />
+              )}
+            </>
           )}
         </div>
       </td>

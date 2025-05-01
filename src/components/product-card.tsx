@@ -58,7 +58,7 @@ export const ProductCard = ({
           search={searchParams}
           className="mb-4"
         >
-          <h2 className="card-title text-xl font-bold underline line-clamp-2 h-14">
+          <h2 className="card-title text-xl font-bold  line-clamp-2 h-14">
             {product.title}
           </h2>
         </Link>

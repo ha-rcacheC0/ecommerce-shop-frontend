@@ -93,3 +93,19 @@ export const makePurchase = async (
   }
   return response.json();
 };
+
+export const addShowToCart = async ({
+  showId,
+  cartId,
+}: {
+  showId: string;
+  cartId: string;
+}) => {
+  return await fetch(`${BASE_URL}/${cartId}/addShow`, {
+    method: "POST",
+    body: JSON.stringify({ showId, cartId }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+};
