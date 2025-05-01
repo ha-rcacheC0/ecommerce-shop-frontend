@@ -154,7 +154,7 @@ export const deleteProductQuery = async (
 
 export const getProductMetadata = async () => {
   try {
-    const METADATA_URL = import.meta.env.VITE_API_BASE_URL! + "/api/metadata";
+    const METADATA_URL = import.meta.env.VITE_API_BASE_URL! + "/metadata";
     const response = await fetch(METADATA_URL, {
       headers: {
         "Content-Type": "application/json",
