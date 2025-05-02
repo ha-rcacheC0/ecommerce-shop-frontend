@@ -1,7 +1,7 @@
 import { TCart } from "../../types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/cart";
-const PURCHASE_URL = import.meta.env.VITE_API_BASE_URL! + "/api/purchase";
+const PURCHASE_URL = import.meta.env.VITE_API_BASE_URL! + "/purchase";
 export const getCartItems = async (cartId: string): Promise<TCart> =>
   await fetch(`${BASE_URL}/${cartId}`, {}).then((response) => response.json());
 
