@@ -8,6 +8,7 @@ primary_region = "ord"
 [env]
   PORT = "3000"
   NODE_ENV = "production"
+   VITE_API_BASE_URL = "https://crew-fireworks-api.fly.dev/api"
 
 [http_service]
    internal_port = 80 

@@ -8,6 +8,7 @@ import {
 } from "../../types";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL!;
+console.log("API Base URL:", BASE_URL);
 
 export const signInUser = async (
   body: SignInRequest
