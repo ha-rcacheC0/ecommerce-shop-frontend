@@ -1,0 +1,21 @@
+app = "crew-fireworks"
+org = "donnelly-development"
+primary_region = "ord"  
+
+[build]
+  # Dockerfile handles the build
+
+[env]
+  PORT = "3000"
+  NODE_ENV = "production"
+   VITE_API_BASE_URL = "https://crew-fireworks-api.fly.dev/api"
+
+[http_service]
+   internal_port = 80 
+  force_https = true
+  auto_start_machines = true
+  min_machines_running = 1
+
+  [[http_service.domains]]
+  name = "crewfireworks.com"
+  zone = "crewfireworks.com"

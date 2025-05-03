@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { TAddress, TApprovedTerminal, TCartProduct } from "../types";
-import { calculateShipping, checkOrderType } from "../utils/utils";
+import {
+  calculateShipping,
+  checkOrderType,
+  calculateStateTax,
+} from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
 import { isObjectEmpty } from "../utils/validationUtils";
@@ -15,6 +19,7 @@ import {
   faEdit,
   faShoppingBag,
   faStore,
+  faStopCircle,
   faTheaterMasks,
   faTruck,
   faWarehouse,
@@ -31,6 +36,8 @@ const Cart = ({
   const [isUpdatingValues, setIsUpdatingValues] = useState(true);
   const [needLiftGate, setNeedLiftGate] = useState(false);
   const [shipping, setShipping] = useState(0);
+  const [tax, setTax] = useState(0);
+  const [isShippableState, setIsShippableState] = useState(true);
   const [currentShippingAddress, setCurrentShippingAddress] = useState<
     TAddress | undefined
   >(shippingAddress);
@@ -60,7 +67,37 @@ const Cart = ({
   // Pass the hasShow flag to checkOrderType
   const orderType = checkOrderType(caseSubtotal, unitSubtotal, hasShow);
 
-  const grandTotal = subtotal + shipping;
+  // Calculate tax and grand total with tax included
+  useEffect(() => {
+    setIsUpdatingValues(true);
+
+    // Only calculate tax if we have a valid shipping address
+    if (currentShippingAddress && !isObjectEmpty(currentShippingAddress)) {
+      try {
+        const stateTax = calculateStateTax(
+          currentShippingAddress.state,
+          subtotal
+        );
+        setTax(stateTax);
+        setIsShippableState(true);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes("don't ship")) {
+          setIsShippableState(false);
+          setTax(0);
+        } else {
+          // Handle other errors
+          console.error("Tax calculation error:", error);
+          setTax(0);
+        }
+      }
+    } else {
+      setTax(0);
+    }
+
+    setIsUpdatingValues(false);
+  }, [currentShippingAddress, subtotal]);
+
+  const grandTotal = subtotal + shipping + tax;
 
   useEffect(() => {
     setIsUpdatingValues(true);
@@ -166,32 +203,51 @@ const Cart = ({
             </div>
           </div>
           <div className="p-6">
-            {hasShow && (
-              <div className="alert alert-success mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="stroke-current shrink-0 h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+            {/* Display non-shippable state error message with priority */}
+            {isShippingAddressSet && !isShippableState ? (
+              <div className="alert alert-error mb-4">
+                <FontAwesomeIcon
+                  icon={faStopCircle}
+                  className="shrink-0 h-6 w-6"
+                />
                 <div>
-                  <h3 className="font-bold">Free Shipping!</h3>
+                  <h3 className="font-bold">Shipping Unavailable</h3>
                   <div className="text-sm">
-                    Your cart contains a show package, so you get free shipping!
+                    We currently don't ship to {currentShippingAddress!.state}.
+                    Please select a different shipping address.
                   </div>
                 </div>
-                <FontAwesomeIcon
-                  icon={faTheaterMasks}
-                  className="ml-auto h-6 w-6 shrink-0"
-                />
               </div>
+            ) : (
+              // Only show free shipping banner if state is shippable
+              hasShow && (
+                <div className="alert alert-success mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="stroke-current shrink-0 h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <div>
+                    <h3 className="font-bold">Free Shipping!</h3>
+                    <div className="text-sm">
+                      Your cart contains a show package, so you get free
+                      shipping!
+                    </div>
+                  </div>
+                  <FontAwesomeIcon
+                    icon={faTheaterMasks}
+                    className="ml-auto h-6 w-6 shrink-0"
+                  />
+                </div>
+              )
             )}
 
             <div className="form-control mb-4">
@@ -239,7 +295,7 @@ const Cart = ({
                     disabled={isTerminalDestination}
                   />
                   <span>Need a liftgate? (+$100)</span>
-                  {hasShow && needLiftGate && (
+                  {hasShow && needLiftGate && isShippableState && (
                     <span className="text-xs text-success ml-2">
                       (Liftgate fee waived with show package)
                     </span>
@@ -334,6 +390,20 @@ const Cart = ({
                 </span>
               </div>
 
+              {/* Tax row */}
+              <div className="flex justify-between items-center">
+                <span>
+                  Tax ({currentShippingAddress?.state || ""}):
+                  {/* If state doesn't allow shipping, show a badge */}
+                  {!isShippableState && currentShippingAddress && (
+                    <span className="badge badge-error badge-sm ml-2">
+                      Not Available
+                    </span>
+                  )}
+                </span>
+                <span className="font-medium">${tax.toFixed(2)}</span>
+              </div>
+
               <div className="h-px bg-base-300 my-2"></div>
 
               <div className="flex justify-between items-center">
@@ -348,7 +418,10 @@ const Cart = ({
               <HelcimPayButton
                 cartId={user!.userInfo!.Cart.id}
                 amount={grandTotal}
-                btnDisabled={!isShippingAddressSet && !isUpdatingValues}
+                btnDisabled={
+                  (!isShippingAddressSet && !isUpdatingValues) ||
+                  !isShippableState
+                }
                 userId={user!.userInfo!.Cart.userId!}
                 shippingAddressId={
                   isShippingAddressSet ? currentShippingAddress!.id : ""
@@ -358,6 +431,13 @@ const Cart = ({
               {!isShippingAddressSet && (
                 <div className="mt-3 text-warning text-sm">
                   Please update your shipping address to proceed to checkout
+                </div>
+              )}
+
+              {!isShippableState && (
+                <div className="mt-3 text-error text-sm">
+                  We don't ship to {currentShippingAddress?.state}. Please
+                  choose a different shipping address.
                 </div>
               )}
             </div>
