@@ -48,6 +48,7 @@ const Products: React.FC = () => {
   const [page, setPage] = useState(() => Number(search.page) || 1);
   const [pageSize, setPageSize] = useState(() => Number(search.pageSize) || 25);
   const [searchTitle, setSearchTitle] = useState(search.searchTitle || "");
+  const [showOutOfStock, setShowOutOfStock] = useState(false);
 
   const {
     data: products,
@@ -67,6 +68,7 @@ const Products: React.FC = () => {
         selectedColors,
         selectedEffects,
         searchTitle,
+        inStock: showOutOfStock ? undefined : true,
       },
     ],
     queryFn: () =>
@@ -78,6 +80,7 @@ const Products: React.FC = () => {
         selectedColors,
         selectedEffects,
         searchTitle,
+        inStock: showOutOfStock ? undefined : true,
       }),
     placeholderData: keepPreviousData,
   });
@@ -111,6 +114,7 @@ const Products: React.FC = () => {
           newSearch.categories = searchParams.categories;
         if ("colors" in searchParams) newSearch.colors = searchParams.colors;
         if ("effects" in searchParams) newSearch.effects = searchParams.effects;
+        if (showOutOfStock) searchParams.showOutOfStock = "true";
 
         return newSearch;
       },
@@ -125,6 +129,7 @@ const Products: React.FC = () => {
     selectedColors,
     selectedEffects,
     searchTitle,
+    showOutOfStock,
   ]);
 
   const handleFilterChange = useCallback(
@@ -175,6 +180,11 @@ const Products: React.FC = () => {
           setSelectedEffects={(effect: string) =>
             handleFilterChange(setSelectedEffects, effect)
           }
+          showOutOfStock={showOutOfStock}
+          setShowOutOfStock={(value) => {
+            setShowOutOfStock(value);
+            setPage(1);
+          }}
           isFetching={isFetching}
           isPlaceholderData={isPlaceholderData}
           setPage={setPage}
@@ -230,6 +240,7 @@ export const Route = createFileRoute("/products/")({
     colors: z.union([z.string(), z.array(z.string())]).optional(),
     effects: z.union([z.string(), z.array(z.string())]).optional(),
     searchTitle: z.string().optional(),
+    showOutOfStock: z.enum(["true", "false"]).optional(),
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ context: { queryClient }, deps }) => {
@@ -256,6 +267,7 @@ export const Route = createFileRoute("/products/")({
         ? deps.effects.split(",").filter(Boolean)
         : [];
     const searchTitle = deps.searchTitle || "";
+    const showOutOfStock = deps.showOutOfStock === "true";
     return queryClient.ensureQueryData(
       getAllProductsQueryOptions({
         page,
@@ -265,6 +277,7 @@ export const Route = createFileRoute("/products/")({
         selectedColors,
         selectedEffects,
         searchTitle,
+        inStock: showOutOfStock ? undefined : true,
       })
     );
   },
