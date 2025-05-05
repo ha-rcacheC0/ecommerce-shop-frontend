@@ -124,7 +124,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         <button
           onClick={onDecrement}
           className="btn btn-sm btn-primary btn-circle btn-ghost"
-          disabled={quantity <= 1}
+          disabled={quantity < 1}
         >
           <FontAwesomeIcon icon={faMinus} size="sm" />
         </button>

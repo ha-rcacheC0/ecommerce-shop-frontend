@@ -70,7 +70,7 @@ function checkOrderType(
   return "combo";
 }
 export function calcUnitPrice(casePrice: number, qty: number): number {
-  return Math.ceil((casePrice / 1.68 / qty) * 2.42) - 0.01; // 2.2*
+  return Math.ceil((casePrice / 2.016 / qty) * 2.5) - 0.01;
 }
 
 function calculateShipping(options: ShippingOptions): number {
