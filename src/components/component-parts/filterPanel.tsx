@@ -21,6 +21,8 @@ interface FilterPanelProps {
   setSelectedEffects: (effect: string) => void;
   isFetching: boolean;
   isPlaceholderData: boolean;
+  showOutOfStock: boolean;
+  setShowOutOfStock: (value: boolean) => void;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
   hasMore: boolean;
@@ -39,6 +41,8 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
   setSelectedColors,
   selectedEffects,
   setSelectedEffects,
+  showOutOfStock,
+  setShowOutOfStock,
 }) => {
   // Use the query options for product metadata
   const { data: metadata, isLoading } = useQuery(
@@ -74,6 +78,23 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 onChange={(e) => setSearchTitle(e.target.value)}
                 className="input input-bordered w-full max-w-xs"
               />
+            </div>
+            <div className="mb-4 mt-4">
+              <h3 className="font-bold mb-2 text-center text-xl underline">
+                Availability
+              </h3>
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="showOutOfStock"
+                  className="checkbox checkbox-sm"
+                  checked={showOutOfStock}
+                  onChange={(e) => setShowOutOfStock(e.target.checked)}
+                />
+                <label htmlFor="showOutOfStock" className="ml-2">
+                  Show out-of-stock products
+                </label>
+              </div>
             </div>
             <div className="divider"></div>
             <div className="mb-4">

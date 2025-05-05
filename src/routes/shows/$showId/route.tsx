@@ -117,7 +117,7 @@ function ShowDetailPage() {
             </div>
 
             <h1 className="text-3xl font-bold mb-2">{show.title}</h1>
-            <p className="text-xl font-semibold text-primary mb-2">
+            <p className="text-xl badge badge-primary p-3 mb-2">
               ${parseFloat(show.casePrice.toString()).toFixed(2)}
             </p>
             <p className="text-sm mb-4">
