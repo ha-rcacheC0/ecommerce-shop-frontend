@@ -19,3 +19,12 @@ primary_region = "ord"
   [[http_service.domains]]
   name = "crewfireworks.com"
   zone = "crewfireworks.com"
+
+
+  [[http_service.domains]]
+    hostname = "www.crewfireworks.com"
+    name = "www.crewfireworks.com"
+
+  [[http_service.domains]]
+    hostname = "crew-fireworks.fly.dev"
+    name = "crew-fireworks.fly.dev"

@@ -5,8 +5,9 @@ import {
   CreateProductData,
   UpdateProductData,
 } from "../../types";
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/products";
+const BASE_URL = API_CONFIG.BASE_URL + "/products";
 
 export const getAllProductsQuery = async (
   filters: ProductFilters
@@ -154,7 +155,7 @@ export const deleteProductQuery = async (
 
 export const getProductMetadata = async () => {
   try {
-    const METADATA_URL = import.meta.env.VITE_API_BASE_URL! + "/metadata";
+    const METADATA_URL = BASE_URL + "/metadata";
     const response = await fetch(METADATA_URL, {
       headers: {
         "Content-Type": "application/json",

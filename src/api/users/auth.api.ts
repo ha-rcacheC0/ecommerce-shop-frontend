@@ -6,8 +6,9 @@ import {
   UserCreateRequest,
   createUserRequestSchema,
 } from "../../types";
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL!;
+const BASE_URL = API_CONFIG.BASE_URL;
 console.log("API Base URL:", BASE_URL);
 
 export const signInUser = async (

@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/api/terminal";
+import { API_CONFIG } from "../../utils/config";
+
+const BASE_URL = API_CONFIG.BASE_URL + "/api/terminal";
 
 export const getTerminalsQuery = async ({
   state,

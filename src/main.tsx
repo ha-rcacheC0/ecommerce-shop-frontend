@@ -2,7 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./App.css";
 import { routeTree } from "./routeTree.gen.ts";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import {
+  RouterProvider,
+  createBrowserHistory,
+  createMemoryHistory,
+  createRouter,
+} from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   ThemeProvider,
@@ -18,6 +23,10 @@ const router = createRouter({
   routeTree,
   defaultPreload: "intent",
   context: { auth: undefined!, theme: undefined!, queryClient },
+  history:
+    typeof window !== "undefined"
+      ? createBrowserHistory()
+      : createMemoryHistory(),
 });
 
 declare module "@tanstack/react-router" {

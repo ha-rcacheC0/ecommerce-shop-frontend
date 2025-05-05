@@ -1,6 +1,7 @@
 import { TInventoryUnitProduct } from "../../types";
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/admin/inventory";
+const BASE_URL = API_CONFIG.BASE_URL + "/admin/inventory";
 
 export interface PaginatedResponse<T> {
   items: T[];
