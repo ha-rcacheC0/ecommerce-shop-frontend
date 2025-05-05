@@ -1,0 +1,25 @@
+# Environment files
+.env
+.env.*
+*.env
+
+# Development files
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.git
+.github
+.vscode
+.idea
+
+# Documentation
+README.md
+ShippingInfo.md
+
+# Build config
+.dockerignore
+.gitignore
+.eslintrc.cjs
+bun.lock
+postcss.config.js
