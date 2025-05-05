@@ -1,7 +1,8 @@
 // src/api/shows/shows.ts
 import { ShowWithProducts, CreateShowData, UpdateShowData } from "../../types";
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL! + "/shows";
+const BASE_URL = API_CONFIG.BASE_URL + "/shows";
 
 export const getAllShows = async (): Promise<ShowWithProducts[]> => {
   const response = await fetch(`${BASE_URL}`, {

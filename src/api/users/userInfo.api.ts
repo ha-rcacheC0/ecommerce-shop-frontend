@@ -1,6 +1,7 @@
 import { User, UserProfile, UsersResponse } from "../../types";
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL + "/user";
+const BASE_URL = API_CONFIG.BASE_URL + "/user";
 export const getUserInfo = async (token: string): Promise<UserProfile> => {
   return await fetch(BASE_URL + "/userInfo", {
     headers: { Authorization: `Bearer ${token}` },

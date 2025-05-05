@@ -1,7 +1,8 @@
 // reports.api.ts
 import { Report } from "../../types"; // Assuming you have a Report type defined
+import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL!;
+const BASE_URL = API_CONFIG.BASE_URL;
 
 // Define the pagination response interface
 export interface ReportsPaginatedResponse {
