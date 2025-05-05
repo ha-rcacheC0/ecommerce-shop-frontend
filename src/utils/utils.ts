@@ -54,7 +54,7 @@ const getShippingCost = (
       return rates[amount][destination];
     }
   }
-  return 0; // Default case, shouldn't reach here.
+  return 0;
 };
 
 function checkOrderType(
