@@ -155,7 +155,7 @@ export const deleteProductQuery = async (
 
 export const getProductMetadata = async () => {
   try {
-    const METADATA_URL = BASE_URL + "/metadata";
+    const METADATA_URL = API_CONFIG.BASE_URL + "/metadata";
     const response = await fetch(METADATA_URL, {
       headers: {
         "Content-Type": "application/json",
