@@ -69,11 +69,12 @@ const SalesReport: React.FC = () => {
   // CSV headers for react-csv
   const csvHeaders = [
     { label: "ID", key: "id" },
-    { label: "Product", key: "productTitle" },
-    { label: "User", key: "userName" },
-    { label: "Quantity", key: "quantity" },
+    { label: "Date Ordered", key: "formattedDate" },
+    { label: "First Name", key: "firstName" },
+    { label: "Last Name", key: "lastName" },
     { label: "Total Price", key: "totalPrice" },
-    { label: "Date", key: "formattedDate" },
+    { label: "Status", key: "status" },
+    { label: "Items", key: "items" },
   ];
   const totalSales = salesReport
     ? salesReport.reduce(
@@ -85,6 +86,18 @@ const SalesReport: React.FC = () => {
   const getCSVFilename = () => {
     const dateStr = new Date().toLocaleDateString().replace(/\//g, "-");
     return `sales-report-${dateStr}.csv`;
+  };
+  const formatDataForCSV = (data: any[]) => {
+    return data.map((item) => ({
+      ...item,
+      formattedDate: new Date(item.date).toLocaleDateString(),
+      firstName: item.user.profile.firstName,
+      lastName: item.user.profile.lastName,
+      totalPrice: item.amount,
+      items: item.purchaseItems
+        .map((i: any) => `${i.product.sku} | ${i.product.title}`)
+        .join(", "),
+    }));
   };
 
   return (
@@ -130,7 +143,7 @@ const SalesReport: React.FC = () => {
           {Array.isArray(salesReport) && (
             <div className="flex items-end ml-auto">
               <CSVLink
-                data={salesReport}
+                data={formatDataForCSV(salesReport)}
                 headers={csvHeaders}
                 filename={getCSVFilename()}
                 className="btn btn-success"

@@ -13,7 +13,7 @@ import { FieldError } from "../../../components/component-parts/ErrorMessage";
 
 export const ProfileForm = () => {
   const { auth } = Route.useRouteContext();
-  const { data: userProfile }: { data: UserProfile | undefined } = useQuery({
+  const { data: userProfile } = useQuery<UserProfile>({
     queryKey: ["userInfo", auth.user?.token],
   });
   const navigate = useNavigate();
