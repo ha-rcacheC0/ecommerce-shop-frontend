@@ -1,6 +1,6 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, IconDefinition } from "@fortawesome/free-solid-svg-icons";
+import { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 
 interface SidebarItem {
   icon: IconDefinition;
@@ -21,7 +21,6 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
   children,
   onSidebarItemSelect,
 }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(
     sidebarItems.length > 0 ? sidebarItems[0].id : null
   );
@@ -32,28 +31,16 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
     }
   }, [selectedItem, onSidebarItemSelect]);
 
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
   const handleItemSelect = (itemId: string) => {
     setSelectedItem(itemId);
-    if (sidebarOpen) {
-      setSidebarOpen(false);
-    }
   };
 
   return (
     <div className="bg-base-100 min-h-screen flex flex-col">
       {/* Navbar */}
       <div className="w-full navbar bg-primary text-primary-content">
-        <div className="flex-none lg:hidden">
-          <button onClick={toggleSidebar} className="btn btn-square btn-ghost">
-            <FontAwesomeIcon icon={faBars} size="lg" />
-          </button>
-        </div>
         <div className="flex-1 px-2 mx-2 text-xl font-bold">{title}</div>
-        <div className="flex-none hidden lg:block">
+        <div className="flex-none block">
           <ul className="menu menu-horizontal">
             {sidebarItems.map((item) => (
               <li key={item.id}>
@@ -71,47 +58,10 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
         </div>
       </div>
 
-      <div className="flex flex-1 ">
-        {/* Sidebar for mobile */}
-        <aside
-          className={`lg:hidden fixed inset-y-0 left-0 z-50 w-64 bg-primary text-base-content transform ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } transition-transform duration-200 ease-in-out`}
-        >
-          <div className="flex justify-between items-center p-4 bg-primary">
-            <h2 className="text-xl font-bold">{title}</h2>
-            <button onClick={toggleSidebar} className="btn btn-ghost btn-sm">
-              <FontAwesomeIcon icon={faBars} size="lg" />
-            </button>
-          </div>
-          <ul className="menu p-4 bg-primary">
-            {sidebarItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => handleItemSelect(item.id)}
-                  className={`flex items-center gap-4 ${selectedItem === item.id ? "bg-base-200" : ""}`}
-                >
-                  <FontAwesomeIcon icon={item.icon} />
-                  <span>{item.label}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </aside>
-
-        {/* Main content */}
-        <main className="flex-1 p-2 overflow-y-auto">
-          {children(selectedItem)}
-        </main>
-      </div>
-
-      {/* Overlay for mobile sidebar */}
-      {sidebarOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={toggleSidebar}
-        ></div>
-      )}
+      {/* Main content */}
+      <main className="flex-1 p-2 overflow-y-auto">
+        {children(selectedItem)}
+      </main>
     </div>
   );
 };

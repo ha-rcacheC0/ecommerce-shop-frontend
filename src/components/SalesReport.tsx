@@ -19,6 +19,25 @@ import {
   useUpdatePurchaseOrderMutation,
 } from "../api/reports/reportQueryOptions.api";
 import Modal from "./component-parts/Modal";
+import { TAddress, TCartProduct } from "../types";
+
+// Define the SalesReportItem type based on the usage in this file
+interface SalesReportItem {
+  id: string;
+  date: string;
+  user: {
+    id: string;
+    profile: {
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+    };
+  };
+  shippingAddress: TAddress;
+  amount: number;
+  status: string;
+  purchaseItems: Array<TCartProduct>;
+}
 
 const SalesReport: React.FC = () => {
   const { user } = useAuth();
@@ -99,6 +118,23 @@ const SalesReport: React.FC = () => {
         .join(", "),
     }));
   };
+
+  function printAddress(shippingAddress: {
+    id: string;
+    street1: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    street2?: string | undefined;
+  }): React.ReactNode {
+    const { street1, street2, city, state, postalCode } = shippingAddress;
+    return (
+      <span>
+        {street1}
+        {street2 ? `, ${street2}` : ""}, {city}, {state} {postalCode}
+      </span>
+    );
+  }
 
   return (
     <div className="bg-base-100 rounded-lg shadow-lg">
@@ -192,68 +228,75 @@ const SalesReport: React.FC = () => {
           </div>
         ) : salesReport ? (
           <div className="overflow-x-auto">
-            <table className="table w-full">
+            <table className="table">
               <thead>
-                <tr>
-                  <th>ID</th>
+                <tr className="text-center">
                   <th>Date Ordered</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
+                  <th>Name</th>
+                  <th>Shipping Address</th>
                   <th>Total Price</th>
                   <th>Status</th>
-                  <th>Actions</th>
+                  <th className="w-[200px] min-w-[180px]">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {salesReport.map((item: any) => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
+                {salesReport.map((item: SalesReportItem) => (
+                  <tr key={item.id} className="text-center">
                     <td>{new Date(item.date).toISOString().split("T")[0]}</td>
-                    <td>{item.user.profile.firstName}</td>
-                    <td>{item.user.profile.lastName}</td>
-                    <td>${item.amount}</td>
+                    <td>
+                      {item.user.profile.firstName} {item.user.profile.lastName}
+                    </td>
+                    <td className="text-center">
+                      {printAddress(item.shippingAddress)}
+                    </td>
+                    <td>${Number(item.amount).toFixed(2)}</td>
                     <td>{item.status}</td>
-                    <td className="flex flex-col gap-2 justify-center-safe">
-                      <button
-                        className="btn btn-sm btn-info "
-                        onClick={() => openItemsModal(item)}
-                      >
-                        View Items
-                      </button>
-                      <div className="grid grid-cols-3 max-md:grid-cols-1 gap-2">
+
+                    {/* Actions cell with better layout */}
+                    <td className="p-2">
+                      <div className="flex flex-col gap-2">
                         <button
-                          className="btn btn-icon btn-warning "
-                          onClick={() =>
-                            statusUpdate.mutate({
-                              id: item.id,
-                              status: "PROCESSING",
-                            })
-                          }
+                          className="btn btn-sm btn-info w-full"
+                          onClick={() => openItemsModal(item)}
                         >
-                          <FontAwesomeIcon icon={faShippingFast} />
+                          View Items
                         </button>
-                        <button
-                          className="btn btn-icon btn-success "
-                          onClick={() =>
-                            statusUpdate.mutate({
-                              id: item.id,
-                              status: "COMPLETED",
-                            })
-                          }
-                        >
-                          <FontAwesomeIcon icon={faCheck} />
-                        </button>
-                        <button
-                          className="btn btn-icon btn-error"
-                          onClick={() =>
-                            statusUpdate.mutate({
-                              id: item.id,
-                              status: "FAILED",
-                            })
-                          }
-                        >
-                          <FontAwesomeIcon icon={faExclamationTriangle} />
-                        </button>
+
+                        <div className="grid grid-cols-3 md:grid-cols-3 gap-2">
+                          <button
+                            className="btn btn-icon btn-warning"
+                            onClick={() =>
+                              statusUpdate.mutate({
+                                id: item.id,
+                                status: "PROCESSING",
+                              })
+                            }
+                          >
+                            <FontAwesomeIcon icon={faShippingFast} />
+                          </button>
+                          <button
+                            className="btn btn-icon btn-success"
+                            onClick={() =>
+                              statusUpdate.mutate({
+                                id: item.id,
+                                status: "COMPLETED",
+                              })
+                            }
+                          >
+                            <FontAwesomeIcon icon={faCheck} />
+                          </button>
+                          <button
+                            className="btn btn-icon btn-error"
+                            onClick={() =>
+                              statusUpdate.mutate({
+                                id: item.id,
+                                status: "FAILED",
+                              })
+                            }
+                          >
+                            <FontAwesomeIcon icon={faExclamationTriangle} />
+                          </button>
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -274,7 +317,7 @@ const SalesReport: React.FC = () => {
         <Modal onClose={() => setIsModalOpen(false)}>
           <div className="p-4">
             <h3 className="text-lg font-semibold mb-4">Ordered Items</h3>
-            <table className="table w-full table-zebra border *:border-base-300 ">
+            <table className="table w-full table-zebra border *:border-base-300">
               <thead>
                 <tr className="">
                   <th>SKU</th>

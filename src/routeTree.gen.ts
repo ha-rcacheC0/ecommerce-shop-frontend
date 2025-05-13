@@ -43,9 +43,85 @@ import { Route as AuthAdminProductsProductIdEditImport } from './routes/_auth/ad
 
 // Create Virtual Routes
 
+const TermsOfUseLazyImport = createFileRoute('/terms-of-use')()
+const ShippingInfoLazyImport = createFileRoute('/shipping-info')()
+const ShippingLazyImport = createFileRoute('/shipping')()
+const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
+const FireworksSafetyLazyImport = createFileRoute('/fireworks-safety')()
+const FaqLazyImport = createFileRoute('/faq')()
+const CustomerServiceLazyImport = createFileRoute('/customer-service')()
+const CookiePolicyLazyImport = createFileRoute('/cookie-policy')()
+const ContactUsLazyImport = createFileRoute('/contact-us')()
+const AboutLazyImport = createFileRoute('/about')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const TermsOfUseLazyRoute = TermsOfUseLazyImport.update({
+  id: '/terms-of-use',
+  path: '/terms-of-use',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/terms-of-use.lazy').then((d) => d.Route))
+
+const ShippingInfoLazyRoute = ShippingInfoLazyImport.update({
+  id: '/shipping-info',
+  path: '/shipping-info',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/shipping-info.lazy').then((d) => d.Route))
+
+const ShippingLazyRoute = ShippingLazyImport.update({
+  id: '/shipping',
+  path: '/shipping',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/shipping.lazy').then((d) => d.Route))
+
+const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/privacy-policy.lazy').then((d) => d.Route),
+)
+
+const FireworksSafetyLazyRoute = FireworksSafetyLazyImport.update({
+  id: '/fireworks-safety',
+  path: '/fireworks-safety',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/fireworks-safety.lazy').then((d) => d.Route),
+)
+
+const FaqLazyRoute = FaqLazyImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/faq.lazy').then((d) => d.Route))
+
+const CustomerServiceLazyRoute = CustomerServiceLazyImport.update({
+  id: '/customer-service',
+  path: '/customer-service',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+  import('./routes/customer-service.lazy').then((d) => d.Route),
+)
+
+const CookiePolicyLazyRoute = CookiePolicyLazyImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/cookie-policy.lazy').then((d) => d.Route))
+
+const ContactUsLazyRoute = ContactUsLazyImport.update({
+  id: '/contact-us',
+  path: '/contact-us',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/contact-us.lazy').then((d) => d.Route))
+
+const AboutLazyRoute = AboutLazyImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
 
 const AuthRoute = AuthImport.update({
   id: '/_auth',
@@ -241,6 +317,76 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/contact-us': {
+      id: '/contact-us'
+      path: '/contact-us'
+      fullPath: '/contact-us'
+      preLoaderRoute: typeof ContactUsLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/customer-service': {
+      id: '/customer-service'
+      path: '/customer-service'
+      fullPath: '/customer-service'
+      preLoaderRoute: typeof CustomerServiceLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/fireworks-safety': {
+      id: '/fireworks-safety'
+      path: '/fireworks-safety'
+      fullPath: '/fireworks-safety'
+      preLoaderRoute: typeof FireworksSafetyLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/shipping': {
+      id: '/shipping'
+      path: '/shipping'
+      fullPath: '/shipping'
+      preLoaderRoute: typeof ShippingLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/shipping-info': {
+      id: '/shipping-info'
+      path: '/shipping-info'
+      fullPath: '/shipping-info'
+      preLoaderRoute: typeof ShippingInfoLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/terms-of-use': {
+      id: '/terms-of-use'
+      path: '/terms-of-use'
+      fullPath: '/terms-of-use'
+      preLoaderRoute: typeof TermsOfUseLazyImport
       parentRoute: typeof rootRoute
     }
     '/_auth/admin': {
@@ -493,6 +639,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/events': typeof EventsRouteRouteWithChildren
   '': typeof AuthRouteWithChildren
+  '/about': typeof AboutLazyRoute
+  '/contact-us': typeof ContactUsLazyRoute
+  '/cookie-policy': typeof CookiePolicyLazyRoute
+  '/customer-service': typeof CustomerServiceLazyRoute
+  '/faq': typeof FaqLazyRoute
+  '/fireworks-safety': typeof FireworksSafetyLazyRoute
+  '/privacy-policy': typeof PrivacyPolicyLazyRoute
+  '/shipping': typeof ShippingLazyRoute
+  '/shipping-info': typeof ShippingInfoLazyRoute
+  '/terms-of-use': typeof TermsOfUseLazyRoute
   '/admin': typeof AuthAdminRouteRouteWithChildren
   '/products/$productId': typeof ProductsProductIdRouteRoute
   '/shows/$showId': typeof ShowsShowIdRouteRoute
@@ -524,6 +680,16 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/events': typeof EventsRouteRouteWithChildren
   '': typeof AuthRouteWithChildren
+  '/about': typeof AboutLazyRoute
+  '/contact-us': typeof ContactUsLazyRoute
+  '/cookie-policy': typeof CookiePolicyLazyRoute
+  '/customer-service': typeof CustomerServiceLazyRoute
+  '/faq': typeof FaqLazyRoute
+  '/fireworks-safety': typeof FireworksSafetyLazyRoute
+  '/privacy-policy': typeof PrivacyPolicyLazyRoute
+  '/shipping': typeof ShippingLazyRoute
+  '/shipping-info': typeof ShippingInfoLazyRoute
+  '/terms-of-use': typeof TermsOfUseLazyRoute
   '/admin': typeof AuthAdminRouteRouteWithChildren
   '/products/$productId': typeof ProductsProductIdRouteRoute
   '/shows/$showId': typeof ShowsShowIdRouteRoute
@@ -556,6 +722,16 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/events': typeof EventsRouteRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
+  '/about': typeof AboutLazyRoute
+  '/contact-us': typeof ContactUsLazyRoute
+  '/cookie-policy': typeof CookiePolicyLazyRoute
+  '/customer-service': typeof CustomerServiceLazyRoute
+  '/faq': typeof FaqLazyRoute
+  '/fireworks-safety': typeof FireworksSafetyLazyRoute
+  '/privacy-policy': typeof PrivacyPolicyLazyRoute
+  '/shipping': typeof ShippingLazyRoute
+  '/shipping-info': typeof ShippingInfoLazyRoute
+  '/terms-of-use': typeof TermsOfUseLazyRoute
   '/_auth/admin': typeof AuthAdminRouteRouteWithChildren
   '/products/$productId': typeof ProductsProductIdRouteRoute
   '/shows/$showId': typeof ShowsShowIdRouteRoute
@@ -589,6 +765,16 @@ export interface FileRouteTypes {
     | '/'
     | '/events'
     | ''
+    | '/about'
+    | '/contact-us'
+    | '/cookie-policy'
+    | '/customer-service'
+    | '/faq'
+    | '/fireworks-safety'
+    | '/privacy-policy'
+    | '/shipping'
+    | '/shipping-info'
+    | '/terms-of-use'
     | '/admin'
     | '/products/$productId'
     | '/shows/$showId'
@@ -619,6 +805,16 @@ export interface FileRouteTypes {
     | '/'
     | '/events'
     | ''
+    | '/about'
+    | '/contact-us'
+    | '/cookie-policy'
+    | '/customer-service'
+    | '/faq'
+    | '/fireworks-safety'
+    | '/privacy-policy'
+    | '/shipping'
+    | '/shipping-info'
+    | '/terms-of-use'
     | '/admin'
     | '/products/$productId'
     | '/shows/$showId'
@@ -649,6 +845,16 @@ export interface FileRouteTypes {
     | '/'
     | '/events'
     | '/_auth'
+    | '/about'
+    | '/contact-us'
+    | '/cookie-policy'
+    | '/customer-service'
+    | '/faq'
+    | '/fireworks-safety'
+    | '/privacy-policy'
+    | '/shipping'
+    | '/shipping-info'
+    | '/terms-of-use'
     | '/_auth/admin'
     | '/products/$productId'
     | '/shows/$showId'
@@ -681,6 +887,16 @@ export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   EventsRouteRoute: typeof EventsRouteRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  AboutLazyRoute: typeof AboutLazyRoute
+  ContactUsLazyRoute: typeof ContactUsLazyRoute
+  CookiePolicyLazyRoute: typeof CookiePolicyLazyRoute
+  CustomerServiceLazyRoute: typeof CustomerServiceLazyRoute
+  FaqLazyRoute: typeof FaqLazyRoute
+  FireworksSafetyLazyRoute: typeof FireworksSafetyLazyRoute
+  PrivacyPolicyLazyRoute: typeof PrivacyPolicyLazyRoute
+  ShippingLazyRoute: typeof ShippingLazyRoute
+  ShippingInfoLazyRoute: typeof ShippingInfoLazyRoute
+  TermsOfUseLazyRoute: typeof TermsOfUseLazyRoute
   ProductsProductIdRouteRoute: typeof ProductsProductIdRouteRoute
   ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute
   UserLoginRoute: typeof UserLoginRoute
@@ -693,6 +909,16 @@ const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   EventsRouteRoute: EventsRouteRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  AboutLazyRoute: AboutLazyRoute,
+  ContactUsLazyRoute: ContactUsLazyRoute,
+  CookiePolicyLazyRoute: CookiePolicyLazyRoute,
+  CustomerServiceLazyRoute: CustomerServiceLazyRoute,
+  FaqLazyRoute: FaqLazyRoute,
+  FireworksSafetyLazyRoute: FireworksSafetyLazyRoute,
+  PrivacyPolicyLazyRoute: PrivacyPolicyLazyRoute,
+  ShippingLazyRoute: ShippingLazyRoute,
+  ShippingInfoLazyRoute: ShippingInfoLazyRoute,
+  TermsOfUseLazyRoute: TermsOfUseLazyRoute,
   ProductsProductIdRouteRoute: ProductsProductIdRouteRoute,
   ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
   UserLoginRoute: UserLoginRoute,
@@ -714,6 +940,16 @@ export const routeTree = rootRoute
         "/",
         "/events",
         "/_auth",
+        "/about",
+        "/contact-us",
+        "/cookie-policy",
+        "/customer-service",
+        "/faq",
+        "/fireworks-safety",
+        "/privacy-policy",
+        "/shipping",
+        "/shipping-info",
+        "/terms-of-use",
         "/products/$productId",
         "/shows/$showId",
         "/user/login",
@@ -742,6 +978,36 @@ export const routeTree = rootRoute
         "/_auth/profile/cart/$cartId/success",
         "/_auth/profile/cart/$cartId/"
       ]
+    },
+    "/about": {
+      "filePath": "about.lazy.tsx"
+    },
+    "/contact-us": {
+      "filePath": "contact-us.lazy.tsx"
+    },
+    "/cookie-policy": {
+      "filePath": "cookie-policy.lazy.tsx"
+    },
+    "/customer-service": {
+      "filePath": "customer-service.lazy.tsx"
+    },
+    "/faq": {
+      "filePath": "faq.lazy.tsx"
+    },
+    "/fireworks-safety": {
+      "filePath": "fireworks-safety.lazy.tsx"
+    },
+    "/privacy-policy": {
+      "filePath": "privacy-policy.lazy.tsx"
+    },
+    "/shipping": {
+      "filePath": "shipping.lazy.tsx"
+    },
+    "/shipping-info": {
+      "filePath": "shipping-info.lazy.tsx"
+    },
+    "/terms-of-use": {
+      "filePath": "terms-of-use.lazy.tsx"
     },
     "/_auth/admin": {
       "filePath": "_auth/admin/route.tsx",

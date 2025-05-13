@@ -13,7 +13,6 @@ import { isObjectEmpty } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
 import StateZipInput from "./component-parts/state-zip-input";
 import TerminalSelection from "./component-parts/terminal-selection";
-import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -24,6 +23,7 @@ import {
   faTruck,
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
+import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
 
 const Cart = ({
   products,
@@ -97,7 +97,10 @@ const Cart = ({
     setIsUpdatingValues(false);
   }, [currentShippingAddress, subtotal]);
 
-  const grandTotal = subtotal + shipping + tax;
+  // Calculate the lift gate fee
+  const liftGateFee = needLiftGate ? 100 : 0;
+
+  const grandTotal = subtotal + shipping + tax + liftGateFee;
 
   useEffect(() => {
     setIsUpdatingValues(true);
@@ -105,18 +108,11 @@ const Cart = ({
       orderAmount: subtotal,
       orderType: orderType,
       destination: isTerminalDestination ? "terminal" : "anywhere",
-      needLiftGate,
+      needLiftGate: false, // Don't include lift gate in shipping calculation
     });
     setShipping(newShipping);
     setIsUpdatingValues(false);
-  }, [
-    subtotal,
-    shipping,
-    isTerminalDestination,
-    needLiftGate,
-    orderType,
-    terminalDestination,
-  ]);
+  }, [subtotal, isTerminalDestination, orderType, terminalDestination]);
 
   const { data: terminalData }: { data: TApprovedTerminal | undefined } =
     useQuery(
@@ -295,11 +291,6 @@ const Cart = ({
                     disabled={isTerminalDestination}
                   />
                   <span>Need a liftgate? (+$100)</span>
-                  {hasShow && needLiftGate && isShippableState && (
-                    <span className="text-xs text-success ml-2">
-                      (Liftgate fee waived with show package)
-                    </span>
-                  )}
                 </label>
               </div>
             )}
@@ -389,6 +380,16 @@ const Cart = ({
                   )}
                 </span>
               </div>
+
+              {/* Added Lift Gate Fee row */}
+              {needLiftGate && (
+                <div className="flex justify-between items-center">
+                  <span className="flex items-center gap-2">
+                    <span>Lift Gate Fee</span>
+                  </span>
+                  <span className="font-medium">${liftGateFee.toFixed(2)}</span>
+                </div>
+              )}
 
               {/* Tax row */}
               <div className="flex justify-between items-center">

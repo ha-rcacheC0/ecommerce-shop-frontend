@@ -78,6 +78,7 @@ export const CategoryDisplay: Record<string, string> = {
 
 export const BrandDisplay: Record<string, string> = {
   ALPHA_FIREWORKS: "Alpha Fireworks",
+  BRIGHT_STAR: "Bright Star",
   BLACK_SCORPION: "Black Scorpion",
   BLUE_DRAGON: "Blue Dragon",
   BOOM_WOW: "Boom Wow",
@@ -90,7 +91,7 @@ export const BrandDisplay: Record<string, string> = {
   CRZ: "CRZ",
   CSS: "CSS",
   DFS: "DFS",
-  DEMON_PYRO: "DEMON_PYRO",
+  DEMON_PYRO: "Demon Pyro",
   DOMINATOR: "Dominator",
   DUCK: "Duck",
   FIREHAWK: "Firehawk",
@@ -131,6 +132,7 @@ export const BrandDisplay: Record<string, string> = {
   TWO_WINGS: "Two Wings",
   WINDA: "Winda",
   WISE_GUY: "Wise Guy",
+  WORLD_CLASS_FIREWORKS: "World Class Fireworks",
 };
 
 // Create string-based schemas instead of enums

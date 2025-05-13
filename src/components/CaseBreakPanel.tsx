@@ -10,6 +10,9 @@ import {
   faCheck,
   faSpinner,
   faExclamationTriangle,
+  faShippingFast,
+  faTimesCircle,
+  faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toast } from "react-toastify";
@@ -19,6 +22,7 @@ import {
   useProcessCaseBreakMutation,
 } from "../api/reports/reportQueryOptions.api";
 import Modal from "./component-parts/Modal";
+import { ReportStatus } from "../types";
 
 const CaseBreakReport: React.FC = () => {
   const { user } = useAuth();
@@ -35,29 +39,59 @@ const CaseBreakReport: React.FC = () => {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
+  // State for status filter
+  const [statusFilter, setStatusFilter] = useState<ReportStatus | "ALL">("ALL");
+
   // Handle date changes
   useEffect(() => {
     // Default to today if no dates are set
     if (!startDate && !endDate) {
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      today.setUTCHours(23, 59, 59, 999); // Set to end of day in UTC
       setEndDate(today.toISOString().split("T")[0]);
     }
   }, [startDate, endDate]);
 
-  // Fetch case break report data
+  // Format dates with proper UTC time for API requests
+  const getFormattedStartDate = (): string => {
+    if (!startDate) return "";
+    // Set to start of day in UTC (00:00:00.000Z)
+    return `${startDate}T00:00:00.000Z`;
+  };
+
+  const getFormattedEndDate = (): string => {
+    if (!endDate) return "";
+    // Set to end of day in UTC (23:59:59.999Z)
+    return `${endDate}T23:59:59.999Z`;
+  };
+
+  // Fetch case break report data with properly formatted dates
   const {
     data: reportData,
     isLoading,
     isError,
     error,
     refetch,
-  } = useQuery(getAllCaseBreaksQueryOptions(token, startDate, endDate));
+  } = useQuery(
+    getAllCaseBreaksQueryOptions(
+      token,
+      getFormattedStartDate(),
+      getFormattedEndDate(),
+      statusFilter !== "ALL" ? statusFilter : undefined
+    )
+  );
+
+  // Refetch when statusFilter changes
+  useEffect(() => {
+    refetch();
+  }, [statusFilter, refetch]);
 
   // Mutation for processing case break requests
   const processMutation = useProcessCaseBreakMutation(
     token,
-    () => {},
+    () => {
+      refetch(); // Refresh data after successful update
+    },
     (_e) => {}
   );
 
@@ -86,6 +120,46 @@ const CaseBreakReport: React.FC = () => {
     setSelectedItem(null);
   };
 
+  // Handle status filter change
+  const handleStatusFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const newStatus = e.target.value as ReportStatus | "ALL";
+    setStatusFilter(newStatus);
+  };
+
+  // Get status icon based on status
+  const getStatusIcon = (status: ReportStatus) => {
+    switch (status) {
+      case "PENDING":
+        return <FontAwesomeIcon icon={faHourglassHalf} />;
+      case "PROCESSING":
+        return <FontAwesomeIcon icon={faShippingFast} />;
+      case "COMPLETED":
+        return <FontAwesomeIcon icon={faCheck} />;
+      case "FAILED":
+        return <FontAwesomeIcon icon={faTimesCircle} />;
+      default:
+        return null;
+    }
+  };
+
+  // Get status badge class based on status
+  const getStatusBadgeClass = (status: ReportStatus) => {
+    switch (status) {
+      case "PENDING":
+        return "badge badge-warning";
+      case "PROCESSING":
+        return "badge badge-info";
+      case "COMPLETED":
+        return "badge badge-success";
+      case "FAILED":
+        return "badge badge-error";
+      default:
+        return "badge";
+    }
+  };
+
   // CSV headers for react-csv
   const csvHeaders = [
     { label: "ID", key: "id" },
@@ -93,6 +167,7 @@ const CaseBreakReport: React.FC = () => {
     { label: "SKU", key: "sku" },
     { label: "Product", key: "title" },
     { label: "Quantity", key: "quantity" },
+    { label: "Status", key: "status" },
     { label: "Date", key: "formattedDate" },
   ];
 
@@ -101,6 +176,15 @@ const CaseBreakReport: React.FC = () => {
     const dateStr = new Date().toLocaleDateString().replace(/\//g, "-");
     return `case-break-report-${dateStr}.csv`;
   };
+
+  // Filter data based on status if needed
+  const getFilteredData = () => {
+    if (!reportData || !reportData.data) return [];
+
+    return reportData.data;
+  };
+
+  const filteredData = getFilteredData();
 
   return (
     <div className="bg-base-100 rounded-lg shadow-lg">
@@ -114,6 +198,7 @@ const CaseBreakReport: React.FC = () => {
               className="input input-bordered"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              title="Start of day (00:00:00 UTC)"
             />
           </label>
 
@@ -124,7 +209,24 @@ const CaseBreakReport: React.FC = () => {
               className="input input-bordered"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              title="End of day (23:59:59 UTC)"
             />
+          </label>
+
+          {/* Status Filter Dropdown */}
+          <label className="floating-label">
+            <span className="label-text">Status</span>
+            <select
+              className="select select-bordered"
+              value={statusFilter}
+              onChange={handleStatusFilterChange}
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="PENDING">Pending</option>
+              <option value="PROCESSING">Processing</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="FAILED">Failed</option>
+            </select>
           </label>
 
           <div className="flex items-end">
@@ -142,10 +244,10 @@ const CaseBreakReport: React.FC = () => {
             </button>
           </div>
 
-          {reportData && reportData.data && reportData.data.length > 0 && (
+          {filteredData.length > 0 && (
             <div className="flex items-end ml-auto">
               <CSVLink
-                data={reportData.data}
+                data={filteredData}
                 headers={csvHeaders}
                 filename={getCSVFilename()}
                 className="btn btn-success"
@@ -183,6 +285,28 @@ const CaseBreakReport: React.FC = () => {
               <div className="stat-title">Total Quantity</div>
               <div className="stat-value">{reportData.totalQuantity}</div>
             </div>
+
+            {/* Status counts */}
+            {reportData.statusCounts && (
+              <>
+                <div className="stat">
+                  <div className="stat-title">
+                    <span className="badge badge-warning">Pending</span>
+                  </div>
+                  <div className="stat-value">
+                    {reportData.statusCounts.PENDING || 0}
+                  </div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">
+                    <span className="badge badge-info">Processing</span>
+                  </div>
+                  <div className="stat-value">
+                    {reportData.statusCounts.PROCESSING || 0}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         )}
 
@@ -192,7 +316,7 @@ const CaseBreakReport: React.FC = () => {
             <FontAwesomeIcon icon={faSpinner} spin size="2x" />
             <span className="ml-2">Loading report...</span>
           </div>
-        ) : reportData && reportData.data && reportData.data.length > 0 ? (
+        ) : filteredData.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="table w-full">
               <thead>
@@ -200,29 +324,38 @@ const CaseBreakReport: React.FC = () => {
                   <th>SKU</th>
                   <th>Product</th>
                   <th>Quantity</th>
+                  <th>Status</th>
                   <th>Created At</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {reportData.data.map((item: any) => (
+                {filteredData.map((item: any) => (
                   <tr key={item.id}>
                     <td>{item.sku}</td>
                     <td>{item.title}</td>
                     <td>{item.quantity}</td>
+                    <td>
+                      <span className={getStatusBadgeClass(item.status)}>
+                        {getStatusIcon(item.status)} {item.status}
+                      </span>
+                    </td>
                     <td>{item.formattedDate}</td>
                     <td>
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => {
-                          console.log(item);
                           handleProcessRequest(
                             item.id,
                             item.quantity,
                             item.boxSize
                           );
                         }}
-                        disabled={processMutation.isPending}
+                        disabled={
+                          processMutation.isPending ||
+                          item.status === "COMPLETED" ||
+                          item.status === "FAILED"
+                        }
                       >
                         {processMutation.isPending &&
                         processMutation.variables?.id === item.id ? (
@@ -230,7 +363,13 @@ const CaseBreakReport: React.FC = () => {
                         ) : (
                           <FontAwesomeIcon icon={faCheck} />
                         )}
-                        <span className="ml-1">Process</span>
+                        <span className="ml-1">
+                          {item.status === "COMPLETED"
+                            ? "Completed"
+                            : item.status === "FAILED"
+                              ? "Failed"
+                              : "Process"}
+                        </span>
                       </button>
 
                       {/* Modal for entering quantity */}
@@ -281,7 +420,8 @@ const CaseBreakReport: React.FC = () => {
         ) : (
           <div className="bg-base-200 rounded-lg p-8 text-center">
             <p className="text-lg">
-              No case break requests found for the selected period.
+              No case break requests found for the selected period
+              {statusFilter !== "ALL" ? ` with status ${statusFilter}` : ""}.
             </p>
           </div>
         )}

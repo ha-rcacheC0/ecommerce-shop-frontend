@@ -6,6 +6,7 @@
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 import { faLocationArrow } from "@fortawesome/free-solid-svg-icons/faLocationArrow";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Link } from "@tanstack/react-router";
 
 export const Footer = () => {
   return (
@@ -13,25 +14,47 @@ export const Footer = () => {
       <footer className="footer flex flex-wrap p-10 bg-base-100 items-base justify-around text-base-content border-t-3 mt-10 border-secondary">
         <nav>
           <h6 className="footer-title underline">Company</h6>
-          <a className="link link-hover">About us</a>
-          <a className="link link-hover">Shipping</a>
+          <Link to="/about" className="link link-hover">
+            About us
+          </Link>
+          <Link to="/shipping-info" className="link link-hover">
+            Shipping
+          </Link>
           <a className="link link-hover">Discounts</a>
           <a className="link link-hover">Reviews</a>
-          <a className="link link-hover">Contact Us</a>
+          <Link to="/contact-us" className="link link-hover">
+            Contact Us
+          </Link>
         </nav>
         <nav>
           <h6 className="footer-title underline">Features</h6>
-          <a className="link link-hover">Fireworks Safety</a>
-          <a className="link link-hover">FAQ</a>
-          <a className="link link-hover">Privacy policy</a>
-          <a className="link link-hover">Cookie policy</a>
+          <Link to="/fireworks-safety" className="link link-hover">
+            Fireworks Safety
+          </Link>
+          <Link to="/faq" className="link link-hover">
+            FAQ
+          </Link>
+          <Link to="/privacy-policy" className="link link-hover">
+            Privacy policy
+          </Link>
+          <Link to="/cookie-policy" className="link link-hover">
+            Cookie policy
+          </Link>
         </nav>
         <nav>
           <h6 className="footer-title underline">Legal</h6>
-          <a className="link link-hover">Fireworks Safety</a>
-          <a className="link link-hover">Terms of Use</a>
-          <a className="link link-hover">Privacy policy</a>
-          <a className="link link-hover">Cookie policy</a>
+          <Link to="/fireworks-safety" className="link link-hover">
+            Fireworks Safety
+          </Link>
+          <Link to="/terms-of-use" className="link link-hover">
+            Terms of Use
+          </Link>
+          <Link to="/privacy-policy" className="link link-hover">
+            Privacy policy
+          </Link>
+          <Link to="/cookie-policy" className="link link-hover">
+            Cookie policy
+          </Link>
         </nav>
       </footer>
       <footer className="flex flex-col items-center justify-center px-8 py-2 border-t bg-base-100 text-base-content border-base-300">

@@ -3,15 +3,16 @@ import { API_CONFIG } from "../../utils/config";
 
 const BASE_URL = API_CONFIG.BASE_URL + "/reports";
 
-
 export const getCaseBreakReport = async (
   token: string,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  statusFilter?: string
 ) => {
   const params = new URLSearchParams();
   if (startDate) params.append("startDate", startDate);
   if (endDate) params.append("endDate", endDate);
+  if (statusFilter) params.append("status", statusFilter);
 
   const response = await fetch(`${BASE_URL}/case-break?${params}`, {
     headers: {

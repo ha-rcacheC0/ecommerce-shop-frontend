@@ -164,7 +164,7 @@ const DashboardContent: React.FC = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 bg-base-100">
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-base-100">
       {dashboardCards.map((card, index) => (
         <Link
           key={index}
@@ -172,13 +172,13 @@ const DashboardContent: React.FC = () => {
           className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300"
         >
           <div className="card-body">
-            <h2 className="card-title">
+            <h2 className="card-title self-center ">
               <FontAwesomeIcon icon={card.icon} className="mr-2" />
               {card.title}
             </h2>
 
             {card.isLoading ? (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center text-center space-x-2">
                 <FontAwesomeIcon icon={faSpinner} spin />
                 <span>Loading...</span>
               </div>
@@ -188,7 +188,7 @@ const DashboardContent: React.FC = () => {
                 <span>Error</span>
               </div>
             ) : (
-              <p className="text-3xl font-bold">{card.count}</p>
+              <p className="text-3xl font-bold text-center">{card.count}</p>
             )}
           </div>
         </Link>
