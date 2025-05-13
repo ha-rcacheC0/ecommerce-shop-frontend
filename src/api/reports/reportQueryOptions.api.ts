@@ -1,59 +1,76 @@
 // reportQueryOptions.api.ts
+
+import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
-  queryOptions,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import {
-  getReports,
-  ReportsQueryParams,
-  generateReport,
-  downloadReport,
+  getCaseBreakReport,
+  getPurchaseOrderReport,
+  processCaseBreakRequest,
+  updatePurchaseOrderStatus,
 } from "./reports.api";
+import { toast } from "react-toastify";
+import { queryClient } from "../../main";
 
-export const getReportsQueryOptions = (
+export const getAllCaseBreaksQueryOptions = (
   token: string,
-  params: ReportsQueryParams = {}
-) => {
-  return queryOptions({
-    queryKey: ["reports", params],
-    queryFn: () => getReports(token, params),
+  startDate: string,
+  endDate: string
+) =>
+  queryOptions({
+    queryKey: ["caseBreakReport", startDate, endDate],
+    queryFn: () => getCaseBreakReport(token, startDate, endDate),
+    enabled: !!token,
   });
-};
-
-// Custom hook for report generation
-export const useGenerateReport = (token: string) => {
-  const queryClient = useQueryClient();
-
+export const useProcessCaseBreakMutation = (
+  token: string,
+  onSuccess: () => void,
+  onError: (error: Error) => void
+) => {
   return useMutation({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    mutationFn: ({
-      reportType,
-      params,
-    }: {
-      reportType: string;
-      params: ReportsQueryParams;
-    }) => generateReport(token, reportType, params),
+    mutationFn: ({ id, quantity }: { id: string; quantity: number }) =>
+      processCaseBreakRequest(token, id, quantity),
     onSuccess: () => {
-      // Invalidate and refetch reports list when a new report is generated
-      queryClient.invalidateQueries({ queryKey: ["reports"] });
+      onSuccess();
+      toast.success("Case break request processed successfully");
+      queryClient.invalidateQueries({ queryKey: ["caseBreakReport"] });
+    },
+    onError: (error) => {
+      onError(error),
+        toast.error(
+          `Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`
+        );
     },
   });
 };
-
-// Custom hook for report download
-export const useDownloadReport = (token: string) => {
+export const getPurchaseOrderReportQueryOptions = (
+  token: string,
+  startDate: string,
+  endDate: string
+) =>
+  queryOptions({
+    queryKey: ["purchaseOrderReport", token, startDate, endDate],
+    queryFn: () => getPurchaseOrderReport(token, startDate, endDate),
+    enabled: !!token,
+  });
+export const useUpdatePurchaseOrderMutation = (
+  token: string,
+  onSuccess: () => void,
+  onError: (error: Error) => void
+) => {
   return useMutation({
-    mutationFn: (reportId: string) => downloadReport(token, reportId),
-    onSuccess: (data) => {
-      // Create a download link and trigger it
-      const url = window.URL.createObjectURL(data);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `report-${new Date().toISOString()}.csv`; // or appropriate file extension
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      updatePurchaseOrderStatus(token, id, status),
+    onSuccess: () => {
+      onSuccess();
+      toast.success("Purchase order request processed successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["purchaseOrderReport", token],
+      });
+    },
+    onError: (error) => {
+      onError(error),
+        toast.error(
+          `Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`
+        );
     },
   });
 };

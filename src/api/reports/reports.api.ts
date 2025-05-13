@@ -1,106 +1,90 @@
 // reports.api.ts
-import { Report } from "../../types"; // Assuming you have a Report type defined
 import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = API_CONFIG.BASE_URL;
+const BASE_URL = API_CONFIG.BASE_URL + "/reports";
 
-// Define the pagination response interface
-export interface ReportsPaginatedResponse {
-  items: Report[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasMore: boolean;
-  };
-}
 
-// Define params interface for the reports endpoint
-export interface ReportsQueryParams {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  startDate?: string;
-  endDate?: string;
-  type?: string;
-  status?: string;
-}
-
-export const getReports = async (
+export const getCaseBreakReport = async (
   token: string,
-  params: ReportsQueryParams = {}
-): Promise<ReportsPaginatedResponse> => {
-  const queryParams = new URLSearchParams();
+  startDate?: string,
+  endDate?: string
+) => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
 
-  if (params.page) queryParams.append("page", params.page.toString());
-  if (params.pageSize)
-    queryParams.append("pageSize", params.pageSize.toString());
-  if (params.search) queryParams.append("search", params.search);
-  if (params.startDate) queryParams.append("startDate", params.startDate);
-  if (params.endDate) queryParams.append("endDate", params.endDate);
-  if (params.type) queryParams.append("type", params.type);
-  if (params.status) queryParams.append("status", params.status);
-
-  const queryString = queryParams.toString()
-    ? `?${queryParams.toString()}`
-    : "";
-
-  const response = await fetch(`${BASE_URL}/reports${queryString}`, {
+  const response = await fetch(`${BASE_URL}/case-break?${params}`, {
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error("Failed to fetch case break report");
   }
 
-  return response.json();
+  return await response.json();
 };
 
-// Function to generate a specific report
-export const generateReport = async (
+export const processCaseBreakRequest = async (
   token: string,
-  reportType: string,
-  params: {
-    startDate?: string;
-    endDate?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // For additional parameters based on report type
-  }
-): Promise<{ reportId: string }> => {
-  const response = await fetch(`${BASE_URL}/reports/generate/${reportType}`, {
+  id: string,
+  quantityAdded: number
+) => {
+  const response = await fetch(`${BASE_URL}/case-break/${id}/process`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(params),
+    body: JSON.stringify({ quantityAdded }),
   });
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error("Failed to process case break request");
   }
 
   return response.json();
 };
-
-// Function to download a report
-export const downloadReport = async (
+export const getPurchaseOrderReport = async (
   token: string,
-  reportId: string
-): Promise<Blob> => {
-  const response = await fetch(`${BASE_URL}/reports/${reportId}/download`, {
+  startDate?: string,
+  endDate?: string
+) => {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const response = await fetch(`${BASE_URL}/purchases?${params}`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
   });
 
   if (!response.ok) {
-    throw new Error("Network response was not ok");
+    throw new Error("Failed to fetch purchase order report");
   }
 
-  return response.blob();
+  return await response.json();
+};
+export const updatePurchaseOrderStatus = async (
+  token: string,
+  id: string,
+  status: string
+) => {
+  const response = await fetch(`${BASE_URL}/purchases/${id}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update purchase order status");
+  }
+
+  return await response.json();
 };
