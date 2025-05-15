@@ -2,39 +2,13 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "@tanstack/react-router";
 import { ThemeType, useThemeProvider } from "../providers/theme.provider";
-
-type TUserProfile = {
-  userId: string;
-  firstName?: string | undefined;
-  lastName?: string | undefined;
-  dateOfBirth?: Date | undefined;
-  phoneNumber?: string | undefined;
-  billingAddress?:
-    | {
-        street1: string;
-        city: string;
-        state: string;
-        postalCode: string;
-        street2?: string | undefined;
-      }
-    | undefined;
-  shippingAddress?:
-    | {
-        street1: string;
-        city: string;
-        state: string;
-        postalCode: string;
-        street2?: string | undefined;
-      }
-    | undefined;
-  canContact?: boolean | undefined;
-};
+import { UserProfile } from "../types";
 
 export const ProfileCard = ({
   userProfile,
   userEmail,
 }: {
-  userProfile: TUserProfile;
+  userProfile: UserProfile;
   userEmail: string;
 }) => {
   const { theme, updateTheme } = useThemeProvider();
@@ -182,7 +156,7 @@ const AddressField = ({
   type,
 }: {
   label: string;
-  address: TUserProfile["billingAddress"];
+  address: UserProfile["billingAddress"];
   type: "billing" | "shipping";
 }) => (
   <div className="p-4 bg-base-200 rounded-lg">

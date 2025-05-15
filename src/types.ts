@@ -230,8 +230,12 @@ const AddressSchema = z.object({
 const UserProfileSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
-  dateOfBirth: z.date().optional(),
+  dateOfBirth: z
+    .string()
+    .transform((str) => (str ? new Date(str) : null))
+    .optional(),
   phoneNumber: z.string().optional(),
+  acceptedTerms: z.boolean(),
   billingAddress: AddressSchema.optional(),
   shippingAddress: AddressSchema.optional(),
   canContact: z.boolean().optional(),
@@ -460,12 +464,13 @@ export const SignInResponseSchema = z.object({
   token: z.string().optional(),
   userInfo: z
     .object({
-      email: z.string(),
+      email: z.string().email(),
       role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
-      lastLogin: z.string().datetime().nullable(),
+      profile: UserProfileSchema,
       Cart: TCartSchema,
     })
     .optional(),
+
   message: z.string().optional(),
 });
 

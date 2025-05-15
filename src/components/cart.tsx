@@ -24,6 +24,11 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
+import TosModal from "./component-parts/tos-Modal";
+import {
+  userInfoQueryOptions,
+  useUserInfoPostMutation,
+} from "../api/users/userQueryOptions.api";
 
 const Cart = ({
   products,
@@ -44,7 +49,19 @@ const Cart = ({
   const [terminalDestination, setTerminalDestination] = useState("");
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
+  const [isTosModalOpen, setIsTosModalOpen] = useState(false);
   const { user } = useAuth();
+
+  const { data: userProfile } = useQuery(userInfoQueryOptions(user!.token!));
+  const { mutate } = useUserInfoPostMutation(
+    user!.token!,
+    () => {
+      setIsTosModalOpen(false);
+    },
+    (error) => {
+      console.error("Error updating user info:", error);
+    }
+  );
 
   let caseSubtotal = 0;
   let unitSubtotal = 0;
@@ -142,6 +159,19 @@ const Cart = ({
     setIsUpdatingValues(false);
   }, [isTerminalDestination, terminalData, shippingAddress]);
 
+  const isToSAccepted = userProfile?.acceptedTerms || false;
+  const handleTosAccept = async () => {
+    try {
+      // Update user profile with TOS acceptance
+      mutate({
+        token: user!.token!,
+        body: { userId: user!.userInfo!.profile.userId, acceptedTerms: true },
+      });
+    } catch (error) {
+      console.error("Failed to update TOS acceptance:", error);
+    }
+  };
+
   const isShippingAddressSet =
     currentShippingAddress && !isObjectEmpty(currentShippingAddress);
 
@@ -165,6 +195,13 @@ const Cart = ({
 
   return (
     <div className="bg-base-100 p-0 rounded-lg overflow-hidden">
+      <TosModal
+        isOpen={isTosModalOpen}
+        onClose={() => {
+          setIsTosModalOpen(false);
+        }}
+        onAccept={handleTosAccept}
+      />
       {/* Cart table with fixed styling to match design */}
       <div className="overflow-x-auto w-full">
         <table className="w-full table-auto">
@@ -334,7 +371,6 @@ const Cart = ({
                 <span>Subtotal:</span>
                 <span className="font-medium">${subtotal.toFixed(2)}</span>
               </div>
-
               <div className="flex justify-between items-center">
                 <span className="flex items-center gap-2">
                   {orderType === "show" && (
@@ -380,7 +416,6 @@ const Cart = ({
                   )}
                 </span>
               </div>
-
               {/* Added Lift Gate Fee row */}
               {needLiftGate && (
                 <div className="flex justify-between items-center">
@@ -414,14 +449,14 @@ const Cart = ({
                 </span>
               </div>
             </div>
-
             <div className="mt-6">
               <HelcimPayButton
                 cartId={user!.userInfo!.Cart.id}
-                amount={grandTotal}
+                amounts={{ subtotal, tax, liftGateFee, shipping, grandTotal }}
                 btnDisabled={
                   (!isShippingAddressSet && !isUpdatingValues) ||
-                  !isShippableState
+                  !isShippableState ||
+                  !isToSAccepted
                 }
                 userId={user!.userInfo!.Cart.userId!}
                 shippingAddressId={
@@ -431,7 +466,20 @@ const Cart = ({
 
               {!isShippingAddressSet && (
                 <div className="mt-3 text-warning text-sm">
-                  Please update your shipping address to proceed to checkout
+                  Please update your shipping address in the user profile to
+                  proceed to checkout
+                </div>
+              )}
+              {!isToSAccepted && (
+                <div className="mt-3 text-warning text-sm">
+                  Please{" "}
+                  <button
+                    className="btn btn-sm btn-link"
+                    onClick={() => setIsTosModalOpen(true)}
+                  >
+                    click here
+                  </button>
+                  to accept the Terms of Service before checkout
                 </div>
               )}
 

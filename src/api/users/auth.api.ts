@@ -9,7 +9,6 @@ import {
 import { API_CONFIG } from "../../utils/config";
 
 const BASE_URL = API_CONFIG.BASE_URL;
-console.log("API Base URL:", BASE_URL);
 
 export const signInUser = async (
   body: SignInRequest
@@ -24,6 +23,7 @@ export const signInUser = async (
     },
   });
   const responseInfo = await response.json();
+  console.log("responseInfo", responseInfo);
   const responseData = SignInResponseSchema.safeParse(responseInfo);
 
   if (!responseData.success) throw new Error(responseData.error.message);

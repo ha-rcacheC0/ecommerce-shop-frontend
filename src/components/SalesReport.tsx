@@ -10,6 +10,7 @@ import {
   faExclamationTriangle,
   faShippingFast,
   faCheck,
+  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useAuth } from "../providers/auth.provider";
@@ -21,7 +22,6 @@ import {
 import Modal from "./component-parts/Modal";
 import { TAddress, TCartProduct } from "../types";
 
-// Define the SalesReportItem type based on the usage in this file
 interface SalesReportItem {
   id: string;
   date: string;
@@ -34,7 +34,7 @@ interface SalesReportItem {
     };
   };
   shippingAddress: TAddress;
-  amount: number;
+  grandTotal: number;
   status: string;
   purchaseItems: Array<TCartProduct>;
 }
@@ -42,8 +42,10 @@ interface SalesReportItem {
 const SalesReport: React.FC = () => {
   const { user } = useAuth();
   const token = user!.token!;
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isItemsModalOpen, setIsItemsModalOpen] = useState(false);
+  const [isAmountsModalOpen, setIsAmountsModalOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
@@ -74,6 +76,7 @@ const SalesReport: React.FC = () => {
       adjustedEndDate || ""
     )
   );
+
   const statusUpdate = useUpdatePurchaseOrderMutation(
     token,
     () => {},
@@ -83,7 +86,12 @@ const SalesReport: React.FC = () => {
   const openItemsModal = (item: any) => {
     // Open a modal to show the items in the order
     setSelectedItems(item.purchaseItems);
-    setIsModalOpen(true);
+    setIsItemsModalOpen(true);
+  };
+  const openAmountsModal = (order: any) => {
+    // Open a modal to show the items in the order
+    setSelectedOrder(order);
+    setIsAmountsModalOpen(true);
   };
   // CSV headers for react-csv
   const csvHeaders = [
@@ -97,7 +105,7 @@ const SalesReport: React.FC = () => {
   ];
   const totalSales = salesReport
     ? salesReport.reduce(
-        (acc: number, item: any) => acc + parseFloat(item.amount),
+        (acc: number, item: any) => acc + parseFloat(item.grandTotal),
         0
       )
     : 0;
@@ -112,7 +120,7 @@ const SalesReport: React.FC = () => {
       formattedDate: new Date(item.date).toLocaleDateString(),
       firstName: item.user.profile.firstName,
       lastName: item.user.profile.lastName,
-      totalPrice: item.amount,
+      totalPrice: item.grandTotal,
       items: item.purchaseItems
         .map((i: any) => `${i.product.sku} | ${i.product.title}`)
         .join(", "),
@@ -249,18 +257,32 @@ const SalesReport: React.FC = () => {
                     <td className="text-center">
                       {printAddress(item.shippingAddress)}
                     </td>
-                    <td>${Number(item.amount).toFixed(2)}</td>
+                    <td>${Number(item.grandTotal).toFixed(2)}</td>
                     <td>{item.status}</td>
 
                     {/* Actions cell with better layout */}
                     <td className="p-2">
                       <div className="flex flex-col gap-2">
-                        <button
-                          className="btn btn-sm btn-info w-full"
-                          onClick={() => openItemsModal(item)}
-                        >
-                          View Items
-                        </button>
+                        <div className="grid grid-cols-2 gap-2">
+                          <button
+                            className="btn btn-sm btn-info"
+                            onClick={() => openItemsModal(item)}
+                          >
+                            View Items
+                          </button>
+
+                          {/* New button for amounts modal */}
+                          <button
+                            className="btn btn-sm btn-secondary"
+                            onClick={() => openAmountsModal(item)}
+                          >
+                            <FontAwesomeIcon
+                              icon={faChartLine}
+                              className="mr-1"
+                            />
+                            Amounts
+                          </button>
+                        </div>
 
                         <div className="grid grid-cols-3 md:grid-cols-3 gap-2">
                           <button
@@ -313,17 +335,18 @@ const SalesReport: React.FC = () => {
         )}
       </div>
       {/* Modal for viewing ordered items */}
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <div className="p-4">
+      {isItemsModalOpen && (
+        <Modal onClose={() => setIsItemsModalOpen(false)}>
+          <div className="p-4 w-full ">
             <h3 className="text-lg font-semibold mb-4">Ordered Items</h3>
-            <table className="table w-full table-zebra border *:border-base-300">
+            <table className="table w-full table-zebra border *:border-base-300 overflow-auto">
               <thead>
                 <tr className="">
                   <th>SKU</th>
                   <th>Title</th>
-                  <th>Quantity</th>
                   <th>Type</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
@@ -333,6 +356,7 @@ const SalesReport: React.FC = () => {
                     <td>{item.product.title}</td>
                     <td>{item.quantity}</td>
                     <td>{item.isUnit ? "units" : "case"}</td>
+                    <td>{Number(item.itemSubTotal).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -340,7 +364,45 @@ const SalesReport: React.FC = () => {
             <div className="flex justify-end mt-4">
               <button
                 className="btn btn-outline"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsItemsModalOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+
+      {isAmountsModalOpen && (
+        <Modal onClose={() => setIsAmountsModalOpen(false)}>
+          <div className="p-4 w-full ">
+            <h3 className="text-lg font-semibold mb-4">Order Amounts</h3>
+            <table className="table w-full table-zebra border *:border-base-300 overflow-auto">
+              <thead>
+                <tr className="">
+                  <th>SubTotal</th>
+                  <th>Shipping</th>
+                  <th>Tax</th>
+                  <th>Lift Gate Fee</th>
+                  <th>Grand Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr key={selectedOrder.id}>
+                  <td className="font-bold">
+                    {Number(selectedOrder.subTotal).toFixed(2)}
+                  </td>
+                  <td>{Number(selectedOrder.shippingCost).toFixed(2)}</td>
+                  <td>{Number(selectedOrder.tax).toFixed(2)}</td>
+                  <td>{Number(selectedOrder.liftGateFee).toFixed(2)}</td>
+                  <td>{Number(selectedOrder.grandTotal).toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="flex justify-end mt-4">
+              <button
+                className="btn btn-outline"
+                onClick={() => setIsAmountsModalOpen(false)}
               >
                 Close
               </button>

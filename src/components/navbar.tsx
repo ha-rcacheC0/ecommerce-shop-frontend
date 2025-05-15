@@ -65,7 +65,7 @@ export const Navbar = () => {
               </Link>
             </li>
             <div className="divider divider-secondary"></div>
-            {auth.authState === "authenticated" && (
+            {auth.authState === "authenticated" ? (
               <>
                 <li className="mt-auto">
                   <Link to="/profile" className="justify-between">
@@ -83,11 +83,25 @@ export const Navbar = () => {
                     <span className="badge badge-secondary">{cartQty}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </li>
                 {auth.user?.userInfo?.role === "ADMIN" && (
                   <li>
                     <Link to="/admin">Admin</Link>
                   </li>
                 )}
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/user/register">Sign Up</Link>
+                </li>
+                <li>
+                  <Link to="/user/login">Sign In</Link>
+                </li>
               </>
             )}
           </ul>

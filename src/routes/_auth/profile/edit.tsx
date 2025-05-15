@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { useState, useEffect } from "react";
 
-import { States, UserProfile } from "../../../types";
+import { States } from "../../../types";
 import {
   useUserInfoPostMutation,
   userInfoQueryOptions,
@@ -13,9 +13,9 @@ import { FieldError } from "../../../components/component-parts/ErrorMessage";
 
 export const ProfileForm = () => {
   const { auth } = Route.useRouteContext();
-  const { data: userProfile } = useQuery<UserProfile>({
-    queryKey: ["userInfo", auth.user?.token],
-  });
+  const { data: userProfile } = useQuery(
+    userInfoQueryOptions(auth.user!.token!)
+  );
   const navigate = useNavigate();
   const [sameAddress, setSameAddress] = useState(true);
 
