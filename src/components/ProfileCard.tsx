@@ -100,7 +100,7 @@ export const ProfileCard = ({
             />
             <ProfileField
               label="Phone Number"
-              value={userProfile?.phoneNumber}
+              value={userProfile?.phoneNumber || ""}
             />
             <ProfileField
               label="Receive Updates"

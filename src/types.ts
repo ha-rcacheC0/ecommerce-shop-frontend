@@ -228,13 +228,13 @@ const AddressSchema = z.object({
 });
 
 const UserProfileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
+  firstName: z.string().nullable().optional(),
+  lastName: z.string().nullable().optional(),
   dateOfBirth: z
     .string()
     .transform((str) => (str ? new Date(str) : null))
     .optional(),
-  phoneNumber: z.string().optional(),
+  phoneNumber: z.string().nullable().optional(),
   acceptedTerms: z.boolean(),
   billingAddress: AddressSchema.optional(),
   shippingAddress: AddressSchema.optional(),
@@ -466,8 +466,8 @@ export const SignInResponseSchema = z.object({
     .object({
       email: z.string().email(),
       role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
-      profile: UserProfileSchema,
-      Cart: TCartSchema,
+      profile: UserProfileSchema.optional(),
+      Cart: TCartSchema.optional(),
     })
     .optional(),
 

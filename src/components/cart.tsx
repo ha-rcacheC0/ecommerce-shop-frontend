@@ -165,7 +165,7 @@ const Cart = ({
       // Update user profile with TOS acceptance
       mutate({
         token: user!.token!,
-        body: { userId: user!.userInfo!.profile.userId, acceptedTerms: true },
+        body: { userId: user!.userInfo!.profile!.userId, acceptedTerms: true },
       });
     } catch (error) {
       console.error("Failed to update TOS acceptance:", error);
@@ -451,14 +451,14 @@ const Cart = ({
             </div>
             <div className="mt-6">
               <HelcimPayButton
-                cartId={user!.userInfo!.Cart.id}
+                cartId={user!.userInfo!.Cart!.id}
                 amounts={{ subtotal, tax, liftGateFee, shipping, grandTotal }}
                 btnDisabled={
                   (!isShippingAddressSet && !isUpdatingValues) ||
                   !isShippableState ||
                   !isToSAccepted
                 }
-                userId={user!.userInfo!.Cart.userId!}
+                userId={user!.userInfo!.Cart!.userId!}
                 shippingAddressId={
                   isShippingAddressSet ? currentShippingAddress!.id : ""
                 }

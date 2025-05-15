@@ -24,7 +24,7 @@ const SingleProductPage = () => {
     queryFn: () => getOneProductQuery({ id: productId }),
   });
 
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart!.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
     () => {

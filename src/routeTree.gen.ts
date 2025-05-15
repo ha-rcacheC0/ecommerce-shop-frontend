@@ -17,6 +17,7 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as ShowsIndexImport } from './routes/shows/index'
 import { Route as ProductsIndexImport } from './routes/products/index'
+import { Route as CodybIndexImport } from './routes/codyb/index'
 import { Route as UserRegisterImport } from './routes/user/register'
 import { Route as UserLoginImport } from './routes/user/login'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
@@ -149,6 +150,12 @@ const ShowsIndexRoute = ShowsIndexImport.update({
 const ProductsIndexRoute = ProductsIndexImport.update({
   id: '/products/',
   path: '/products/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CodybIndexRoute = CodybIndexImport.update({
+  id: '/codyb/',
+  path: '/codyb/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -445,6 +452,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserRegisterImport
       parentRoute: typeof rootRoute
     }
+    '/codyb/': {
+      id: '/codyb/'
+      path: '/codyb'
+      fullPath: '/codyb'
+      preLoaderRoute: typeof CodybIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/products/': {
       id: '/products/'
       path: '/products'
@@ -657,6 +671,7 @@ export interface FileRoutesByFullPath {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
+  '/codyb': typeof CodybIndexRoute
   '/products': typeof ProductsIndexRoute
   '/shows': typeof ShowsIndexRoute
   '/admin/admin': typeof AuthAdminAdminRoute
@@ -698,6 +713,7 @@ export interface FileRoutesByTo {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
+  '/codyb': typeof CodybIndexRoute
   '/products': typeof ProductsIndexRoute
   '/shows': typeof ShowsIndexRoute
   '/admin/admin': typeof AuthAdminAdminRoute
@@ -740,6 +756,7 @@ export interface FileRoutesById {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
+  '/codyb/': typeof CodybIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/shows/': typeof ShowsIndexRoute
   '/_auth/admin/admin': typeof AuthAdminAdminRoute
@@ -783,6 +800,7 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
+    | '/codyb'
     | '/products'
     | '/shows'
     | '/admin/admin'
@@ -823,6 +841,7 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
+    | '/codyb'
     | '/products'
     | '/shows'
     | '/admin/admin'
@@ -863,6 +882,7 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
+    | '/codyb/'
     | '/products/'
     | '/shows/'
     | '/_auth/admin/admin'
@@ -901,6 +921,7 @@ export interface RootRouteChildren {
   ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute
   UserLoginRoute: typeof UserLoginRoute
   UserRegisterRoute: typeof UserRegisterRoute
+  CodybIndexRoute: typeof CodybIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ShowsIndexRoute: typeof ShowsIndexRoute
 }
@@ -923,6 +944,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
   UserLoginRoute: UserLoginRoute,
   UserRegisterRoute: UserRegisterRoute,
+  CodybIndexRoute: CodybIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ShowsIndexRoute: ShowsIndexRoute,
 }
@@ -954,6 +976,7 @@ export const routeTree = rootRoute
         "/shows/$showId",
         "/user/login",
         "/user/register",
+        "/codyb/",
         "/products/",
         "/shows/"
       ]
@@ -1049,6 +1072,9 @@ export const routeTree = rootRoute
     },
     "/user/register": {
       "filePath": "user/register.tsx"
+    },
+    "/codyb/": {
+      "filePath": "codyb/index.tsx"
     },
     "/products/": {
       "filePath": "products/index.tsx"

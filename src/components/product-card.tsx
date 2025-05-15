@@ -16,7 +16,7 @@ export const ProductCard = ({
   const packageString = product.package.join("/");
   const unitPackageString = product.unitProduct?.package.join("/");
   const { authState, user } = useAuth();
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart?.id;
 
   const addItem = useAddItemToCartMutation(
     userCartId!,
