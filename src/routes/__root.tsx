@@ -27,6 +27,16 @@ function Root() {
       <Footer />
       {isDevelopment && (
         <>
+          <button
+            type="button"
+            className="btn btn-primary fixed bottom-4 right-4 z-50"
+            onClick={() => {
+              console.log("Breaking the world...");
+              throw new Error("Sentry Test Error");
+            }}
+          >
+            Break the world
+          </button>
           <TanStackRouterDevtools position="bottom-right" />
           <ReactQueryDevtools
             initialIsOpen={false}
