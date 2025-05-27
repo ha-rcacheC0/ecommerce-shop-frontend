@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getInventoryQueryOptions } from "../../../api/admin/inventoryQueries";
+import { getInventoryQueryOptions } from "@api/admin/inventoryQueries";
 
-import InventoryPanel from "../../../components/InventoryPanel";
+import InventoryPanel from "@components/admin-panel-components/InventoryPanel";
 
 export const Route = createFileRoute("/_auth/admin/inventory")({
   component: InventoryPanel,

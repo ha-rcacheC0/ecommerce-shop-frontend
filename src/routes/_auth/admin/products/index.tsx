@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ProductsPanel from "../../../../components/ProductsPanel";
-import { getAllProductsQueryOptions } from "../../../../api/products/productsQueries";
+import ProductsPanel from "@components/admin-panel-components/ProductsPanel";
+import { getAllProductsQueryOptions } from "@api/products/productsQueries";
 
 export const Route = createFileRoute("/_auth/admin/products/")({
   component: ProductsPanel,

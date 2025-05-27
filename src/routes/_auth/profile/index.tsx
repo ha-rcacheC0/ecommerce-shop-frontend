@@ -1,11 +1,11 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { userInfoQueryOptions } from "../../../api/users/userQueryOptions.api";
+import { userInfoQueryOptions } from "@api/users/userQueryOptions.api";
 import { useQuery } from "@tanstack/react-query";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ProfileCard } from "../../../components/ProfileCard";
-import Cart from "../../../components/cart";
-import { cartItemsQueryOptions } from "../../../api/cart/cartQueries";
+import { ProfileCard } from "@components/ProfileCard";
+import Cart from "@components/cart";
+import { cartItemsQueryOptions } from "@api/cart/cartQueries";
 
 export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { queryClient, auth } }) => {

@@ -5,10 +5,10 @@ import {
   Link,
   useSearch,
 } from "@tanstack/react-router";
-import { getOneProductQuery } from "../../../api/products/products";
-import { getOneProductQueryOptions } from "../../../api/products/productsQueries";
-import { useAuth } from "../../../providers/auth.provider";
-import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
+import { getOneProductQuery } from "@api/products/products";
+import { getOneProductQueryOptions } from "@api/products/productsQueries";
+import { useAuth } from "@providers/auth.provider";
+import { useAddItemToCartMutation } from "@api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";

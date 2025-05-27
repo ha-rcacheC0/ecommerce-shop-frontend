@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ShowForm from "../../../../components/ShowForm";
-import { getAllShowTypesQueryOptions } from "../../../../api/shows/showsQueries";
-import { getAllProductsQueryOptions } from "../../../../api/products/productsQueries";
+
+import { getAllShowTypesQueryOptions } from "@api/shows/showsQueries";
+
+import ShowForm from "@/components/admin-panel-components/ShowForm";
+import { getAllProductsQueryOptions } from "@/api/products/productsQueries";
 
 export const Route = createFileRoute("/_auth/admin/shows/create")({
   component: ShowForm,

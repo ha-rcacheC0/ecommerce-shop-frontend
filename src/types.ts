@@ -227,7 +227,7 @@ const AddressSchema = z.object({
   postalCode: z.string(),
 });
 
-const UserProfileSchema = z.object({
+export const UserProfileSchema = z.object({
   firstName: z.string().nullable().optional(),
   lastName: z.string().nullable().optional(),
   dateOfBirth: z

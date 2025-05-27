@@ -13,17 +13,17 @@ import {
   faBox,
   faBoxes,
 } from "@fortawesome/free-solid-svg-icons";
-import { getAllShowTypesQueryOptions } from "../api/shows/showsQueries";
-import { getAllProductsQueryOptions } from "../api/products/productsQueries";
+import { getAllShowTypesQueryOptions } from "@api/shows/showsQueries";
+import { getAllProductsQueryOptions } from "@api/products/productsQueries";
 import { toast } from "react-toastify";
-import { useAuth } from "../providers/auth.provider";
-import { getShowByIdQueryOptions } from "../api/shows/showsQueries";
+import { useAuth } from "@providers/auth.provider";
+import { getShowByIdQueryOptions } from "@api/shows/showsQueries";
 import {
   useCreateShowMutation,
   useUpdateShowMutation,
-} from "../api/shows/showsQueries";
-import { getProductMetadataQueryOptions } from "../api/products/productsQueries";
-import { CreateShowProductData, TProduct } from "../types";
+} from "@api/shows/showsQueries";
+import { getProductMetadataQueryOptions } from "@api/products/productsQueries";
+import { CreateShowProductData, TProduct } from "@/types";
 
 interface ShowFormProps {
   showId?: string;

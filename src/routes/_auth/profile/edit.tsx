@@ -1,15 +1,15 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-form-adapter";
+
 import { useState, useEffect } from "react";
 
-import { States } from "../../../types";
+import { States, UserProfileSchema } from "@/types";
 import {
   useUserInfoPostMutation,
   userInfoQueryOptions,
-} from "../../../api/users/userQueryOptions.api";
+} from "@api/users/userQueryOptions.api";
 import { useQuery } from "@tanstack/react-query";
-import { FieldError } from "../../../components/component-parts/ErrorMessage";
+import { FieldError } from "@components/component-parts/ErrorMessage";
 
 export const ProfileForm = () => {
   const { auth } = Route.useRouteContext();
@@ -30,7 +30,9 @@ export const ProfileForm = () => {
   );
 
   const form = useForm({
-    validatorAdapter: zodValidator,
+    validators: {
+      onChange: (values) => UserProfileSchema.parse(values),
+    },
     defaultValues: userProfile,
     onSubmit: ({ value }) => {
       if (sameAddress && value.billingAddress) {

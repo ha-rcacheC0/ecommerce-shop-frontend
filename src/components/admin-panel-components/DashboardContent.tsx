@@ -12,11 +12,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsersQueryOptions } from "../api/users/userQueryOptions.api";
-import { useAuth } from "../providers/auth.provider";
-import { getInventoryQueryOptions } from "../api/admin/inventoryQueries";
-import { getAllProductsQueryOptions } from "../api/products/productsQueries";
-import { getAllShowsQueryOptions } from "../api/shows/showsQueries";
+import { getAllUsersQueryOptions } from "@api/users/userQueryOptions.api";
+import { useAuth } from "@providers/auth.provider";
+import { getInventoryQueryOptions } from "@api/admin/inventoryQueries";
+import { getAllProductsQueryOptions } from "@api/products/productsQueries";
+import { getAllShowsQueryOptions } from "@api/shows/showsQueries";
 
 interface DashboardCard {
   title: string;

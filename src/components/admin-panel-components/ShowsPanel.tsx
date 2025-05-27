@@ -11,13 +11,16 @@ import {
 import {
   getAllShowsQueryOptions,
   useDeleteShowMutation,
-} from "../api/shows/showsQueries";
+} from "@api/shows/showsQueries";
 
-import { ShowWithProducts } from "../types";
+import { ShowWithProducts } from "@/types";
 import { toast } from "react-toastify";
 import ShowTypesManager from "./ShowTypesManager";
-import { useAuth } from "../providers/auth.provider";
-import { ActionButton, DataTable } from "./component-parts/data-table";
+import { useAuth } from "@providers/auth.provider";
+import {
+  ActionButton,
+  DataTable,
+} from "@components/component-parts/data-table";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 interface ShowTableItem extends ShowWithProducts, Record<string, unknown> {}
 

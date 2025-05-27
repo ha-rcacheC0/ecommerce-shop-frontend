@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getInventoryQueryOptions } from "../api/admin/inventoryQueries";
+import { getInventoryQueryOptions } from "@api/admin/inventoryQueries";
 import AdminPageLayout from "./AdminPageLayout";
 import {
   faBox,
@@ -8,8 +8,8 @@ import {
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { TInventoryUnitProduct } from "../types";
-import { DataTable } from "./component-parts/data-table";
+import { TInventoryUnitProduct } from "@/types";
+import { DataTable } from "@components/component-parts/data-table";
 
 // Define the table item type
 interface InventoryTableItem

@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllShowsQueryOptions,
   getAllShowTypesQueryOptions,
-} from "../../api/shows/showsQueries";
-import { ShowCard } from "../../components/show-card";
+} from "@api/shows/showsQueries";
+import { ShowCard } from "@components/show-card";
 import { useState } from "react";
-import { ShowType } from "../../types";
+import { ShowType } from "@/types";
 
 export const Route = createFileRoute("/shows/")({
   component: ShowsList,

@@ -13,14 +13,14 @@ import {
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { useAuth } from "../providers/auth.provider";
+import { useAuth } from "@providers/auth.provider";
 
 import {
   getPurchaseOrderReportQueryOptions,
   useUpdatePurchaseOrderMutation,
-} from "../api/reports/reportQueryOptions.api";
-import Modal from "./component-parts/Modal";
-import { TAddress, TCartProduct } from "../types";
+} from "@api/reports/reportQueryOptions.api";
+import Modal from "@components/component-parts/Modal";
+import { TAddress, TCartProduct } from "@/types";
 
 interface SalesReportItem {
   id: string;

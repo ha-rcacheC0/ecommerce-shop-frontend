@@ -12,12 +12,8 @@ import {
   updateProductQuery,
   deleteProductQuery,
 } from "./products";
-import {
-  ProductFilters,
-  CreateProductData,
-  UpdateProductData,
-} from "../../types";
-import { queryClient } from "../../main";
+import { ProductFilters, CreateProductData, UpdateProductData } from "@/types";
+import { queryClient } from "@/main";
 
 export const getAllProductsQueryOptions = (filters: ProductFilters) =>
   queryOptions({

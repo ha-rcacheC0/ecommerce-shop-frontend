@@ -16,13 +16,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import { toast } from "react-toastify";
-import { useAuth } from "../providers/auth.provider";
+import { useAuth } from "@providers/auth.provider";
 import {
   getAllCaseBreaksQueryOptions,
   useProcessCaseBreakMutation,
-} from "../api/reports/reportQueryOptions.api";
-import Modal from "./component-parts/Modal";
-import { ReportStatus } from "../types";
+} from "@api/reports/reportQueryOptions.api";
+import Modal from "@components/component-parts/Modal";
+import { ReportStatus } from "@/types";
 
 const CaseBreakReport: React.FC = () => {
   const { user } = useAuth();
