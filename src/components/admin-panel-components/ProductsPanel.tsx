@@ -10,13 +10,13 @@ import {
   faXmarkSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { useAuth } from "../providers/auth.provider";
-import { TProduct } from "../types";
-import { DataTable } from "./component-parts/data-table";
+import { useAuth } from "@providers/auth.provider";
+import { TProduct } from "@/types";
+import { DataTable } from "@components/component-parts/data-table";
 import {
   getAllProductsQueryOptions,
   useDeleteProductMutation,
-} from "../api/products/productsQueries";
+} from "@api/products/productsQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

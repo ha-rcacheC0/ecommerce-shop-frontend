@@ -118,10 +118,18 @@ export const useMakePurchaseMutation = (
     mutationFn: ({
       userId,
       shippingAddressId,
+      amounts,
     }: {
       userId: string;
       shippingAddressId: string;
-    }) => makePurchase(userId, shippingAddressId),
+      amounts: {
+        subtotal: number;
+        tax: number;
+        liftGateFee: number;
+        shipping: number;
+        grandTotal: number;
+      };
+    }) => makePurchase(userId, shippingAddressId, amounts),
     onSuccess: async () => {
       onSuccessCallback();
       queryClient.invalidateQueries({ queryKey: ["cart"] });

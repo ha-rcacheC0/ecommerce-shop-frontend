@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllShowTypesQueryOptions } from "../api/shows/showsQueries";
+import { getAllShowTypesQueryOptions } from "@api/shows/showsQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,7 +10,7 @@ import {
   faSave,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { ShowType } from "../types";
+import { ShowType } from "@/types";
 
 // This is a basic API function that we can implement later
 // or import from your shows API file

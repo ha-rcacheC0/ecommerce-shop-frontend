@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Cart from "../../../../../components/cart";
-import { cartItemsQueryOptions } from "../../../../../api/cart/cartQueries";
+import Cart from "@components/cart";
+import { cartItemsQueryOptions } from "@api/cart/cartQueries";
 import { useQuery } from "@tanstack/react-query";
-import { userInfoQueryOptions } from "../../../../../api/users/userQueryOptions.api";
+import { userInfoQueryOptions } from "@api/users/userQueryOptions.api";
 
 export const Route = createFileRoute("/_auth/profile/cart/$cartId/")({
   loader: async ({ context: { queryClient, auth }, params: { cartId } }) => {

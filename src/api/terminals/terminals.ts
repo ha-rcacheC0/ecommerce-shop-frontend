@@ -1,6 +1,6 @@
 import { API_CONFIG } from "../../utils/config";
 
-const BASE_URL = API_CONFIG.BASE_URL + "/api/terminal";
+const BASE_URL = API_CONFIG.BASE_URL + "/terminal";
 
 export const getTerminalsQuery = async ({
   state,

@@ -1,5 +1,5 @@
 import { createFileRoute, redirect, Outlet } from "@tanstack/react-router";
-import LoadingScreen from "../components/LoadingScreen"; // Import the LoadingScreen component using default import syntax
+import LoadingScreen from "@components/LoadingScreen"; // Import the LoadingScreen component using default import syntax
 
 export const Route = createFileRoute("/_auth")({
   beforeLoad: async ({ context, location }) => {

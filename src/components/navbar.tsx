@@ -20,7 +20,7 @@ export const Navbar = () => {
     navigate({ to: "/" });
   };
 
-  const cartId = auth.user?.userInfo?.Cart.id ?? "";
+  const cartId = auth.user?.userInfo?.Cart?.id ?? "";
 
   const { data: cartInfo } = useQuery(cartItemsQueryOptions(cartId, !!cartId));
 
@@ -30,42 +30,42 @@ export const Navbar = () => {
       0
     ) || 0;
 
-  const MenuButton = () => {
-    return (
-      <div tabIndex={0} role="button" className="btn btn-ghost md:hidden">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h8m-8 6h16"
-          />
-        </svg>
-      </div>
-    );
-  };
-
   return (
     <div className="navbar bg-base-100 border-b-2 border-secondary pt-3">
       <div className="navbar-start flex-1">
         <div className="dropdown">
-          <MenuButton />
+          <div tabIndex={0} role="button" className="btn btn-ghost md:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow-sm bg-base-100 rounded-box w-52"
+            className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow-sm bg-base-100 rounded-box w-52"
           >
             <li>
               <Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
                 Fireworks
               </Link>
             </li>
-            {auth.authState === "authenticated" && (
+            <li>
+              <Link to={"/shows"} search={{ page: 1, pageSize: 25 }}>
+                Shows
+              </Link>
+            </li>
+            <div className="divider divider-secondary"></div>
+            {auth.authState === "authenticated" ? (
               <>
                 <li className="mt-auto">
                   <Link to="/profile" className="justify-between">
@@ -83,18 +83,32 @@ export const Navbar = () => {
                     <span className="badge badge-secondary">{cartQty}</span>
                   </Link>
                 </li>
+                <li>
+                  <Link to="/" onClick={handleLogout}>
+                    Logout
+                  </Link>
+                </li>
                 {auth.user?.userInfo?.role === "ADMIN" && (
                   <li>
                     <Link to="/admin">Admin</Link>
                   </li>
                 )}
               </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/user/register">Sign Up</Link>
+                </li>
+                <li>
+                  <Link to="/user/login">Sign In</Link>
+                </li>
+              </>
             )}
           </ul>
         </div>
         <Link to={"/"} className="btn btn-link">
           <img
-            className="w-68 mb-[-10px]"
+            className="w-52 mb-[-10px]"
             src="/imgs/crew-logo.png"
             alt="company logo"
           />

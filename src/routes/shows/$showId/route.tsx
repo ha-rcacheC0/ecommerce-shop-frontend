@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { getShowByIdQueryOptions } from "../../../api/shows/showsQueries";
-import { useAuth } from "../../../providers/auth.provider";
-import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
+import { getShowByIdQueryOptions } from "@api/shows/showsQueries";
+import { useAuth } from "@providers/auth.provider";
+import { useAddItemToCartMutation } from "@api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +11,7 @@ import {
   faBox,
   faBoxes,
 } from "@fortawesome/free-solid-svg-icons";
-import { ShowProduct } from "../../../types";
+import { ShowProduct } from "@/types";
 
 export const Route = createFileRoute("/shows/$showId")({
   component: ShowDetailPage,
@@ -26,7 +26,7 @@ function ShowDetailPage() {
 
   const { data: show, isLoading } = useQuery(getShowByIdQueryOptions(showId));
 
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart!.id;
 
   const addToCart = useAddItemToCartMutation(
     userCartId!,

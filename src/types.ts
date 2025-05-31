@@ -78,6 +78,7 @@ export const CategoryDisplay: Record<string, string> = {
 
 export const BrandDisplay: Record<string, string> = {
   ALPHA_FIREWORKS: "Alpha Fireworks",
+  BRIGHT_STAR: "Bright Star",
   BLACK_SCORPION: "Black Scorpion",
   BLUE_DRAGON: "Blue Dragon",
   BOOM_WOW: "Boom Wow",
@@ -90,7 +91,7 @@ export const BrandDisplay: Record<string, string> = {
   CRZ: "CRZ",
   CSS: "CSS",
   DFS: "DFS",
-  DEMON_PYRO: "DEMON_PYRO",
+  DEMON_PYRO: "Demon Pyro",
   DOMINATOR: "Dominator",
   DUCK: "Duck",
   FIREHAWK: "Firehawk",
@@ -131,6 +132,7 @@ export const BrandDisplay: Record<string, string> = {
   TWO_WINGS: "Two Wings",
   WINDA: "Winda",
   WISE_GUY: "Wise Guy",
+  WORLD_CLASS_FIREWORKS: "World Class Fireworks",
 };
 
 // Create string-based schemas instead of enums
@@ -225,11 +227,15 @@ const AddressSchema = z.object({
   postalCode: z.string(),
 });
 
-const UserProfileSchema = z.object({
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  dateOfBirth: z.date().optional(),
-  phoneNumber: z.string().optional(),
+export const UserProfileSchema = z.object({
+  firstName: z.string().nullable().optional(),
+  lastName: z.string().nullable().optional(),
+  dateOfBirth: z
+    .string()
+    .transform((str) => (str ? new Date(str) : null))
+    .optional(),
+  phoneNumber: z.string().nullable().optional(),
+  acceptedTerms: z.boolean(),
   billingAddress: AddressSchema.optional(),
   shippingAddress: AddressSchema.optional(),
   canContact: z.boolean().optional(),
@@ -458,12 +464,13 @@ export const SignInResponseSchema = z.object({
   token: z.string().optional(),
   userInfo: z
     .object({
-      email: z.string(),
+      email: z.string().email(),
       role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
-      lastLogin: z.string().datetime().nullable(),
-      Cart: TCartSchema,
+      profile: UserProfileSchema.optional(),
+      Cart: TCartSchema.optional(),
     })
     .optional(),
+
   message: z.string().optional(),
 });
 

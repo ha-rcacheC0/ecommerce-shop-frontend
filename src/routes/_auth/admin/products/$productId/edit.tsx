@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import ProductForm from "../../../../../components/ProductForm";
+
 import {
   getProductMetadataQueryOptions,
   getOneProductQueryOptions,
 } from "../../../../../api/products/productsQueries";
+import ProductForm from "../../../../../components/admin-panel-components/ProductForm";
 
 export const Route = createFileRoute("/_auth/admin/products/$productId/edit")({
   component: ProductEditPage,

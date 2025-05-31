@@ -1,17 +1,17 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { userInfoQueryOptions } from "../../../api/users/userQueryOptions.api";
+import { userInfoQueryOptions } from "@api/users/userQueryOptions.api";
 import { useQuery } from "@tanstack/react-query";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ProfileCard } from "../../../components/ProfileCard";
-import Cart from "../../../components/cart";
-import { cartItemsQueryOptions } from "../../../api/cart/cartQueries";
+import { ProfileCard } from "@components/ProfileCard";
+import Cart from "@components/cart";
+import { cartItemsQueryOptions } from "@api/cart/cartQueries";
 
 export const Route = createFileRoute("/_auth/profile/")({
   loader: async ({ context: { queryClient, auth } }) => {
     await queryClient.prefetchQuery(userInfoQueryOptions(auth.user!.token!));
     await queryClient.prefetchQuery(
-      cartItemsQueryOptions(auth.user!.userInfo!.Cart.id)
+      cartItemsQueryOptions(auth.user!.userInfo!.Cart!.id)
     );
   },
   component: ProfilePage,
@@ -27,7 +27,7 @@ function ProfilePage() {
   } = useQuery(userInfoQueryOptions(auth.user!.token!));
 
   const { data: cart } = useQuery(
-    cartItemsQueryOptions(auth.user!.userInfo!.Cart.id)
+    cartItemsQueryOptions(auth.user!.userInfo!.Cart!.id)
   );
 
   if (isLoading) {
@@ -99,7 +99,7 @@ function ProfilePage() {
                   {cart!.cartProducts.length > 0 && (
                     <Link
                       to="/profile/cart/$cartId"
-                      params={{ cartId: auth.user!.userInfo!.Cart.id }}
+                      params={{ cartId: auth.user!.userInfo!.Cart!.id }}
                       className="btn btn-sm btn-ghost"
                     >
                       View Full Cart{" "}
@@ -127,7 +127,7 @@ function ProfilePage() {
                   <div className="mt-4 md:hidden">
                     <Link
                       to="/profile/cart/$cartId"
-                      params={{ cartId: auth.user!.userInfo!.Cart.id }}
+                      params={{ cartId: auth.user!.userInfo!.Cart!.id }}
                       className="btn btn-primary w-full"
                     >
                       View Full Cart{" "}

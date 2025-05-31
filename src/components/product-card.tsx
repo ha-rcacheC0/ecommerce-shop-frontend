@@ -16,7 +16,7 @@ export const ProductCard = ({
   const packageString = product.package.join("/");
   const unitPackageString = product.unitProduct?.package.join("/");
   const { authState, user } = useAuth();
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart?.id;
 
   const addItem = useAddItemToCartMutation(
     userCartId!,
@@ -88,36 +88,51 @@ export const ProductCard = ({
           <div className="grid grid-cols-2 gap-2 mt-2">
             {authState === "authenticated" ? (
               <>
-                <button
-                  className="btn btn-secondary btn-outline"
-                  onClick={() =>
-                    addItem.mutate({
-                      productId: product.id,
-                      cartId: userCartId!,
-                      isUnit: false,
-                    })
-                  }
-                >
-                  Add Case <FontAwesomeIcon icon={faCartPlus} />
-                </button>
-                {product.unitProduct && (
-                  <button
-                    className="btn btn-secondary btn-outline"
-                    onClick={() =>
-                      addItem.mutate({
-                        productId: product.id,
-                        cartId: userCartId!,
-                        isUnit: true,
-                      })
-                    }
-                  >
-                    Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                  </button>
+                {product.inStock ? (
+                  <>
+                    <button
+                      className="btn btn-secondary btn-outline"
+                      onClick={() =>
+                        addItem.mutate({
+                          productId: product.id,
+                          cartId: userCartId!,
+                          isUnit: false,
+                        })
+                      }
+                    >
+                      Add Case <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+
+                    {product.unitProduct && (
+                      <button
+                        className="btn btn-secondary btn-outline"
+                        onClick={() =>
+                          addItem.mutate({
+                            productId: product.id,
+                            cartId: userCartId!,
+                            isUnit: true,
+                          })
+                        }
+                      >
+                        Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="col-span-2">
+                    <div className="badge badge-error badge-lg w-full py-4">
+                      Currently Out of Stock
+                    </div>
+                  </div>
                 )}
               </>
             ) : (
               <div className="col-span-2 text-center text-sm">
-                Please sign-in to add product to cart
+                Please{" "}
+                <Link to="/user/login" className="text-primary hover:underline">
+                  sign-in
+                </Link>{" "}
+                to add product to cart
               </div>
             )}
           </div>

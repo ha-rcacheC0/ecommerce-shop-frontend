@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getUsersQueryOptions } from "../api/users/userQueryOptions.api";
+import { getUsersQueryOptions } from "@api/users/userQueryOptions.api";
 import AdminPageLayout from "./AdminPageLayout";
 import {
   faEdit,
@@ -9,9 +9,9 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { User } from "../types";
-import { DataTable } from "./component-parts/data-table";
-import { useAuth } from "../providers/auth.provider";
+import { User } from "@/types";
+import { DataTable } from "@components/component-parts/data-table";
+import { useAuth } from "@providers/auth.provider";
 
 // Extend the User interface with Record<string, unknown>
 interface UserTableItem extends User, Record<string, unknown> {}
@@ -39,7 +39,6 @@ const UsersPanel = () => {
     }),
     placeholderData: keepPreviousData,
   });
-  console.log(usersData);
 
   // Create column helper
   const columnHelper = createColumnHelper<UserTableItem>();
@@ -113,10 +112,6 @@ const UsersPanel = () => {
     <AdminPageLayout title="User Management" sidebarItems={usersSidebarItems}>
       {() => (
         <div className="p-6">
-          <h2 className="text-2xl font-bold mb-4 text-base-content">
-            User Management
-          </h2>
-
           <DataTable<UserTableItem>
             title="Users"
             data={usersData?.items as UserTableItem[]}

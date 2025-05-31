@@ -14,13 +14,19 @@ declare global {
 
 const HelcimPayButton = ({
   cartId,
-  amount,
+  amounts,
   btnDisabled,
   userId,
   shippingAddressId,
 }: {
   cartId: string;
-  amount: number;
+  amounts: {
+    subtotal: number;
+    tax: number;
+    liftGateFee: number;
+    shipping: number;
+    grandTotal: number;
+  };
   btnDisabled: boolean;
   userId: string;
   shippingAddressId: string;
@@ -41,7 +47,10 @@ const HelcimPayButton = ({
   useEffect(() => {
     const fetchCheckoutToken = async () => {
       try {
-        const { checkoutToken } = await startPaymentProcess({ cartId, amount });
+        const { checkoutToken } = await startPaymentProcess({
+          cartId,
+          amount: amounts.grandTotal,
+        });
         setCheckoutToken(checkoutToken);
       } catch (error) {
         console.error("Failed to fetch checkout token", error);
@@ -49,7 +58,7 @@ const HelcimPayButton = ({
     };
 
     fetchCheckoutToken();
-  }, [cartId, amount]);
+  }, [cartId, amounts]);
 
   const handlePayNow = () => {
     if (checkoutToken && typeof window.appendHelcimPayIframe === "function") {
@@ -67,7 +76,7 @@ const HelcimPayButton = ({
 
             // Wait for makePurchase to resolve
             try {
-              await makePurchase({ userId, shippingAddressId });
+              await makePurchase({ userId, shippingAddressId, amounts });
             } catch (error) {
               console.error("Error completing purchase:", error);
             }

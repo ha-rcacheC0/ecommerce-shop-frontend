@@ -2,13 +2,13 @@
 // @ts-nocheck
 import React, { useState, useCallback, useEffect } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { ProductCard } from "../../components/product-card";
-import { getAllProductsQueryOptions } from "../../api/products/productsQueries";
+import { ProductCard } from "@components/product-card";
+import { getAllProductsQueryOptions } from "@api/products/productsQueries";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { TProduct } from "../../types";
-import { getAllProductsQuery } from "../../api/products/products";
-import FilterPanel from "../../components/component-parts/filterPanel";
-import { PageButtons } from "../../components/component-parts/pageButtons";
+import { TProduct } from "@/types";
+import { getAllProductsQuery } from "@api/products/products";
+import FilterPanel from "@components/component-parts/filterPanel";
+import { PageButtons } from "@components/component-parts/pageButtons";
 import { z } from "zod";
 
 const Products: React.FC = () => {

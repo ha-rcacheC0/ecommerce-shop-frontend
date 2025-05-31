@@ -3,10 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAllShowsQueryOptions,
   getAllShowTypesQueryOptions,
-} from "../../api/shows/showsQueries";
-import { ShowCard } from "../../components/show-card";
+} from "@api/shows/showsQueries";
+import { ShowCard } from "@components/show-card";
 import { useState } from "react";
-import { ShowType } from "../../types";
+import { ShowType } from "@/types";
 
 export const Route = createFileRoute("/shows/")({
   component: ShowsList,
@@ -34,6 +34,17 @@ function ShowsList() {
     ? shows?.filter((show) => show.showTypeId === selectedType)
     : shows;
 
+  const showTypesDisplay = {
+    all: "All Shows",
+    CUSTOM: "Custom Shows",
+    FOURTH_JULY: "Fourth of July",
+    NEW_YEARS: "New Year",
+    GENDER_REVEAL: "Gender Reveal",
+    RETAIL: "Retail",
+    WHOLESALE: "Wholesale",
+    WEDDING: "Wedding",
+  } as const;
+
   return (
     <div className="p-4">
       <h1 className="text-3xl font-bold mb-6 text-center">Fireworks Shows</h1>
@@ -53,7 +64,8 @@ function ShowsList() {
               className={`btn ${selectedType === type.id ? "btn-active" : ""}`}
               onClick={() => setSelectedType(type.id)}
             >
-              {type.name}
+              {showTypesDisplay[type.name as keyof typeof showTypesDisplay] ||
+                type.name}
             </button>
           ))}
         </div>

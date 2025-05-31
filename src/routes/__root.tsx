@@ -1,11 +1,11 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { Navbar } from "../components/navbar";
-import { Footer } from "../components/footer";
+import { Navbar } from "@components/navbar";
+import { Footer } from "@components/footer";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ThemeContextType } from "../providers/theme.provider";
+import { ThemeContextType } from "@providers/theme.provider";
 import { QueryClient } from "@tanstack/react-query";
-import { AuthContextType } from "../providers/auth.provider";
+import { AuthContextType } from "@providers/auth.provider";
 
 interface RouterContext {
   auth: AuthContextType;
@@ -27,6 +27,16 @@ function Root() {
       <Footer />
       {isDevelopment && (
         <>
+          <button
+            type="button"
+            className="btn btn-primary fixed bottom-4 right-4 z-50"
+            onClick={() => {
+              console.log("Breaking the world...");
+              throw new Error("Sentry Test Error");
+            }}
+          >
+            Break the world
+          </button>
           <TanStackRouterDevtools position="bottom-right" />
           <ReactQueryDevtools
             initialIsOpen={false}

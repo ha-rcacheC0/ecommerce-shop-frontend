@@ -5,10 +5,10 @@ import {
   Link,
   useSearch,
 } from "@tanstack/react-router";
-import { getOneProductQuery } from "../../../api/products/products";
-import { getOneProductQueryOptions } from "../../../api/products/productsQueries";
-import { useAuth } from "../../../providers/auth.provider";
-import { useAddItemToCartMutation } from "../../../api/cart/cartQueries";
+import { getOneProductQuery } from "@api/products/products";
+import { getOneProductQueryOptions } from "@api/products/productsQueries";
+import { useAuth } from "@providers/auth.provider";
+import { useAddItemToCartMutation } from "@api/cart/cartQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +24,7 @@ const SingleProductPage = () => {
     queryFn: () => getOneProductQuery({ id: productId }),
   });
 
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart!.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
     () => {
@@ -117,18 +117,24 @@ const SingleProductPage = () => {
                 Case: ${parseFloat(product.data!.casePrice).toFixed(2)}
               </h2>
               {authState === "authenticated" ? (
-                <button
-                  className="btn lg:btn-wide btn-secondary"
-                  onClick={() =>
-                    addItem.mutate({
-                      productId: productId,
-                      cartId: userCartId!,
-                      isUnit: false,
-                    })
-                  }
-                >
-                  Add Case <FontAwesomeIcon icon={faCartPlus} />
-                </button>
+                product.data?.inStock ? (
+                  <button
+                    className="btn lg:btn-wide btn-secondary"
+                    onClick={() =>
+                      addItem.mutate({
+                        productId: productId,
+                        cartId: userCartId!,
+                        isUnit: false,
+                      })
+                    }
+                  >
+                    Add Case <FontAwesomeIcon icon={faCartPlus} />
+                  </button>
+                ) : (
+                  <div className="text-error font-bold">
+                    Item is out of stock
+                  </div>
+                )
               ) : (
                 <p>Please sign-in to add product to cart</p>
               )}
@@ -145,20 +151,26 @@ const SingleProductPage = () => {
               </h2>
               {authState === "authenticated" ? (
                 <>
-                  {product.data?.unitProduct && (
-                    <button
-                      className="btn lg:btn-wide btn-secondary"
-                      onClick={() =>
-                        addItem.mutate({
-                          productId: product.data.id,
-                          cartId: userCartId!,
-                          isUnit: true,
-                        })
-                      }
-                    >
-                      Add Unit <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
-                  )}
+                  {product.data?.unitProduct ? (
+                    product.data?.inStock ? (
+                      <button
+                        className="btn lg:btn-wide btn-secondary"
+                        onClick={() =>
+                          addItem.mutate({
+                            productId: product.data.id,
+                            cartId: userCartId!,
+                            isUnit: true,
+                          })
+                        }
+                      >
+                        Add Unit <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    ) : (
+                      <div className="text-error font-bold">
+                        Item is out of stock
+                      </div>
+                    )
+                  ) : null}
                 </>
               ) : (
                 <p>Please sign-in to add product to cart</p>

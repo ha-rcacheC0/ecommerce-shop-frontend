@@ -12,7 +12,7 @@ interface ShowCardProps {
 
 export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
   const { authState, user } = useAuth();
-  const userCartId = user?.userInfo?.Cart.id;
+  const userCartId = user?.userInfo?.Cart?.id;
   const addToCart = useAddItemToCartMutation(
     userCartId!,
     () => {

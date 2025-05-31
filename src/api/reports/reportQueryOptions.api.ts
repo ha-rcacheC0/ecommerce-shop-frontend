@@ -9,15 +9,17 @@ import {
 } from "./reports.api";
 import { toast } from "react-toastify";
 import { queryClient } from "../../main";
+import { ReportStatus } from "../../types";
 
 export const getAllCaseBreaksQueryOptions = (
   token: string,
   startDate: string,
-  endDate: string
+  endDate: string,
+  statusFilter?: ReportStatus | "ALL"
 ) =>
   queryOptions({
     queryKey: ["caseBreakReport", startDate, endDate],
-    queryFn: () => getCaseBreakReport(token, startDate, endDate),
+    queryFn: () => getCaseBreakReport(token, startDate, endDate, statusFilter),
     enabled: !!token,
   });
 export const useProcessCaseBreakMutation = (
