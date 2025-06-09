@@ -17,7 +17,7 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as EventsRouteImport } from './routes/events/route'
 import { Route as ShowsIndexImport } from './routes/shows/index'
 import { Route as ProductsIndexImport } from './routes/products/index'
-import { Route as CodybIndexImport } from './routes/codyb/index'
+import { Route as ApparelIndexImport } from './routes/apparel/index'
 import { Route as UserRegisterImport } from './routes/user/register'
 import { Route as UserLoginImport } from './routes/user/login'
 import { Route as EventsNewYearsImport } from './routes/events/new-years'
@@ -29,10 +29,10 @@ import { Route as AuthAdminRouteImport } from './routes/_auth/admin/route'
 import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
 import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
 import { Route as AuthAdminUsersImport } from './routes/_auth/admin/users'
-import { Route as AuthAdminReportsImport } from './routes/_auth/admin/reports'
 import { Route as AuthAdminInventoryImport } from './routes/_auth/admin/inventory'
 import { Route as AuthAdminAdminImport } from './routes/_auth/admin/admin'
 import { Route as AuthAdminShowsIndexImport } from './routes/_auth/admin/shows/index'
+import { Route as AuthAdminReportsIndexImport } from './routes/_auth/admin/reports/index'
 import { Route as AuthAdminProductsIndexImport } from './routes/_auth/admin/products/index'
 import { Route as AuthAdminShowsShowTypesImport } from './routes/_auth/admin/shows/showTypes'
 import { Route as AuthAdminShowsCreateImport } from './routes/_auth/admin/shows/create'
@@ -40,13 +40,13 @@ import { Route as AuthAdminProductsCreateImport } from './routes/_auth/admin/pro
 import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
 import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/profile/cart/$cartId/success'
 import { Route as AuthAdminShowsShowIdEditImport } from './routes/_auth/admin/shows/$showId/edit'
+import { Route as AuthAdminReportsSalesOrderIdImport } from './routes/_auth/admin/reports/sales/$orderId'
 import { Route as AuthAdminProductsProductIdEditImport } from './routes/_auth/admin/products/$productId/edit'
 
 // Create Virtual Routes
 
 const TermsOfUseLazyImport = createFileRoute('/terms-of-use')()
 const ShippingInfoLazyImport = createFileRoute('/shipping-info')()
-const ShippingLazyImport = createFileRoute('/shipping')()
 const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
 const FireworksSafetyLazyImport = createFileRoute('/fireworks-safety')()
 const FaqLazyImport = createFileRoute('/faq')()
@@ -69,12 +69,6 @@ const ShippingInfoLazyRoute = ShippingInfoLazyImport.update({
   path: '/shipping-info',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/shipping-info.lazy').then((d) => d.Route))
-
-const ShippingLazyRoute = ShippingLazyImport.update({
-  id: '/shipping',
-  path: '/shipping',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/shipping.lazy').then((d) => d.Route))
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
   id: '/privacy-policy',
@@ -153,9 +147,9 @@ const ProductsIndexRoute = ProductsIndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const CodybIndexRoute = CodybIndexImport.update({
-  id: '/codyb/',
-  path: '/codyb/',
+const ApparelIndexRoute = ApparelIndexImport.update({
+  id: '/apparel/',
+  path: '/apparel/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -225,12 +219,6 @@ const AuthAdminUsersRoute = AuthAdminUsersImport.update({
   getParentRoute: () => AuthAdminRouteRoute,
 } as any)
 
-const AuthAdminReportsRoute = AuthAdminReportsImport.update({
-  id: '/reports',
-  path: '/reports',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
-
 const AuthAdminInventoryRoute = AuthAdminInventoryImport.update({
   id: '/inventory',
   path: '/inventory',
@@ -246,6 +234,12 @@ const AuthAdminAdminRoute = AuthAdminAdminImport.update({
 const AuthAdminShowsIndexRoute = AuthAdminShowsIndexImport.update({
   id: '/shows/',
   path: '/shows/',
+  getParentRoute: () => AuthAdminRouteRoute,
+} as any)
+
+const AuthAdminReportsIndexRoute = AuthAdminReportsIndexImport.update({
+  id: '/reports/',
+  path: '/reports/',
   getParentRoute: () => AuthAdminRouteRoute,
 } as any)
 
@@ -293,6 +287,13 @@ const AuthAdminShowsShowIdEditRoute = AuthAdminShowsShowIdEditImport.update({
   path: '/shows/$showId/edit',
   getParentRoute: () => AuthAdminRouteRoute,
 } as any)
+
+const AuthAdminReportsSalesOrderIdRoute =
+  AuthAdminReportsSalesOrderIdImport.update({
+    id: '/reports/sales/$orderId',
+    path: '/reports/sales/$orderId',
+    getParentRoute: () => AuthAdminRouteRoute,
+  } as any)
 
 const AuthAdminProductsProductIdEditRoute =
   AuthAdminProductsProductIdEditImport.update({
@@ -375,13 +376,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyPolicyLazyImport
       parentRoute: typeof rootRoute
     }
-    '/shipping': {
-      id: '/shipping'
-      path: '/shipping'
-      fullPath: '/shipping'
-      preLoaderRoute: typeof ShippingLazyImport
-      parentRoute: typeof rootRoute
-    }
     '/shipping-info': {
       id: '/shipping-info'
       path: '/shipping-info'
@@ -452,11 +446,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UserRegisterImport
       parentRoute: typeof rootRoute
     }
-    '/codyb/': {
-      id: '/codyb/'
-      path: '/codyb'
-      fullPath: '/codyb'
-      preLoaderRoute: typeof CodybIndexImport
+    '/apparel/': {
+      id: '/apparel/'
+      path: '/apparel'
+      fullPath: '/apparel'
+      preLoaderRoute: typeof ApparelIndexImport
       parentRoute: typeof rootRoute
     }
     '/products/': {
@@ -485,13 +479,6 @@ declare module '@tanstack/react-router' {
       path: '/inventory'
       fullPath: '/admin/inventory'
       preLoaderRoute: typeof AuthAdminInventoryImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/reports': {
-      id: '/_auth/admin/reports'
-      path: '/reports'
-      fullPath: '/admin/reports'
-      preLoaderRoute: typeof AuthAdminReportsImport
       parentRoute: typeof AuthAdminRouteImport
     }
     '/_auth/admin/users': {
@@ -543,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAdminProductsIndexImport
       parentRoute: typeof AuthAdminRouteImport
     }
+    '/_auth/admin/reports/': {
+      id: '/_auth/admin/reports/'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AuthAdminReportsIndexImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
     '/_auth/admin/shows/': {
       id: '/_auth/admin/shows/'
       path: '/shows'
@@ -555,6 +549,13 @@ declare module '@tanstack/react-router' {
       path: '/products/$productId/edit'
       fullPath: '/admin/products/$productId/edit'
       preLoaderRoute: typeof AuthAdminProductsProductIdEditImport
+      parentRoute: typeof AuthAdminRouteImport
+    }
+    '/_auth/admin/reports/sales/$orderId': {
+      id: '/_auth/admin/reports/sales/$orderId'
+      path: '/reports/sales/$orderId'
+      fullPath: '/admin/reports/sales/$orderId'
+      preLoaderRoute: typeof AuthAdminReportsSalesOrderIdImport
       parentRoute: typeof AuthAdminRouteImport
     }
     '/_auth/admin/shows/$showId/edit': {
@@ -602,28 +603,30 @@ const EventsRouteRouteWithChildren = EventsRouteRoute._addFileChildren(
 interface AuthAdminRouteRouteChildren {
   AuthAdminAdminRoute: typeof AuthAdminAdminRoute
   AuthAdminInventoryRoute: typeof AuthAdminInventoryRoute
-  AuthAdminReportsRoute: typeof AuthAdminReportsRoute
   AuthAdminUsersRoute: typeof AuthAdminUsersRoute
   AuthAdminProductsCreateRoute: typeof AuthAdminProductsCreateRoute
   AuthAdminShowsCreateRoute: typeof AuthAdminShowsCreateRoute
   AuthAdminShowsShowTypesRoute: typeof AuthAdminShowsShowTypesRoute
   AuthAdminProductsIndexRoute: typeof AuthAdminProductsIndexRoute
+  AuthAdminReportsIndexRoute: typeof AuthAdminReportsIndexRoute
   AuthAdminShowsIndexRoute: typeof AuthAdminShowsIndexRoute
   AuthAdminProductsProductIdEditRoute: typeof AuthAdminProductsProductIdEditRoute
+  AuthAdminReportsSalesOrderIdRoute: typeof AuthAdminReportsSalesOrderIdRoute
   AuthAdminShowsShowIdEditRoute: typeof AuthAdminShowsShowIdEditRoute
 }
 
 const AuthAdminRouteRouteChildren: AuthAdminRouteRouteChildren = {
   AuthAdminAdminRoute: AuthAdminAdminRoute,
   AuthAdminInventoryRoute: AuthAdminInventoryRoute,
-  AuthAdminReportsRoute: AuthAdminReportsRoute,
   AuthAdminUsersRoute: AuthAdminUsersRoute,
   AuthAdminProductsCreateRoute: AuthAdminProductsCreateRoute,
   AuthAdminShowsCreateRoute: AuthAdminShowsCreateRoute,
   AuthAdminShowsShowTypesRoute: AuthAdminShowsShowTypesRoute,
   AuthAdminProductsIndexRoute: AuthAdminProductsIndexRoute,
+  AuthAdminReportsIndexRoute: AuthAdminReportsIndexRoute,
   AuthAdminShowsIndexRoute: AuthAdminShowsIndexRoute,
   AuthAdminProductsProductIdEditRoute: AuthAdminProductsProductIdEditRoute,
+  AuthAdminReportsSalesOrderIdRoute: AuthAdminReportsSalesOrderIdRoute,
   AuthAdminShowsShowIdEditRoute: AuthAdminShowsShowIdEditRoute,
 }
 
@@ -660,7 +663,6 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqLazyRoute
   '/fireworks-safety': typeof FireworksSafetyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping': typeof ShippingLazyRoute
   '/shipping-info': typeof ShippingInfoLazyRoute
   '/terms-of-use': typeof TermsOfUseLazyRoute
   '/admin': typeof AuthAdminRouteRouteWithChildren
@@ -671,12 +673,11 @@ export interface FileRoutesByFullPath {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
-  '/codyb': typeof CodybIndexRoute
+  '/apparel': typeof ApparelIndexRoute
   '/products': typeof ProductsIndexRoute
   '/shows': typeof ShowsIndexRoute
   '/admin/admin': typeof AuthAdminAdminRoute
   '/admin/inventory': typeof AuthAdminInventoryRoute
-  '/admin/reports': typeof AuthAdminReportsRoute
   '/admin/users': typeof AuthAdminUsersRoute
   '/profile/edit': typeof AuthProfileEditRoute
   '/profile': typeof AuthProfileIndexRoute
@@ -684,8 +685,10 @@ export interface FileRoutesByFullPath {
   '/admin/shows/create': typeof AuthAdminShowsCreateRoute
   '/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
   '/admin/products': typeof AuthAdminProductsIndexRoute
+  '/admin/reports': typeof AuthAdminReportsIndexRoute
   '/admin/shows': typeof AuthAdminShowsIndexRoute
   '/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
+  '/admin/reports/sales/$orderId': typeof AuthAdminReportsSalesOrderIdRoute
   '/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
   '/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
   '/profile/cart/$cartId': typeof AuthProfileCartCartIdIndexRoute
@@ -702,7 +705,6 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqLazyRoute
   '/fireworks-safety': typeof FireworksSafetyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping': typeof ShippingLazyRoute
   '/shipping-info': typeof ShippingInfoLazyRoute
   '/terms-of-use': typeof TermsOfUseLazyRoute
   '/admin': typeof AuthAdminRouteRouteWithChildren
@@ -713,12 +715,11 @@ export interface FileRoutesByTo {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
-  '/codyb': typeof CodybIndexRoute
+  '/apparel': typeof ApparelIndexRoute
   '/products': typeof ProductsIndexRoute
   '/shows': typeof ShowsIndexRoute
   '/admin/admin': typeof AuthAdminAdminRoute
   '/admin/inventory': typeof AuthAdminInventoryRoute
-  '/admin/reports': typeof AuthAdminReportsRoute
   '/admin/users': typeof AuthAdminUsersRoute
   '/profile/edit': typeof AuthProfileEditRoute
   '/profile': typeof AuthProfileIndexRoute
@@ -726,8 +727,10 @@ export interface FileRoutesByTo {
   '/admin/shows/create': typeof AuthAdminShowsCreateRoute
   '/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
   '/admin/products': typeof AuthAdminProductsIndexRoute
+  '/admin/reports': typeof AuthAdminReportsIndexRoute
   '/admin/shows': typeof AuthAdminShowsIndexRoute
   '/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
+  '/admin/reports/sales/$orderId': typeof AuthAdminReportsSalesOrderIdRoute
   '/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
   '/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
   '/profile/cart/$cartId': typeof AuthProfileCartCartIdIndexRoute
@@ -745,7 +748,6 @@ export interface FileRoutesById {
   '/faq': typeof FaqLazyRoute
   '/fireworks-safety': typeof FireworksSafetyLazyRoute
   '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping': typeof ShippingLazyRoute
   '/shipping-info': typeof ShippingInfoLazyRoute
   '/terms-of-use': typeof TermsOfUseLazyRoute
   '/_auth/admin': typeof AuthAdminRouteRouteWithChildren
@@ -756,12 +758,11 @@ export interface FileRoutesById {
   '/events/new-years': typeof EventsNewYearsRoute
   '/user/login': typeof UserLoginRoute
   '/user/register': typeof UserRegisterRoute
-  '/codyb/': typeof CodybIndexRoute
+  '/apparel/': typeof ApparelIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/shows/': typeof ShowsIndexRoute
   '/_auth/admin/admin': typeof AuthAdminAdminRoute
   '/_auth/admin/inventory': typeof AuthAdminInventoryRoute
-  '/_auth/admin/reports': typeof AuthAdminReportsRoute
   '/_auth/admin/users': typeof AuthAdminUsersRoute
   '/_auth/profile/edit': typeof AuthProfileEditRoute
   '/_auth/profile/': typeof AuthProfileIndexRoute
@@ -769,8 +770,10 @@ export interface FileRoutesById {
   '/_auth/admin/shows/create': typeof AuthAdminShowsCreateRoute
   '/_auth/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
   '/_auth/admin/products/': typeof AuthAdminProductsIndexRoute
+  '/_auth/admin/reports/': typeof AuthAdminReportsIndexRoute
   '/_auth/admin/shows/': typeof AuthAdminShowsIndexRoute
   '/_auth/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
+  '/_auth/admin/reports/sales/$orderId': typeof AuthAdminReportsSalesOrderIdRoute
   '/_auth/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
   '/_auth/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
   '/_auth/profile/cart/$cartId/': typeof AuthProfileCartCartIdIndexRoute
@@ -789,7 +792,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fireworks-safety'
     | '/privacy-policy'
-    | '/shipping'
     | '/shipping-info'
     | '/terms-of-use'
     | '/admin'
@@ -800,12 +802,11 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
-    | '/codyb'
+    | '/apparel'
     | '/products'
     | '/shows'
     | '/admin/admin'
     | '/admin/inventory'
-    | '/admin/reports'
     | '/admin/users'
     | '/profile/edit'
     | '/profile'
@@ -813,8 +814,10 @@ export interface FileRouteTypes {
     | '/admin/shows/create'
     | '/admin/shows/showTypes'
     | '/admin/products'
+    | '/admin/reports'
     | '/admin/shows'
     | '/admin/products/$productId/edit'
+    | '/admin/reports/sales/$orderId'
     | '/admin/shows/$showId/edit'
     | '/profile/cart/$cartId/success'
     | '/profile/cart/$cartId'
@@ -830,7 +833,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fireworks-safety'
     | '/privacy-policy'
-    | '/shipping'
     | '/shipping-info'
     | '/terms-of-use'
     | '/admin'
@@ -841,12 +843,11 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
-    | '/codyb'
+    | '/apparel'
     | '/products'
     | '/shows'
     | '/admin/admin'
     | '/admin/inventory'
-    | '/admin/reports'
     | '/admin/users'
     | '/profile/edit'
     | '/profile'
@@ -854,8 +855,10 @@ export interface FileRouteTypes {
     | '/admin/shows/create'
     | '/admin/shows/showTypes'
     | '/admin/products'
+    | '/admin/reports'
     | '/admin/shows'
     | '/admin/products/$productId/edit'
+    | '/admin/reports/sales/$orderId'
     | '/admin/shows/$showId/edit'
     | '/profile/cart/$cartId/success'
     | '/profile/cart/$cartId'
@@ -871,7 +874,6 @@ export interface FileRouteTypes {
     | '/faq'
     | '/fireworks-safety'
     | '/privacy-policy'
-    | '/shipping'
     | '/shipping-info'
     | '/terms-of-use'
     | '/_auth/admin'
@@ -882,12 +884,11 @@ export interface FileRouteTypes {
     | '/events/new-years'
     | '/user/login'
     | '/user/register'
-    | '/codyb/'
+    | '/apparel/'
     | '/products/'
     | '/shows/'
     | '/_auth/admin/admin'
     | '/_auth/admin/inventory'
-    | '/_auth/admin/reports'
     | '/_auth/admin/users'
     | '/_auth/profile/edit'
     | '/_auth/profile/'
@@ -895,8 +896,10 @@ export interface FileRouteTypes {
     | '/_auth/admin/shows/create'
     | '/_auth/admin/shows/showTypes'
     | '/_auth/admin/products/'
+    | '/_auth/admin/reports/'
     | '/_auth/admin/shows/'
     | '/_auth/admin/products/$productId/edit'
+    | '/_auth/admin/reports/sales/$orderId'
     | '/_auth/admin/shows/$showId/edit'
     | '/_auth/profile/cart/$cartId/success'
     | '/_auth/profile/cart/$cartId/'
@@ -914,14 +917,13 @@ export interface RootRouteChildren {
   FaqLazyRoute: typeof FaqLazyRoute
   FireworksSafetyLazyRoute: typeof FireworksSafetyLazyRoute
   PrivacyPolicyLazyRoute: typeof PrivacyPolicyLazyRoute
-  ShippingLazyRoute: typeof ShippingLazyRoute
   ShippingInfoLazyRoute: typeof ShippingInfoLazyRoute
   TermsOfUseLazyRoute: typeof TermsOfUseLazyRoute
   ProductsProductIdRouteRoute: typeof ProductsProductIdRouteRoute
   ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute
   UserLoginRoute: typeof UserLoginRoute
   UserRegisterRoute: typeof UserRegisterRoute
-  CodybIndexRoute: typeof CodybIndexRoute
+  ApparelIndexRoute: typeof ApparelIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   ShowsIndexRoute: typeof ShowsIndexRoute
 }
@@ -937,14 +939,13 @@ const rootRouteChildren: RootRouteChildren = {
   FaqLazyRoute: FaqLazyRoute,
   FireworksSafetyLazyRoute: FireworksSafetyLazyRoute,
   PrivacyPolicyLazyRoute: PrivacyPolicyLazyRoute,
-  ShippingLazyRoute: ShippingLazyRoute,
   ShippingInfoLazyRoute: ShippingInfoLazyRoute,
   TermsOfUseLazyRoute: TermsOfUseLazyRoute,
   ProductsProductIdRouteRoute: ProductsProductIdRouteRoute,
   ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
   UserLoginRoute: UserLoginRoute,
   UserRegisterRoute: UserRegisterRoute,
-  CodybIndexRoute: CodybIndexRoute,
+  ApparelIndexRoute: ApparelIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   ShowsIndexRoute: ShowsIndexRoute,
 }
@@ -969,14 +970,13 @@ export const routeTree = rootRoute
         "/faq",
         "/fireworks-safety",
         "/privacy-policy",
-        "/shipping",
         "/shipping-info",
         "/terms-of-use",
         "/products/$productId",
         "/shows/$showId",
         "/user/login",
         "/user/register",
-        "/codyb/",
+        "/apparel/",
         "/products/",
         "/shows/"
       ]
@@ -1023,9 +1023,6 @@ export const routeTree = rootRoute
     "/privacy-policy": {
       "filePath": "privacy-policy.lazy.tsx"
     },
-    "/shipping": {
-      "filePath": "shipping.lazy.tsx"
-    },
     "/shipping-info": {
       "filePath": "shipping-info.lazy.tsx"
     },
@@ -1038,14 +1035,15 @@ export const routeTree = rootRoute
       "children": [
         "/_auth/admin/admin",
         "/_auth/admin/inventory",
-        "/_auth/admin/reports",
         "/_auth/admin/users",
         "/_auth/admin/products/create",
         "/_auth/admin/shows/create",
         "/_auth/admin/shows/showTypes",
         "/_auth/admin/products/",
+        "/_auth/admin/reports/",
         "/_auth/admin/shows/",
         "/_auth/admin/products/$productId/edit",
+        "/_auth/admin/reports/sales/$orderId",
         "/_auth/admin/shows/$showId/edit"
       ]
     },
@@ -1073,8 +1071,8 @@ export const routeTree = rootRoute
     "/user/register": {
       "filePath": "user/register.tsx"
     },
-    "/codyb/": {
-      "filePath": "codyb/index.tsx"
+    "/apparel/": {
+      "filePath": "apparel/index.tsx"
     },
     "/products/": {
       "filePath": "products/index.tsx"
@@ -1088,10 +1086,6 @@ export const routeTree = rootRoute
     },
     "/_auth/admin/inventory": {
       "filePath": "_auth/admin/inventory.tsx",
-      "parent": "/_auth/admin"
-    },
-    "/_auth/admin/reports": {
-      "filePath": "_auth/admin/reports.tsx",
       "parent": "/_auth/admin"
     },
     "/_auth/admin/users": {
@@ -1122,12 +1116,20 @@ export const routeTree = rootRoute
       "filePath": "_auth/admin/products/index.tsx",
       "parent": "/_auth/admin"
     },
+    "/_auth/admin/reports/": {
+      "filePath": "_auth/admin/reports/index.tsx",
+      "parent": "/_auth/admin"
+    },
     "/_auth/admin/shows/": {
       "filePath": "_auth/admin/shows/index.tsx",
       "parent": "/_auth/admin"
     },
     "/_auth/admin/products/$productId/edit": {
       "filePath": "_auth/admin/products/$productId/edit.tsx",
+      "parent": "/_auth/admin"
+    },
+    "/_auth/admin/reports/sales/$orderId": {
+      "filePath": "_auth/admin/reports/sales/$orderId.tsx",
       "parent": "/_auth/admin"
     },
     "/_auth/admin/shows/$showId/edit": {

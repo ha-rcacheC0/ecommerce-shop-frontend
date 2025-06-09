@@ -221,7 +221,7 @@ const TerminalCompanyEnum = z.nativeEnum(TerminalCompany);
 const AddressSchema = z.object({
   id: z.string(),
   street1: z.string(),
-  street2: z.string().optional(),
+  street2: z.string().nullable().optional(),
   city: z.string(),
   state: StateEnum,
   postalCode: z.string(),
@@ -250,6 +250,11 @@ const TUserSchema = z.object({
 });
 
 export const ShowTypeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+});
+export const ApparelTypeSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable(),
@@ -285,6 +290,25 @@ interface ShowProductInterface {
   notes: string | null;
   isUnit: boolean;
   product: TProductInterface;
+}
+
+interface ApparelProductInterface {
+  id: string;
+  productId: string;
+  size: string;
+  colorId: string;
+  unitPrice: string;
+  availableStock: number;
+}
+
+interface TPurchaseItem {
+  id: string;
+  purchaseId: string;
+  productId: string;
+  quantity: number;
+  isUnit: boolean;
+  product: TProductInterface;
+  itemSubTotal: number;
 }
 
 interface TUnitProductInterface {
@@ -366,6 +390,8 @@ export const TInventoryUnitProductSchema: z.ZodType<TInventoryUnitProductInterfa
 
 // Define the types from the schemas
 export type ShowType = z.infer<typeof ShowTypeSchema>;
+export type ApparelType = z.infer<typeof ApparelTypeSchema>;
+
 export type ShowProduct = z.infer<typeof ShowProductSchema>;
 export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
 export type TProduct = z.infer<typeof TProductSchema>;
@@ -410,10 +436,17 @@ export type CreateShowData = {
   categoryId: string;
   products: CreateShowProductData[];
 };
+export type CreateApparelData = {
+  productId: string;
+  size: string;
+  colorId: string;
+  unitPrice: string;
+  availableStock: number;
+};
+export type UpdateApparelData = Partial<CreateApparelData>;
 
 export type UpdateShowData = Partial<CreateShowData>;
 
-// Update ProductFilters to include isShow
 export interface ProductFilters {
   page: number;
   pageSize: number;
@@ -423,14 +456,21 @@ export interface ProductFilters {
   selectedColors?: string[];
   selectedEffects?: string[];
   isShow?: boolean;
+  isApparel?: boolean;
   inStock?: boolean;
 }
 
-// Enhanced type for a product that is a show
 export type ShowWithProducts = TProduct & {
   isShow: true;
   showType: ShowType;
   showProducts: ShowProduct[];
+};
+
+export type ApparelProduct = TProduct & {
+  isApparel: true;
+  apparelTypeId: string;
+  apparelType: ApparelType;
+  apparelProduct: ApparelProductInterface;
 };
 
 const CartProductSchema = z.object({
@@ -607,4 +647,5 @@ export type {
   TAddress,
   TApprovedTerminal,
   ProductsResponse,
+  TPurchaseItem,
 };

@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute("/shipping-info")({
 function RouteComponent() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-primary">
+      <h1 className="text-3xl font-bold text-center mb-8 text-secondary">
         Shipping Information
       </h1>
 
@@ -52,7 +52,7 @@ function RouteComponent() {
           we can contact you when it's necessary, as your order will be on hold
           until the additional shipping payments are made and you can opt out of
           marketing at your convenience. See our{" "}
-          <Link to="/privacy-policy" className="text-primary hover:underline">
+          <Link to="/privacy-policy" className="text-secondary hover:underline">
             privacy policy
           </Link>
           .

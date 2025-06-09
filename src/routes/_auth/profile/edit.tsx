@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { useState, useEffect } from "react";
 
@@ -31,7 +31,9 @@ export const ProfileForm = () => {
 
   const form = useForm({
     validators: {
-      onChange: (values) => UserProfileSchema.parse(values),
+      onChange: (values) => {
+        UserProfileSchema.parse(values.value);
+      },
     },
     defaultValues: userProfile,
     onSubmit: ({ value }) => {
@@ -171,7 +173,7 @@ export const ProfileForm = () => {
           </div>
 
           {/* Contact Preference */}
-          <div className="mt-4">
+          <div className="mt-4 flex gap-4">
             <form.Field name="canContact">
               {(field) => (
                 <div className="flex items-center gap-2">
@@ -184,6 +186,25 @@ export const ProfileForm = () => {
                   />
                   <label htmlFor="canContact" className="cursor-pointer">
                     I would like to receive promotional emails and updates
+                  </label>
+                </div>
+              )}
+            </form.Field>
+            <form.Field name="acceptedTerms">
+              {(field) => (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="canContact"
+                    className="checkbox checkbox-primary"
+                    checked={field.state.value ?? false}
+                    onChange={(e) => field.handleChange(e.target.checked)}
+                  />
+                  <label htmlFor="canContact" className="cursor-pointer">
+                    I accept the Terms and Conditions outlined{" "}
+                    <Link className="link" to="/terms-of-use">
+                      here
+                    </Link>
                   </label>
                 </div>
               )}

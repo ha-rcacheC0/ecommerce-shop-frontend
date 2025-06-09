@@ -1,9 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 
-const CodyBApparel: React.FC = () => {
+const CodyBApparel = () => {
   return <div>Apparel Coming Soon</div>;
 
   // const navigate = useNavigate();
@@ -214,6 +211,6 @@ const CodyBApparel: React.FC = () => {
   // );
 };
 
-export const Route = createFileRoute("/codyb/")({
+export const Route = createFileRoute("/apparel/")({
   component: CodyBApparel,
 });
