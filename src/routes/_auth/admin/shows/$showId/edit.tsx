@@ -1,14 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import ShowForm from "@/components/admin-panel-components/ShowForm";
-import {
-  getProductMetadataQueryOptions,
-  getAllProductsQueryOptions,
-} from "@/api/products/productsQueries";
+import { getAllProductsQueryOptions } from "@/api/products/productsQueries";
 import {
   getShowByIdQueryOptions,
   getAllShowTypesQueryOptions,
 } from "@/api/shows/showsQueries";
+import { getProductMetadataQueryOptions } from "@/api/metadata/metadataQueries";
 
 export const Route = createFileRoute("/_auth/admin/shows/$showId/edit")({
   component: ShowEditPage,

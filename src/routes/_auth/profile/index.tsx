@@ -116,7 +116,7 @@ function ProfilePage() {
                     userProfile!.shippingAddress ?? {
                       id: "",
                       street1: "",
-                      state: "",
+                      state: "ND",
                       city: "",
                       postalCode: "",
                     }

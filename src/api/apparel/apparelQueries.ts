@@ -1,24 +1,24 @@
 // src/api/apparel/apparelQueries.ts
 import { queryOptions, useMutation } from "@tanstack/react-query";
 import {
-  createApparelItem,
+  createApparelProduct,
   createApparelType,
-  deleteApparelItem,
+  deleteApparelProductAndVariants,
   deleteApparelType,
   getAllApparel,
   getAllApparelTypes,
   getApparelById,
   getApparelByType,
-  updateApparelItem,
+  getSkuPreview,
   updateApparelType,
 } from "./apparel";
 import { queryClient } from "../../main";
-import { CreateApparelData, UpdateApparelData } from "../../types";
+import { ApparelFilter, CreateApparelProductData } from "@/types";
 
-export const getAllApparelQueryOptions = () =>
+export const getAllApparelQueryOptions = (filters: ApparelFilter) =>
   queryOptions({
-    queryKey: ["apparel"],
-    queryFn: () => getAllApparel(),
+    queryKey: ["apparel", filters],
+    queryFn: () => getAllApparel(filters),
   });
 
 export const getApparelByTypeQueryOptions = (typeId: string) =>
@@ -39,48 +39,20 @@ export const getAllApparelTypesQueryOptions = () =>
     queryFn: () => getAllApparelTypes(),
   });
 
+export const getSkuPreviewQueryOptions = () => ({
+  queryKey: ["sku-preview", "apparel"],
+  queryFn: async () => getSkuPreview(),
+  staleTime: 1000 * 60 * 5, // 5 minutes
+});
+
 export const useCreateApparelMutation = (
   token: string,
   onSuccess?: () => void,
   onError?: (error: Error) => void
 ) => {
   return useMutation({
-    mutationFn: (data: CreateApparelData) => createApparelItem(data, token),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["apparel"] });
-      if (onSuccess) onSuccess();
-    },
-    onError: (error: Error) => {
-      if (onError) onError(error);
-    },
-  });
-};
-
-export const useUpdateApparelMutation = (
-  id: string,
-  token: string,
-  onSuccess?: () => void,
-  onError?: (error: Error) => void
-) => {
-  return useMutation({
-    mutationFn: (data: UpdateApparelData) => updateApparelItem(id, data, token),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["apparel"] });
-      if (onSuccess) onSuccess();
-    },
-    onError: (error: Error) => {
-      if (onError) onError(error);
-    },
-  });
-};
-
-export const useDeleteApparelMutation = (
-  token: string,
-  onSuccess?: () => void,
-  onError?: (error: Error) => void
-) => {
-  return useMutation({
-    mutationFn: (id: string) => deleteApparelItem(id, token),
+    mutationFn: (data: CreateApparelProductData) =>
+      createApparelProduct(data, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["apparel"] });
       if (onSuccess) onSuccess();
@@ -137,6 +109,24 @@ export const useDeleteApparelTypeMutation = (
     mutationFn: (id: string) => deleteApparelType(id, token),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["apparelTypes"] });
+      if (onSuccess) onSuccess();
+    },
+    onError: (error: Error) => {
+      if (onError) onError(error);
+    },
+  });
+};
+
+export const useDeleteApparelProductMutation = (
+  token: string,
+  onSuccess?: () => void,
+  onError?: (error: Error) => void
+) => {
+  return useMutation({
+    mutationFn: (id: string) => deleteApparelProductAndVariants(id, token),
+    onSuccess: () => {
+      // Invalidate products list
+      queryClient.invalidateQueries({ queryKey: ["apparel"] });
       if (onSuccess) onSuccess();
     },
     onError: (error: Error) => {

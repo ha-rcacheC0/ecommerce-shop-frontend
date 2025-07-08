@@ -45,7 +45,7 @@ const ShowsPanel = () => {
     (error) => toast.error(`Error deleting show: ${error.message}`)
   );
 
-  const filteredShows = shows?.filter((show: ShowWithProducts) => {
+  const filteredShows = shows?.shows.filter((show: ShowWithProducts) => {
     const matchesSearch =
       show.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       show.description?.toLowerCase().includes(searchTerm.toLowerCase());

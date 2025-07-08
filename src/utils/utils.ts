@@ -1,4 +1,4 @@
-type OrderType = "retail" | "wholesale" | "combo" | "show";
+type OrderType = "retail" | "wholesale" | "combo" | "show" | "apparelOnly";
 type DestinationType = "terminal" | "anywhere";
 
 interface ShippingOptions {
@@ -57,20 +57,22 @@ const getShippingCost = (
   return 0;
 };
 
+export function calcUnitPrice(casePrice: number, qty: number): number {
+  return Math.ceil((casePrice / 2.016 / qty) * 2.65) - 0.01;
+}
 function checkOrderType(
   caseSubtotal: number,
   unitSubtotal: number,
-  hasShow: boolean
+  hasShow: boolean,
+  onlyApparel: boolean
 ): OrderType {
   const combinedSubTotal = caseSubtotal + unitSubtotal;
   if (hasShow) return "show";
+  if (onlyApparel) return "apparelOnly";
   if (combinedSubTotal === unitSubtotal) return "retail";
   if (unitSubtotal === 0) return "wholesale";
   if (unitSubtotal / combinedSubTotal < 0.25) return "wholesale";
   return "combo";
-}
-export function calcUnitPrice(casePrice: number, qty: number): number {
-  return Math.ceil((casePrice / 2.016 / qty) * 2.65) - 0.01;
 }
 
 function calculateShipping(options: ShippingOptions): number {
@@ -79,9 +81,9 @@ function calculateShipping(options: ShippingOptions): number {
 
   switch (orderType) {
     case "show":
-      // Shows always get free shipping
       return (shippingCost = 0);
-
+    case "apparelOnly":
+      return (shippingCost = 10);
     case "retail":
       shippingCost = getShippingCost(
         retailShippingRates,

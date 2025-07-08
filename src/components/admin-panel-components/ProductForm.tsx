@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTimes, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { getProductMetadataQueryOptions } from "@api/products/productsQueries";
+
 import { getOneProductQueryOptions } from "@api/products/productsQueries";
 import { useAuth } from "@providers/auth.provider";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@api/products/productsQueries";
 import { toast } from "react-toastify";
 import { calcUnitPrice } from "@/utils/utils";
+import { getProductMetadataQueryOptions } from "@/api/metadata/metadataQueries";
 
 interface ProductFormProps {
   productId?: string;

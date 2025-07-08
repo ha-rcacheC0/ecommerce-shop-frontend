@@ -2,7 +2,6 @@ import {
   SignInRequest,
   SignInRequestSchema,
   SignInResponse,
-  SignInResponseSchema,
   UserCreateRequest,
   createUserRequestSchema,
 } from "../../types";
@@ -22,12 +21,8 @@ export const signInUser = async (
       "Content-Type": "application/json",
     },
   });
-  const responseInfo = await response.json();
-  console.log("responseInfo", responseInfo);
-  const responseData = SignInResponseSchema.safeParse(responseInfo);
 
-  if (!responseData.success) throw new Error(responseData.error.message);
-  return responseData.data;
+  return await response.json();
 };
 
 export const createUser = async (body: UserCreateRequest): Promise<unknown> => {

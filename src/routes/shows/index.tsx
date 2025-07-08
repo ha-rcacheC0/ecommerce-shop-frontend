@@ -31,8 +31,8 @@ function ShowsList() {
   }
 
   const filteredShows = selectedType
-    ? shows?.filter((show) => show.showTypeId === selectedType)
-    : shows;
+    ? shows?.shows.filter((show) => show.showTypeId === selectedType)
+    : shows?.shows;
 
   const showTypesDisplay = {
     all: "All Shows",

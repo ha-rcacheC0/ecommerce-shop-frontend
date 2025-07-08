@@ -28,7 +28,7 @@ function CartPage() {
           userProfile?.shippingAddress ?? {
             id: "",
             street1: "",
-            state: "",
+            state: "MD",
             city: "",
             postalCode: "",
           }

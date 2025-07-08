@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
   faUsers,
-  faCog,
   faFile,
   faWarehouse,
   IconDefinition,
@@ -22,10 +21,10 @@ const menuItems: MenuItem[] = [
   { icon: faHome, label: "Home", toDest: "/admin" },
   { icon: faUsers, label: "Users", toDest: "/admin/users" },
   { icon: faBoxes, label: "Products", toDest: "/admin/products" },
+  { icon: faBoxes, label: "Apparel Products", toDest: "/admin/apparel" },
   { icon: faBoxesPacking, label: "Shows", toDest: "/admin/shows" },
   { icon: faFile, label: "Reports", toDest: "/admin/reports" },
   { icon: faWarehouse, label: "Inventory", toDest: "/admin/inventory" },
-  { icon: faCog, label: "Settings", toDest: "/admin/settings" },
 ];
 
 const AdminDashboard = () => {

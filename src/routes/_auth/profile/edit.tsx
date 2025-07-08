@@ -286,7 +286,11 @@ export const ProfileForm = () => {
                       <select
                         className="select select-bordered w-full"
                         value={field.state.value ?? ""}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        onChange={(e) =>
+                          field.handleChange(
+                            e.target.value as keyof typeof States
+                          )
+                        }
                         onBlur={field.handleBlur}
                       >
                         <option value="" disabled>
@@ -415,7 +419,11 @@ export const ProfileForm = () => {
                         <select
                           className="select select-bordered w-full"
                           value={field.state.value ?? ""}
-                          onChange={(e) => field.handleChange(e.target.value)}
+                          onChange={(e) =>
+                            field.handleChange(
+                              e.target.value as keyof typeof States
+                            )
+                          }
                           onBlur={field.handleBlur}
                         >
                           <option value="" disabled>

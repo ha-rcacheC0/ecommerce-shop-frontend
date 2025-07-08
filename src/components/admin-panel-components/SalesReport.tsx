@@ -11,7 +11,6 @@ import {
   faShippingFast,
   faCheck,
   faEye,
-  faTimes,
   faUser,
   faMapMarkerAlt,
   faCalculator,
@@ -404,7 +403,7 @@ const SalesReport: React.FC = () => {
       {/* Order Detail Modal */}
       {selectedOrderDetail && (
         <Modal onClose={handleCloseDetail}>
-          <div className="max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="max-w-6xl w-full max-h-[90vh] overflow-y-auto ">
             <div className="space-y-6 p-6">
               {/* Header */}
               <div className="flex items-center justify-between">
@@ -415,13 +414,6 @@ const SalesReport: React.FC = () => {
                     {new Date(selectedOrderDetail.date).toLocaleDateString()}
                   </p>
                 </div>
-
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={handleCloseDetail}
-                >
-                  <FontAwesomeIcon icon={faTimes} />
-                </button>
               </div>
 
               {/* Status Badge */}

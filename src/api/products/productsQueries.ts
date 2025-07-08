@@ -7,7 +7,6 @@ import {
 import {
   getAllProductsQuery,
   getOneProductQuery,
-  getProductMetadata,
   createProductQuery,
   updateProductQuery,
   deleteProductQuery,
@@ -26,13 +25,6 @@ export const getOneProductQueryOptions = ({ id }: { id: string }) =>
   queryOptions({
     queryKey: ["product", id],
     queryFn: () => getOneProductQuery({ id }),
-  });
-
-export const getProductMetadataQueryOptions = () =>
-  queryOptions({
-    queryKey: ["productMetadata"],
-    queryFn: () => getProductMetadata(),
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
 export const useCreateProductMutation = (

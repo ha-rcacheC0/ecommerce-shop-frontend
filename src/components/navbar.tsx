@@ -126,6 +126,11 @@ export const Navbar = () => {
               Shows
             </Link>
           </li>
+          <li>
+            <Link to={"/apparel"} search={{ page: 1, pageSize: 25 }}>
+              Apparel
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="navbar-end flex gap-2 flex-1">

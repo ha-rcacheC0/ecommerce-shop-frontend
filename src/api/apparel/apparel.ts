@@ -1,12 +1,41 @@
-// src/api/apparel/apparel.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// src/api/apparel/apparel.ts - Updated for variants
 
-import { CreateApparelData, UpdateApparelData } from "@/types";
+import {
+  ApparelFilter,
+  CreateApparelProductData,
+  CreateVariantData,
+  UpdateVariantData,
+} from "@/types";
 import { API_CONFIG } from "../../utils/config";
 
 const BASE_URL = API_CONFIG.BASE_URL + "/apparel";
 
-export const getAllApparel = async () => {
-  const response = await fetch(`${BASE_URL}`, {
+export const getAllApparel = async (filters: ApparelFilter) => {
+  const params = new URLSearchParams();
+  params.append("page", filters.page.toString());
+  params.append("pageSize", filters.pageSize.toString());
+  if (filters.searchTitle) {
+    params.append("searchTitle", filters.searchTitle);
+  }
+  params.append("isApparel", "true");
+  if (filters.showOutOfStock) {
+    params.append("showOutOfStock", "true");
+  } else {
+    params.append("showOutOfStock", "false");
+  }
+  filters.selectedBrands.forEach((brand) => params.append("brands", brand));
+  filters.selectedCategories.forEach((category) =>
+    params.append("categories", category)
+  );
+  filters.selectedColors.forEach((color) => params.append("colors", color));
+  filters.selectedApparelTypes.forEach((apparelType) =>
+    params.append("apparelTypes", apparelType)
+  );
+  filters.selectedGenders.forEach((gender) => params.append("genders", gender));
+  filters.selectedSizes.forEach((size) => params.append("sizes", size));
+
+  const response = await fetch(`${BASE_URL}?${params.toString()}`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -17,7 +46,7 @@ export const getAllApparel = async () => {
   }
 
   const data = await response.json();
-  return data.apparel;
+  return data;
 };
 
 export const getApparelByType = async (typeId: string) => {
@@ -63,11 +92,12 @@ export const getAllApparelTypes = async () => {
   return await response.json();
 };
 
-export const createApparelItem = async (
-  apparelData: CreateApparelData,
+// NEW: Create apparel product with variants
+export const createApparelProduct = async (
+  apparelData: CreateApparelProductData,
   token: string
 ) => {
-  const response = await fetch(`${BASE_URL}`, {
+  const response = await fetch(`${BASE_URL}/products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -78,36 +108,84 @@ export const createApparelItem = async (
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to create apparel");
+    throw new Error(error.message || "Failed to create apparel product");
+  }
+
+  return await response.json();
+};
+export const deleteApparelProductAndVariants = async (
+  apparelId: string,
+  token: string
+) => {
+  const response = await fetch(`${BASE_URL}/products/${apparelId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to delete apparel product");
   }
 
   return await response.json();
 };
 
-export const updateApparelItem = async (
-  id: string,
-  apparelData: UpdateApparelData,
+export const getSkuPreview = async () => {
+  const response = await fetch(`${BASE_URL}/sku/preview`);
+  if (!response.ok) throw new Error("Failed to fetch SKU preview");
+  return await response.json();
+};
+
+// NEW: Create variant for existing product
+export const createVariant = async (
+  variantData: CreateVariantData,
   token: string
 ) => {
-  const response = await fetch(`${BASE_URL}/${id}`, {
+  const response = await fetch(`${BASE_URL}/variants`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(variantData),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Failed to create variant");
+  }
+
+  return await response.json();
+};
+
+// NEW: Update variant
+export const updateVariant = async (
+  id: string,
+  variantData: UpdateVariantData,
+  token: string
+) => {
+  const response = await fetch(`${BASE_URL}/variants/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(apparelData),
+    body: JSON.stringify(variantData),
   });
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to update apparel");
+    throw new Error(error.message || "Failed to update variant");
   }
 
   return await response.json();
 };
 
-export const deleteApparelItem = async (id: string, token: string) => {
-  const response = await fetch(`${BASE_URL}/${id}`, {
+// NEW: Delete variant
+export const deleteVariant = async (id: string, token: string) => {
+  const response = await fetch(`${BASE_URL}/variants/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -116,7 +194,7 @@ export const deleteApparelItem = async (id: string, token: string) => {
 
   if (!response.ok) {
     const error = await response.json();
-    throw new Error(error.message || "Failed to delete apparel");
+    throw new Error(error.message || "Failed to delete variant");
   }
 
   return true;
