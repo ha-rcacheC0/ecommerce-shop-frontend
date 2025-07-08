@@ -7,24 +7,41 @@ import {
   faTheaterMasks,
   faBox,
   faBoxes,
+  faShirt, // For apparel items
 } from "@fortawesome/free-solid-svg-icons";
 import {
   useRemoveProductFromCartMutation,
   useUpdateProductQuantityMutation,
 } from "../../api/cart/cartQueries";
-import { TCartProduct, TProductSchema } from "../../types";
+import { TCartProduct } from "../../types";
 
 const CartItem = ({ product }: { product: TCartProduct }) => {
-  const { title, sku, casePrice, unitProduct, isShow } = TProductSchema.parse(
-    product.product
+  const { title, sku, casePrice, unitProduct, isShow, isApparel } =
+    product.product;
+
+  // Handle variant information
+  const variant = product.product.variants?.find(
+    (z) => z.id === product.variantId
   );
-  const unitPrice = unitProduct ? parseFloat(unitProduct.unitPrice) : 0;
+
+  const unitPrice = variant
+    ? parseFloat(variant.unitPrice)
+    : unitProduct
+      ? parseFloat(unitProduct.unitPrice)
+      : 0;
 
   const caseQuantity = product.caseQuantity || 0;
   const unitQuantity = product.unitQuantity || 0;
 
   const subtotal =
     parseFloat(casePrice) * caseQuantity + unitPrice * unitQuantity;
+
+  // Gender display mapping
+  const genderDisplay = {
+    MALE: "Men's",
+    FEMALE: "Women's",
+    UNISEX: "Unisex",
+  };
 
   const removeItem = useRemoveProductFromCartMutation(
     product.cartId,
@@ -60,6 +77,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       cartId: product.cartId,
       quantity: product.caseQuantity + 1,
       isUnit: false,
+      variantId: variant?.id || "",
     });
   };
 
@@ -70,6 +88,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         cartId: product.cartId,
         quantity: product.caseQuantity - 1,
         isUnit: false,
+        variantId: variant?.id || "",
       });
     }
   };
@@ -80,6 +99,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       cartId: product.cartId,
       quantity: product.unitQuantity + 1,
       isUnit: true,
+      variantId: variant?.id || "",
     });
   };
 
@@ -90,6 +110,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         cartId: product.cartId,
         quantity: product.unitQuantity - 1,
         isUnit: true,
+        variantId: variant?.id || "",
       });
     }
   };
@@ -140,11 +161,11 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
   );
 
   return (
-    <tr className="border-b border-base-300 hover:bg-base-200/40 ">
+    <tr className="border-b border-base-300 hover:bg-base-200/40">
       {/* Product column */}
-      <td className="py-4 ">
-        <div className=" flex items-center justify-center gap-3  ">
-          <div className="avatar  ">
+      <td className="py-4">
+        <div className="flex items-center justify-center gap-3">
+          <div className="avatar">
             <div className="mask mask-squircle w-12 h-12">
               <img
                 src={product.product.image}
@@ -159,19 +180,52 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
             <div className="font-medium text-center truncate max-w-[120px] md:max-w-[200px]">
               {title}
             </div>
+
+            {/* Special badges for different product types */}
             {isShow && (
               <div className="badge badge-secondary badge-sm">Show Package</div>
+            )}
+            {isApparel && (
+              <div className="badge badge-accent badge-sm">Apparel</div>
+            )}
+
+            {/* Apparel variant information */}
+            {isApparel && variant && (
+              <div className="mt-1 text-xs text-gray-600 space-y-1">
+                <div className="flex flex-wrap gap-1">
+                  <span className="badge badge-outline badge-xs">
+                    {variant.size}
+                  </span>
+                  <span className="badge badge-outline badge-xs">
+                    {genderDisplay[variant.gender]}
+                  </span>
+                  {variant.color && (
+                    <span className="badge badge-outline badge-xs">
+                      {variant.color.name}
+                    </span>
+                  )}
+                </div>
+              </div>
             )}
           </div>
         </div>
       </td>
 
       {/* SKU column */}
-      <td className="py-4 text-center">{sku}</td>
+      <td className="py-4 text-center">
+        <div className="font-mono text-sm">
+          {/* Show variant SKU if apparel, otherwise product SKU */}
+          {isApparel && variant ? variant.sku : sku}
+        </div>
+        {/* Show base product SKU for apparel items below variant SKU */}
+        {isApparel && variant && variant.sku !== sku && (
+          <div className="text-xs text-gray-500 font-mono">Base: {sku}</div>
+        )}
+      </td>
 
       <td className="py-4 px-2">
         <div className="flex flex-col">
-          {/* Show special display for shows */}
+          {/* Special display for shows */}
           {isShow ? (
             <QuantityControl
               key={`Show-${product.id}`}
@@ -182,7 +236,21 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
               onDecrement={decrementCaseQuantity}
               onIncrement={incrementCaseQuantity}
             />
+          ) : isApparel ? (
+            /* Special display for apparel - typically unit sales only */
+            <>
+              <QuantityControl
+                key={`Apparel-${product.id}`}
+                label={`Apparel`}
+                icon={<FontAwesomeIcon icon={faShirt} />}
+                price={unitPrice}
+                quantity={unitQuantity}
+                onDecrement={decrementUnitQuantity}
+                onIncrement={incrementUnitQuantity}
+              />
+            </>
           ) : (
+            /* Regular products */
             <>
               <QuantityControl
                 key={`Cases-${product.id}`}
@@ -220,6 +288,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
             removeItem.mutate({
               productId: product.product.id,
               cartId: product.cartId,
+              variantId: variant?.id || "", // Include variant ID for removal
             })
           }
           className="btn btn-ghost btn-md btn-error"

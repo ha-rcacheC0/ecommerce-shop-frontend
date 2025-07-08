@@ -31,11 +31,13 @@ export const useAddItemToCartMutation = (
       productId,
       cartId,
       isUnit,
+      variantId,
     }: {
       productId: string;
       cartId: string;
       isUnit: boolean;
-    }) => addProductToCart({ productId, cartId, isUnit }),
+      variantId?: string;
+    }) => addProductToCart({ productId, cartId, isUnit, variantId }),
     onSuccess: async () => {
       onSuccessCallback();
     },
@@ -59,10 +61,12 @@ export const useRemoveProductFromCartMutation = (
     mutationFn: ({
       productId,
       cartId,
+      variantId,
     }: {
       productId: string;
       cartId: string;
-    }) => removeProductFromCart({ productId, cartId }),
+      variantId: string;
+    }) => removeProductFromCart({ productId, cartId, variantId }),
     onSuccess: async () => {
       onSuccessCallback();
     },
@@ -90,12 +94,15 @@ export const useUpdateProductQuantityMutation = (
       cartId,
       quantity,
       isUnit,
+      variantId,
     }: {
       productId: string;
       cartId: string;
       quantity: number;
       isUnit: boolean;
-    }) => updateProductQuantity({ productId, cartId, quantity, isUnit }),
+      variantId: string;
+    }) =>
+      updateProductQuantity({ productId, cartId, quantity, isUnit, variantId }),
     onSuccess: async () => {
       onSuccessCallback();
     },

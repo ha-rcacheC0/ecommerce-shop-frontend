@@ -103,7 +103,7 @@ const DashboardContent: React.FC = () => {
     {
       title: "Shows",
       icon: faBoxesPacking,
-      count: shows?.length || 0,
+      count: shows?.shows.length || 0,
       link: "/admin/shows",
       isLoading: showsIsLoading,
       isError: showsIsError,

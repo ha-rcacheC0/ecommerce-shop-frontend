@@ -8,6 +8,7 @@ import {
   faFilter,
   faCheckSquare,
   faXmarkSquare,
+  faTags,
 } from "@fortawesome/free-solid-svg-icons";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useAuth } from "@providers/auth.provider";
@@ -19,6 +20,7 @@ import {
 } from "@api/products/productsQueries";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import MetadataManager from "./metadataManager";
 
 // Define the table item type
 interface ProductTableItem extends TProduct, Record<string, unknown> {}
@@ -165,6 +167,7 @@ const ProductsPanel = () => {
   const sidebarItems = [
     { icon: faBoxes, label: "All Products", id: "all-products" },
     { icon: faFilter, label: "Out of Stock", id: "out-of-stock" },
+    { icon: faTags, label: "Manage Metadata", id: "manage-metadata" },
   ];
 
   const handleSidebarItemSelect = (itemId: string | null) => {
@@ -183,6 +186,9 @@ const ProductsPanel = () => {
               .replace(/-/g, " ")
               .replace(/\b\w/g, (l) => l.toUpperCase())
           : "All Products";
+        if (selectedView === "manage-metadata") {
+          return <MetadataManager />;
+        }
 
         return (
           <div className="p-6">

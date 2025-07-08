@@ -1,74 +1,85 @@
+// @components/component-parts/apparelFilterPanel.tsx
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import {
-  BrandDisplay,
-  CategoryDisplay,
-  ColorsDisplay,
-  EffectsDisplay,
-} from "../../types";
+import { ApparelFilter, BrandDisplay, ColorsDisplay } from "@/types";
 import { getProductMetadataQueryOptions } from "@/api/metadata/metadataQueries";
 
-interface FilterPanelProps {
-  searchTitle: string;
-  setSearchTitle: (value: string) => void;
-  selectedBrands: string[];
-  setSelectedBrands: (brand: string) => void;
-  selectedCategories: string[];
-  setSelectedCategories: (category: string) => void;
-  selectedColors: string[];
-  setSelectedColors: (color: string) => void;
-  selectedEffects: string[];
-  setSelectedEffects: (effect: string) => void;
-  isFetching: boolean;
-  isPlaceholderData: boolean;
-  showOutOfStock: boolean;
-  setShowOutOfStock: (value: boolean) => void;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  page: number;
-  hasMore: boolean;
-  pageSize: number;
-  setPageAmount: (value: number) => void;
-}
-
-const FilterPanel: React.FC<FilterPanelProps> = ({
+export const ApparelFilterPanel: React.FC<ApparelFilter> = ({
   searchTitle,
   setSearchTitle,
   selectedBrands,
   setSelectedBrands,
-  selectedCategories,
-  setSelectedCategories,
   selectedColors,
   setSelectedColors,
-  selectedEffects,
-  setSelectedEffects,
+  selectedApparelTypes,
+  setSelectedApparelTypes,
+  selectedGenders,
+  setSelectedGenders,
+  selectedSizes,
+  setSelectedSizes,
   showOutOfStock,
   setShowOutOfStock,
 }) => {
-  // Use the query options for product metadata
+  // Use the same query pattern as FilterPanel
   const { data: metadata, isLoading } = useQuery(
     getProductMetadataQueryOptions()
   );
 
   // Use the fetched metadata or empty arrays if still loading
   const availableBrands = metadata?.brands || [];
-  const availableCategories = metadata?.categories || [];
+
   const availableColors = metadata?.colors || [];
-  const availableEffects = metadata?.effects || [];
+  const availableApparelTypes = metadata?.apparelTypes || [];
+
+  // Static data for genders and sizes (since these aren't in your current metadata API)
+  const availableGenders = [
+    { id: "MALE", name: "MALE" },
+    { id: "FEMALE", name: "FEMALE" },
+    { id: "UNISEX", name: "UNISEX" },
+  ];
+
+  const availableSizes = [
+    { id: "XS", name: "XS" },
+    { id: "S", name: "S" },
+    { id: "M", name: "M" },
+    { id: "L", name: "L" },
+    { id: "XL", name: "XL" },
+    { id: "2XL", name: "2XL" },
+    { id: "3XL", name: "3XL" },
+  ];
+
+  // const clearAllFilters = () => {
+  //   setSearchTitle("");
+  //   setSelectedBrands([]);
+  //   setSelectedColors([]);
+  //   setSelectedApparelTypes([]);
+  //   setSelectedGenders([]);
+  //   setSelectedSizes([]);
+  //   setShowOutOfStock(false);
+  //   setPage(1);
+  // };
 
   return (
     <>
       <label
-        htmlFor="filter-drawer"
+        htmlFor="apparel-filter-drawer"
         className="btn btn-primary fixed top-20 left-4 z-40 lg:hidden"
       >
         Open Filters
       </label>
 
       <div className="drawer h-full lg:p-1 lg:border-r-2 m-2 rounded-md lg:drawer-open max-lg:h-auto drawer-start">
-        <input id="filter-drawer" type="checkbox" className="drawer-toggle" />
+        <input
+          id="apparel-filter-drawer"
+          type="checkbox"
+          className="drawer-toggle"
+        />
         <div className="drawer-content"></div>
         <div className="drawer-side z-50">
-          <label htmlFor="filter-drawer" className="drawer-overlay"></label>
+          <label
+            htmlFor="apparel-filter-drawer"
+            className="drawer-overlay"
+          ></label>
           <div className="menu p-4 w-80 bg-base-100 text-base-content">
             <div className="flex justify-center p-3 rounded-2xl">
               <input
@@ -79,6 +90,7 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 className="input input-bordered w-full max-w-xs"
               />
             </div>
+
             <div className="mb-4 mt-4">
               <h3 className="font-bold mb-2 text-center text-xl underline">
                 Availability
@@ -96,37 +108,9 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                 </label>
               </div>
             </div>
+
             <div className="divider"></div>
-            <div className="mb-4">
-              <h3 className="font-bold mb-4 text-center text-2xl underline">
-                Categories
-              </h3>
-              <div className="grid grid-cols-2 gap-1">
-                {isLoading ? (
-                  <div>Loading categories...</div>
-                ) : (
-                  availableCategories.map(
-                    (category: { id: string; name: string }) => (
-                      <label
-                        key={category.id}
-                        className="flex items-center space-x-2"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category.name)}
-                          onChange={() => setSelectedCategories(category.name)}
-                          className="checkbox checkbox-sm"
-                        />
-                        <span>
-                          {CategoryDisplay[category.name] || category.name}
-                        </span>
-                      </label>
-                    )
-                  )
-                )}
-              </div>
-            </div>
-            <div className="divider"></div>
+
             <div className="mb-4">
               <h3 className="font-bold mb-4 text-center text-2xl underline">
                 Brands
@@ -146,13 +130,17 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                         onChange={() => setSelectedBrands(brand.name)}
                         className="checkbox checkbox-sm"
                       />
-                      <span>{BrandDisplay[brand.name] || brand.name}</span>
+                      <span className="text-xs">
+                        {BrandDisplay[brand.name] || brand.name}
+                      </span>
                     </label>
                   ))
                 )}
               </div>
             </div>
+
             <div className="divider"></div>
+
             <div className="mb-4">
               <h3 className="font-bold mb-4 text-center text-2xl underline">
                 Colors
@@ -172,47 +160,110 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
                         onChange={() => setSelectedColors(color.name)}
                         className="checkbox checkbox-sm"
                       />
-                      <span>{ColorsDisplay[color.name] || color.name}</span>
+                      <span className="text-xs">
+                        {ColorsDisplay[color.name] || color.name}
+                      </span>
                     </label>
                   ))
                 )}
               </div>
             </div>
+
             <div className="divider"></div>
+
             <div className="mb-4">
               <h3 className="font-bold mb-4 text-center text-2xl underline">
-                Effects
+                Apparel Types
               </h3>
               <div className="grid grid-cols-2 gap-1">
                 {isLoading ? (
-                  <div>Loading effects...</div>
+                  <div>Loading apparel types...</div>
                 ) : (
-                  availableEffects.map(
-                    (effect: { id: string; name: string }) => (
+                  availableApparelTypes.map(
+                    (apparelType: { id: string; name: string }) => (
                       <label
-                        key={effect.id}
+                        key={apparelType.id}
                         className="flex items-center space-x-2"
                       >
                         <input
                           type="checkbox"
-                          checked={selectedEffects.includes(effect.name)}
-                          onChange={() => setSelectedEffects(effect.name)}
+                          checked={selectedApparelTypes.includes(
+                            apparelType.name
+                          )}
+                          onChange={() =>
+                            setSelectedApparelTypes(apparelType.name)
+                          }
                           className="checkbox checkbox-sm"
                         />
-                        <span>
-                          {EffectsDisplay[effect.name] || effect.name}
-                        </span>
+                        <span className="text-xs">{apparelType.name}</span>
                       </label>
                     )
                   )
                 )}
               </div>
             </div>
+
+            <div className="divider"></div>
+
+            <div className="mb-4">
+              <h3 className="font-bold mb-4 text-center text-2xl underline">
+                Genders
+              </h3>
+              <div className="grid grid-cols-1 gap-1">
+                {availableGenders.map(
+                  (gender: { id: string; name: string }) => (
+                    <label
+                      key={gender.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedGenders.includes(gender.name)}
+                        onChange={() => setSelectedGenders(gender.name)}
+                        className="checkbox checkbox-sm"
+                      />
+                      <span className="text-xs">{gender.name}</span>
+                    </label>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div className="divider"></div>
+
+            <div className="mb-4">
+              <h3 className="font-bold mb-4 text-center text-2xl underline">
+                Sizes
+              </h3>
+              <div className="grid grid-cols-3 gap-1">
+                {availableSizes.map((size: { id: string; name: string }) => (
+                  <label key={size.id} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedSizes.includes(size.name)}
+                      onChange={() => setSelectedSizes(size.name)}
+                      className="checkbox checkbox-sm"
+                    />
+                    <span className="text-xs">{size.name}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div className="divider"></div>
+
+            {/* Clear All Filters Button */}
+            {/* <div className="mb-4">
+              <button
+                onClick={clearAllFilters}
+                className="btn btn-outline w-full"
+              >
+                Clear All Filters
+              </button>
+            </div> */}
           </div>
         </div>
       </div>
     </>
   );
 };
-
-export default FilterPanel;

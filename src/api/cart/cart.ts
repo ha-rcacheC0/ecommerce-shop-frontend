@@ -10,14 +10,16 @@ export const addProductToCart = async ({
   productId,
   cartId,
   isUnit,
+  variantId,
 }: {
   productId: string;
   cartId: string;
   isUnit: boolean;
+  variantId?: string;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/add`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, isUnit }),
+    body: JSON.stringify({ productId, cartId, isUnit, variantId }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -27,13 +29,15 @@ export const addProductToCart = async ({
 export const removeProductFromCart = async ({
   productId,
   cartId,
+  variantId,
 }: {
   productId: string;
   cartId: string;
+  variantId: string;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/remove`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId }),
+    body: JSON.stringify({ productId, cartId, variantId }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -45,15 +49,17 @@ export const updateProductQuantity = async ({
   productId,
   quantity,
   isUnit,
+  variantId,
 }: {
   productId: string;
   cartId: string;
   quantity: number;
   isUnit: boolean;
+  variantId: string;
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/updateQuantity`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, quantity, isUnit }),
+    body: JSON.stringify({ productId, cartId, quantity, isUnit, variantId }),
     headers: {
       "Content-Type": "application/json",
     },

@@ -11,14 +11,21 @@ import {
   createShowType,
   updateShowType,
   deleteShowType,
+  getShowsByBrand,
 } from "./shows";
 import { queryClient } from "../../main";
 import { CreateShowData, UpdateShowData } from "../../types";
 
-export const getAllShowsQueryOptions = () =>
+export const getAllShowsQueryOptions = (params?: {
+  page?: number;
+  pageSize?: number;
+  typeId?: string;
+  searchTitle?: string;
+  brandId?: string;
+}) =>
   queryOptions({
-    queryKey: ["shows"],
-    queryFn: () => getAllShows(),
+    queryKey: ["shows", params],
+    queryFn: () => getAllShows(params),
   });
 
 export const getShowsByTypeQueryOptions = (typeId: string) =>
@@ -37,6 +44,19 @@ export const getAllShowTypesQueryOptions = () =>
   queryOptions({
     queryKey: ["showTypes"],
     queryFn: () => getAllShowTypes(),
+  });
+export const getShowsByBrandQueryOptions = (
+  brandId: string,
+  params?: {
+    page?: number;
+    pageSize?: number;
+    typeId?: string;
+    searchTitle?: string;
+  }
+) =>
+  queryOptions({
+    queryKey: ["shows", "brand", brandId, params],
+    queryFn: () => getShowsByBrand(brandId, params),
   });
 
 export const useCreateShowMutation = (

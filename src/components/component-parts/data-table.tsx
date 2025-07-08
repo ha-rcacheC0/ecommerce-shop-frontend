@@ -70,6 +70,7 @@ export interface DataTableProps<T extends Record<string, unknown>> {
   emptyMessage?: string;
   initialSorting?: SortingState;
   manualSorting?: boolean;
+  hidePagination?: boolean; // Optional prop to hide pagination
   onSortingChange?: (sorting: SortingState) => void;
 }
 
@@ -114,12 +115,23 @@ export function DataTable<T extends Record<string, unknown>>({
   errorMessage = "Error loading data",
   createButton,
   searchConfig,
-  pagination,
+  pagination = {
+    currentPage: 1,
+    pageSize: 25,
+    setPage: () => {},
+    setPageSize: () => {},
+    hasMore: false,
+    isFetching: false,
+    isPlaceholderData: false,
+    totalRows: data?.length,
+    manualPagination: true,
+  },
   rowClassName = "text-base-content hover:bg-primary hover:text-primary-content group",
   emptyMessage = "No data found.",
   initialSorting = [],
   manualSorting = false,
   onSortingChange,
+  hidePagination = false,
 }: DataTableProps<T>) {
   // Table state
   const [sorting, setSorting] = useState<SortingState>(initialSorting);
@@ -300,7 +312,7 @@ export function DataTable<T extends Record<string, unknown>>({
       )}
 
       {/* Pagination */}
-      {pagination && (
+      {pagination && !hidePagination && (
         <div className="p-4">
           <PageButtons
             isFetching={pagination.isFetching}
@@ -408,7 +420,7 @@ export function DataTable<T extends Record<string, unknown>>({
         </table>
 
         {/* Pagination */}
-        {pagination && (
+        {pagination && !hidePagination && (
           <div className="p-4">
             <PageButtons
               isFetching={pagination.isFetching}

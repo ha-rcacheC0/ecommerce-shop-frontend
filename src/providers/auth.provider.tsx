@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useContext,
+  useCallback,
 } from "react";
 import { SignInResponse, SignInResponseSchema } from "../types";
 
@@ -49,7 +50,9 @@ const getUserFromLocalStorage = (): SignInResponse | null => {
   }
 
   try {
-    return SignInResponseSchema.parse(JSON.parse(userFromLocalStorage));
+    const parsed = JSON.parse(userFromLocalStorage);
+    // Use type assertion to handle the state conversion
+    return SignInResponseSchema.parse(parsed) as SignInResponse;
   } catch (_e) {
     clearUser();
     return null;
@@ -64,36 +67,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const authState = deriveAuthState({ user, isLoading });
 
-  const logout = async () => {
+  // Use useCallback to memoize functions and prevent unnecessary re-renders
+  const logout = useCallback(async () => {
     setIsLoading(true);
     clearUser();
     setUser(null);
     setIsLoading(false);
-  };
+  }, []);
 
-  const login = (data: SignInResponse) => {
-    setIsLoading(false);
+  const login = useCallback((data: SignInResponse) => {
     setUser(data);
+    setIsLoading(false);
     localStorage.setItem("user", JSON.stringify(data));
     // Set token expiration to 24 hours from now
     const expirationTime = new Date().getTime() + 24 * 60 * 60 * 1000;
     localStorage.setItem("tokenExpiration", expirationTime.toString());
-  };
-
-  useEffect(() => {
-    const user = getUserFromLocalStorage();
-    if (!user) {
-      setIsLoading(false);
-      setUser(null);
-      return;
-    }
-    login(user);
   }, []);
 
+  // Initialize user from localStorage on mount
+  useEffect(() => {
+    const storedUser = getUserFromLocalStorage();
+    if (storedUser) {
+      setUser(storedUser);
+    }
+    setIsLoading(false);
+  }, []);
+
+  // Check token expiration periodically
   useEffect(() => {
     const checkTokenExpiration = () => {
-      const user = getUserFromLocalStorage();
-      if (!user) {
+      const storedUser = getUserFromLocalStorage();
+      if (!storedUser && user) {
+        // Only logout if we currently have a user but localStorage doesn't
         logout();
       }
     };
@@ -101,7 +106,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const intervalId = setInterval(checkTokenExpiration, 60000); // Check every minute
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [user, logout]);
+
   return (
     <AuthContext.Provider
       value={{

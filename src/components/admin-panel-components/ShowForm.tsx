@@ -22,8 +22,9 @@ import {
   useCreateShowMutation,
   useUpdateShowMutation,
 } from "@api/shows/showsQueries";
-import { getProductMetadataQueryOptions } from "@api/products/productsQueries";
+
 import { CreateShowProductData, TProduct } from "@/types";
+import { getProductMetadataQueryOptions } from "@/api/metadata/metadataQueries";
 
 interface ShowFormProps {
   showId?: string;

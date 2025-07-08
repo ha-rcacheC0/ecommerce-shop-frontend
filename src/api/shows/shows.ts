@@ -1,11 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/api/shows/shows.ts
 import { ShowWithProducts, CreateShowData, UpdateShowData } from "../../types";
 import { API_CONFIG } from "../../utils/config";
 
 const BASE_URL = API_CONFIG.BASE_URL + "/shows";
 
-export const getAllShows = async (): Promise<ShowWithProducts[]> => {
-  const response = await fetch(`${BASE_URL}`, {
+// Update the existing getAllShows function to support brand filtering
+export const getAllShows = async (params?: {
+  page?: number;
+  pageSize?: number;
+  typeId?: string;
+  searchTitle?: string;
+  brandId?: string; // Add brand filter
+}): Promise<{ shows: ShowWithProducts[]; pagination: any }> => {
+  const searchParams = new URLSearchParams();
+  if (params?.page) searchParams.append("page", params.page.toString());
+  if (params?.pageSize)
+    searchParams.append("pageSize", params.pageSize.toString());
+  if (params?.typeId) searchParams.append("typeId", params.typeId);
+  if (params?.searchTitle)
+    searchParams.append("searchTitle", params.searchTitle);
+  if (params?.brandId) searchParams.append("brandId", params.brandId); // Add brand filter
+
+  const response = await fetch(`${BASE_URL}?${searchParams}`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -16,9 +33,38 @@ export const getAllShows = async (): Promise<ShowWithProducts[]> => {
   }
 
   const data = await response.json();
-  return data.shows;
+  return { shows: data.shows, pagination: data.pagination };
 };
 
+export const getShowsByBrand = async (
+  brandId: string,
+  params?: {
+    page?: number;
+    pageSize?: number;
+    typeId?: string;
+    searchTitle?: string;
+  }
+): Promise<{ shows: ShowWithProducts[]; brand: any; pagination: any }> => {
+  const searchParams = new URLSearchParams();
+  if (params?.page) searchParams.append("page", params.page.toString());
+  if (params?.pageSize)
+    searchParams.append("pageSize", params.pageSize.toString());
+  if (params?.typeId) searchParams.append("typeId", params.typeId);
+  if (params?.searchTitle)
+    searchParams.append("searchTitle", params.searchTitle);
+
+  const response = await fetch(`${BASE_URL}/brand/${brandId}?${searchParams}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+
+  return await response.json();
+};
 export const getShowsByType = async (
   typeId: string
 ): Promise<ShowWithProducts[]> => {

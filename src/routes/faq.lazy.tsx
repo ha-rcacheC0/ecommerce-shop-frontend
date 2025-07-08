@@ -107,7 +107,7 @@ function RouteComponent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Link
-              to="/shipping"
+              to="/shipping-info"
               className="card bg-base-200 hover:bg-base-300 transition-colors"
             >
               <div className="card-body">

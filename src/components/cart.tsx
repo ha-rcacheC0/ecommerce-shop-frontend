@@ -80,9 +80,15 @@ const Cart = ({
 
   // Check if there's any show product in the cart
   const hasShow = !!products.find((elm) => elm.product.isShow);
+  const onlyApparel = !!products.every((elm) => elm.product.isApparel);
 
   // Pass the hasShow flag to checkOrderType
-  const orderType = checkOrderType(caseSubtotal, unitSubtotal, hasShow);
+  const orderType = checkOrderType(
+    caseSubtotal,
+    unitSubtotal,
+    hasShow,
+    onlyApparel
+  );
 
   // Calculate tax and grand total with tax included
   useEffect(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { z } from "zod";
 
 // Display mappings - we'll retain these for UI presentation
@@ -53,6 +54,7 @@ export const ColorsDisplay: Record<string, string> = {
 export const CategoryDisplay: Record<string, string> = {
   REPEATERS_200_GRAM: "200 Gram Cakes",
   REPEATERS_500_GRAM: "500 Gram Cakes",
+  Apparel: "Apparel",
   ASSORTMENT: "Assortments",
   BOTTLE_ROCKETS: "Bottle Rockets",
   CONE_FLORAL: "Cone & Floral",
@@ -135,12 +137,7 @@ export const BrandDisplay: Record<string, string> = {
   WORLD_CLASS_FIREWORKS: "World Class Fireworks",
 };
 
-// Create string-based schemas instead of enums
-export const EffectsSchema = z.string();
-export const ColorsSchema = z.string();
-export const CategorySchema = z.string();
-export const BrandSchema = z.string();
-
+// Enums and constants
 export const States = {
   AL: "AL",
   AK: "AK",
@@ -193,11 +190,12 @@ export const States = {
   WI: "WI",
   WY: "WY",
 };
+
 export const TerminalCompany = {
   FEDEX: "FedEx",
+  DHL: "DHL",
 };
 
-// Define report status enum
 export enum ReportStatus {
   PENDING = "PENDING",
   PROCESSING = "PROCESSING",
@@ -205,7 +203,6 @@ export enum ReportStatus {
   FAILED = "FAILED",
 }
 
-// Define report type enum
 export enum ReportType {
   SALES = "SALES",
   INVENTORY = "INVENTORY",
@@ -214,14 +211,457 @@ export enum ReportType {
   PRODUCT_PERFORMANCE = "PRODUCT_PERFORMANCE",
 }
 
+// =============================================
+// MAIN INTERFACE DEFINITIONS
+// =============================================
+
+// Basic entity interfaces
+export interface TBrand {
+  id: string;
+  name: string;
+}
+
+export interface TCategory {
+  id: string;
+  name: string;
+}
+
+export interface TColor {
+  id: string;
+  name: string;
+}
+
+export interface TEffect {
+  id: string;
+  name: string;
+}
+
+export interface ShowType {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+export interface ApparelType {
+  id: string;
+  name: string;
+  description: string | null;
+}
+
+export interface TAddress {
+  id: string;
+  street1: string;
+  street2?: string | null;
+  city: string;
+  state: keyof typeof States;
+  postalCode: string;
+}
+
+// Product Variant Interface
+export interface ProductVariant {
+  id: string;
+  sku: string;
+  productId: string;
+  size: string;
+  gender: "MALE" | "FEMALE" | "UNISEX";
+  colorId: string | null;
+  color?: TColor | null;
+  unitPrice: string;
+  availableStock: number;
+  additionalSku?: string | null;
+  weight?: string | null;
+  isActive: boolean;
+}
+
+// Unit Product Interface
+export interface TUnitProduct {
+  id: string;
+  sku: string;
+  productId: string;
+  unitPrice: string;
+  package: number[];
+  availableStock: number;
+}
+
+// Show Product Interface
+export interface ShowProduct {
+  id: string;
+  showId: string;
+  productId: string;
+  quantity: number;
+  notes: string | null;
+  isUnit: boolean;
+  product: TProduct;
+}
+
+// DEPRECATED: Keep for migration compatibility
+export interface ApparelProduct {
+  id: string;
+  productId: string;
+  size: string;
+  colorId: string;
+  unitPrice: string;
+  availableStock: number;
+}
+
+// Main Product Interface
+export interface TProduct {
+  id: string;
+  sku: string;
+  title: string;
+  description: string | null;
+  image: string;
+  videoURL?: string | null;
+  casePrice: string;
+  isCaseBreakable: boolean;
+  inStock: boolean;
+  package: number[];
+
+  // Product type flags
+  isShow?: boolean;
+  isApparel?: boolean;
+
+  // Type-specific IDs
+  showTypeId?: string | null;
+  apparelTypeId?: string | null;
+
+  // Required relationships
+  brandId: string;
+  categoryId: string;
+  brand: TBrand;
+  category: TCategory;
+
+  // Optional relationships
+  colors?: TColor[];
+  effects?: TEffect[];
+  unitProduct?: TUnitProduct | null;
+  showType?: ShowType | null;
+  apparelType?: ApparelType | null;
+
+  // Product variants (for apparel)
+  variants?: ProductVariant[];
+
+  // Show-specific relationships
+  showProducts?: ShowProduct[];
+
+  // DEPRECATED: Keep for migration
+  apparelProducts?: ApparelProduct[] | null;
+}
+
+// User and Auth Interfaces
+export interface UserProfile {
+  firstName?: string | null;
+  lastName?: string | null;
+  dateOfBirth?: Date | null;
+  phoneNumber?: string | null;
+  acceptedTerms: boolean;
+  billingAddress?: TAddress;
+  shippingAddress?: TAddress;
+  canContact?: boolean;
+  userId: string;
+}
+
+export interface TUser {
+  id: string;
+  role: "USER" | "MANAGER" | "ADMIN" | "MEMBER";
+  email: string;
+  lastLogin: string | null;
+}
+
+export interface User {
+  id: string;
+  role: string;
+  email: string;
+  hashedPassword: string;
+  createdOn: string;
+  lastLogin: string | null;
+  profile: UserProfile;
+}
+
+// Cart Interfaces
+export interface TCartProduct {
+  id: string;
+  caseQuantity: number;
+  unitQuantity: number;
+  cartId: string;
+  productId: string;
+  variantId?: string | null;
+  variant?: ProductVariant | null;
+  product: TProduct;
+}
+
+export interface TCart {
+  id: string;
+  userId?: string;
+  cartProducts: TCartProduct[];
+  user: TUser;
+}
+
+// Purchase Interfaces
+export interface TPurchaseItem {
+  id: string;
+  purchaseId: string;
+  productId: string;
+  quantity: number;
+  isUnit: boolean;
+  itemSubTotal: number;
+  variantId?: string | null;
+  variant?: ProductVariant | null;
+  product: TProduct;
+}
+
+// Report Interface
+export interface Report {
+  id: string;
+  type: ReportType;
+  name: string;
+  description?: string;
+  status: ReportStatus;
+  createdAt: string;
+  completedAt?: string | null;
+  parameters?: Record<string, any>;
+  createdBy: string;
+  fileUrl?: string | null;
+  errorMessage?: string | null;
+}
+
+// Terminal Interface
+export interface TApprovedTerminal {
+  id: string;
+  acceptOutOfStateLicence: boolean;
+  terminalName: string;
+  businessRequired: boolean;
+  address: TAddress;
+  addressId: string;
+  company: keyof typeof TerminalCompany;
+}
+
+// =============================================
+// API REQUEST/RESPONSE TYPES
+// =============================================
+
+// Auth Types
+export interface SignInRequest {
+  email: string;
+  password: string;
+}
+
+export interface SignInResponse {
+  token?: string;
+  userInfo?: {
+    email: string;
+    role: "USER" | "MANAGER" | "ADMIN" | "MEMBER";
+    profile?: UserProfile;
+    Cart?: TCart;
+  };
+  message?: string;
+}
+
+export interface UserCreateRequest {
+  email: string;
+  password: string;
+}
+
+// API Response Types
+export interface PaginatedResponse<T> {
+  items: T[];
+  pagination: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
+export interface ProductsResponse {
+  contents: TProduct[];
+  hasMore: boolean;
+  totalPages: number;
+  totalItems: number;
+  currentPage: number;
+}
+
+export type UsersResponse = PaginatedResponse<User>;
+
+// =============================================
+// CREATE/UPDATE DATA TYPES
+// =============================================
+
+// Product Creation Types
+export interface CreateProductData {
+  sku: string;
+  title: string;
+  description?: string;
+  image?: string;
+  casePrice: string;
+  inStock: boolean;
+  package: string; // Comma-separated list
+  isCaseBreakable: boolean;
+  videoURL?: string;
+  brandId: string;
+  categoryId: string;
+  colors: string[]; // Array of color IDs
+  effects: string[]; // Array of effect IDs
+}
+
+export interface UpdateProductData extends Partial<CreateProductData> {}
+
+// Apparel Creation Types
+export interface CreateApparelProductData {
+  title: string;
+  description?: string;
+  image?: string;
+  casePrice: string;
+  inStock: boolean;
+  package: string;
+  brandId: string;
+  categoryId: string;
+  apparelTypeId: string;
+  colors: string[];
+  variants: {
+    size: string;
+    gender: "MALE" | "FEMALE" | "UNISEX";
+    colorId?: string;
+    unitPrice: string;
+    availableStock?: number;
+  }[];
+}
+
+export interface UpdateApparelData extends Partial<CreateApparelProductData> {}
+
+// Variant Creation Types
+export interface CreateVariantData {
+  sku: string;
+  productId: string;
+  size: string;
+  gender: "MALE" | "FEMALE" | "UNISEX";
+  colorId?: string;
+  unitPrice: string;
+  availableStock?: number;
+  additionalSku?: string;
+  weight?: string;
+  isActive?: boolean;
+}
+
+export interface UpdateVariantData extends Partial<CreateVariantData> {}
+
+// Show Creation Types
+export interface CreateShowProductData {
+  productId: string;
+  quantity: number;
+  isUnit: boolean;
+  notes?: string;
+}
+
+export interface CreateShowData {
+  title: string;
+  description?: string;
+  casePrice: number;
+  image?: string;
+  videoURL?: string;
+  inStock: boolean;
+  showTypeId: string;
+  brandId: string;
+  categoryId: string;
+  products: CreateShowProductData[];
+}
+
+export interface UpdateShowData extends Partial<CreateShowData> {}
+
+// Cart API Types
+export interface AddToCartParams {
+  productId: string;
+  cartId: string;
+  isUnit: boolean;
+  variantId?: string;
+}
+
+export interface UpdateQuantityParams {
+  productId: string;
+  cartId: string;
+  quantity: number;
+  isUnit: boolean;
+  variantId?: string;
+}
+
+export interface RemoveFromCartParams {
+  productId: string;
+  cartId: string;
+  variantId?: string;
+}
+
+// =============================================
+// FILTER AND SPECIALIZED TYPES
+// =============================================
+
+export interface ProductFilters {
+  page: number;
+  pageSize: number;
+  searchTitle?: string;
+  selectedBrands?: string[];
+  selectedCategories?: string[];
+  selectedColors?: string[];
+  selectedEffects?: string[];
+  isShow?: boolean;
+  isApparel?: boolean;
+  inStock?: boolean;
+}
+
+export interface ApparelFilter {
+  searchTitle: string;
+  setSearchTitle: (value: string | []) => void;
+  selectedBrands: string[];
+  setSelectedBrands: (brand: string | []) => void;
+  selectedCategories: string[];
+  setSelectedCategories: (category: string | []) => void;
+  selectedColors: string[];
+  setSelectedColors: (color: string | []) => void;
+  selectedApparelTypes: string[];
+  setSelectedApparelTypes: (apparelType: string | []) => void;
+  selectedGenders: string[];
+  setSelectedGenders: (gender: string | []) => void;
+  selectedSizes: string[];
+  setSelectedSizes: (size: string | []) => void;
+  isFetching: boolean;
+  isPlaceholderData: boolean;
+  showOutOfStock: boolean;
+  setShowOutOfStock: (value: boolean) => void;
+  setPage: (page: number) => void;
+  page: number;
+  hasMore: boolean;
+  pageSize: number;
+  setPageAmount: (amount: number) => void;
+}
+
+// Specialized Product Types
+export type ShowWithProducts = TProduct & {
+  isShow: true;
+  showType: ShowType;
+  showProducts: ShowProduct[];
+};
+
+export type TInventoryUnitProduct = TUnitProduct & {
+  product: TProduct;
+};
+
+// =============================================
+// ZOD SCHEMAS (Keep only for validation)
+// =============================================
+
+// Create string-based schemas instead of enums
+export const EffectsSchema = z.string();
+export const ColorsSchema = z.string();
+export const CategorySchema = z.string();
+export const BrandSchema = z.string();
+
 // Create a Zod enum schema from the states enum
 const StateEnum = z.nativeEnum(States);
-const TerminalCompanyEnum = z.nativeEnum(TerminalCompany);
 
 const AddressSchema = z.object({
   id: z.string(),
   street1: z.string(),
-  street2: z.string().optional(),
+  street2: z.string().nullable().optional(),
   city: z.string(),
   state: StateEnum,
   postalCode: z.string(),
@@ -255,189 +695,43 @@ export const ShowTypeSchema = z.object({
   description: z.string().nullable(),
 });
 
-interface TProductInterface {
-  id: string;
-  sku: string;
-  title: string;
-  description: string | null;
-  casePrice: string;
-  isShow?: boolean;
-  inStock?: boolean;
-  isCaseBreakable: boolean;
-  showTypeId?: string | null;
-  category: { id: string; name: string };
-  brand: { id: string; name: string };
-  showType?: { id: string; name: string; description: string | null } | null;
-  colors?: { id: string; name: string }[];
-  effects?: { id: string; name: string }[];
-  image: string;
-  videoURL?: string | null;
-  package: number[];
-  unitProduct?: TUnitProductInterface | null;
-  showProducts?: ShowProductInterface[];
-}
+export const ApparelTypeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+});
 
-interface ShowProductInterface {
-  id: string;
-  showId: string;
-  productId: string;
-  quantity: number;
-  notes: string | null;
-  isUnit: boolean;
-  product: TProductInterface;
-}
-
-interface TUnitProductInterface {
-  id: string;
-  sku: string;
-  productId: string;
-  unitPrice: string;
-  package: number[];
-  availableStock: number;
-}
-interface TInventoryUnitProductInterface {
-  id: string;
-  sku: string;
-  product: TProductInterface;
-  productId: string;
-  unitPrice: string;
-  package: number[];
-  availableStock: number;
-}
-
-export const TProductSchema: z.ZodType<TProductInterface> = z.lazy(() =>
-  z.object({
-    id: z.string(),
-    sku: z.string(),
-    title: z.string(),
-    description: z.string().nullable(),
-    casePrice: z.string(),
-    isShow: z.boolean().optional(),
-    isCaseBreakable: z.boolean(),
-    inStock: z.boolean(),
-    showTypeId: z.string().nullable().optional(),
-    category: z.object({ id: z.string(), name: z.string() }),
-    brand: z.object({ id: z.string(), name: z.string() }),
-    showType: ShowTypeSchema.nullable().optional(),
-    colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-    effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
-    image: z.string(),
-    videoURL: z.string().url().nullable().optional(),
-    package: z.array(z.number()),
-    unitProduct: TUnitProductSchema.optional().nullable(),
-    showProducts: z.array(ShowProductSchema).optional(),
-  })
-);
-
-export const ShowProductSchema: z.ZodType<ShowProductInterface> = z.lazy(() =>
-  z.object({
-    id: z.string(),
-    showId: z.string(),
-    productId: z.string(),
-    quantity: z.number(),
-    isUnit: z.boolean(),
-    notes: z.string().nullable(),
-    product: TProductSchema,
-  })
-);
-
-export const TUnitProductSchema: z.ZodType<TUnitProductInterface> = z.lazy(() =>
-  z.object({
-    id: z.string(),
-    sku: z.string(),
-    productId: z.string(),
-    unitPrice: z.string(),
-    package: z.array(z.number()),
-    availableStock: z.number(),
-  })
-);
-export const TInventoryUnitProductSchema: z.ZodType<TInventoryUnitProductInterface> =
-  z.lazy(() =>
-    z.object({
-      id: z.string(),
-      sku: z.string(),
-      product: TProductSchema,
-      productId: z.string(),
-      unitPrice: z.string(),
-      package: z.array(z.number()),
-      availableStock: z.number(),
-    })
-  );
-
-// Define the types from the schemas
-export type ShowType = z.infer<typeof ShowTypeSchema>;
-export type ShowProduct = z.infer<typeof ShowProductSchema>;
-export type TUnitProduct = z.infer<typeof TUnitProductSchema>;
-export type TProduct = z.infer<typeof TProductSchema>;
-export type TInventoryUnitProduct = z.infer<typeof TInventoryUnitProductSchema>;
-
-// Product Types
-export type CreateProductData = {
-  sku: string;
-  title: string;
-  description?: string;
-  image?: string;
-  casePrice: string;
-  inStock: boolean;
-  package: string; // Comma-separated list
-  isCaseBreakable: boolean;
-  videoURL?: string;
-  brandId: string;
-  categoryId: string;
-  colors: string[]; // Array of color IDs
-  effects: string[]; // Array of effect IDs
-};
-
-export type UpdateProductData = Partial<CreateProductData>;
-
-// Show Types
-export type CreateShowProductData = {
-  productId: string;
-  quantity: number;
-  isUnit: boolean;
-  notes?: string;
-};
-
-export type CreateShowData = {
-  title: string;
-  description?: string;
-  casePrice: number;
-  image?: string;
-  videoURL?: string;
-  inStock: boolean;
-  showTypeId: string;
-  brandId: string;
-  categoryId: string;
-  products: CreateShowProductData[];
-};
-
-export type UpdateShowData = Partial<CreateShowData>;
-
-// Update ProductFilters to include isShow
-export interface ProductFilters {
-  page: number;
-  pageSize: number;
-  searchTitle?: string;
-  selectedBrands?: string[];
-  selectedCategories?: string[];
-  selectedColors?: string[];
-  selectedEffects?: string[];
-  isShow?: boolean;
-  inStock?: boolean;
-}
-
-// Enhanced type for a product that is a show
-export type ShowWithProducts = TProduct & {
-  isShow: true;
-  showType: ShowType;
-  showProducts: ShowProduct[];
-};
+export const TProductSchema = z.object({
+  id: z.string(),
+  sku: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  casePrice: z.string(),
+  isShow: z.boolean().optional(),
+  isApparel: z.boolean().optional(),
+  apparelTypeId: z.string().nullable().optional(),
+  apparelType: ApparelTypeSchema.nullable().optional(),
+  isCaseBreakable: z.boolean(),
+  inStock: z.boolean().optional(),
+  showTypeId: z.string().nullable().optional(),
+  category: z.object({ id: z.string(), name: z.string() }),
+  brand: z.object({ id: z.string(), name: z.string() }),
+  showType: ShowTypeSchema.nullable().optional(),
+  colors: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  effects: z.array(z.object({ id: z.string(), name: z.string() })).optional(),
+  image: z.string(),
+  videoURL: z.string().url().nullable().optional(),
+  package: z.array(z.number()),
+  // Note: unitProduct, showProducts, variants would need recursive definitions
+});
 
 const CartProductSchema = z.object({
   id: z.string(),
   caseQuantity: z.number(),
   unitQuantity: z.number(),
   cartId: z.string(),
+  productId: z.string(),
+  variantId: z.string().nullable().optional(),
   product: TProductSchema,
 });
 
@@ -470,11 +764,9 @@ export const SignInResponseSchema = z.object({
       Cart: TCartSchema.optional(),
     })
     .optional(),
-
   message: z.string().optional(),
 });
 
-// Zod schema for a report
 export const ReportSchema = z.object({
   id: z.string(),
   type: z.nativeEnum(ReportType),
@@ -484,15 +776,12 @@ export const ReportSchema = z.object({
   createdAt: z.string().datetime(),
   completedAt: z.string().datetime().nullable(),
   parameters: z.record(z.string(), z.any()).optional(),
-  createdBy: z.string(), // userId
+  createdBy: z.string(),
   fileUrl: z.string().nullable(),
   errorMessage: z.string().nullable(),
 });
 
-// TypeScript type derived from the schema
-export type Report = z.infer<typeof ReportSchema>;
-
-// Define report configuration for available report types
+// Report configurations
 export const reportConfigurations = {
   [ReportType.SALES]: {
     name: "Sales Report",
@@ -542,69 +831,4 @@ export const reportConfigurations = {
       includeCategoryAnalysis: z.boolean().optional().default(true),
     }),
   },
-};
-
-const ApprovedTerminalSchema = z.object({
-  id: z.string(),
-  acceptOutOfStateLicence: z.boolean(),
-  terminalName: z.string(),
-  businessRequired: z.boolean(),
-  address: AddressSchema,
-  addressId: z.string(),
-  company: TerminalCompanyEnum,
-});
-
-export interface User {
-  id: string;
-  role: string;
-  email: string;
-  hashedPassword: string;
-  createdOn: string;
-  lastLogin: string | null;
-  profile: UserProfile;
-}
-
-export interface PaginatedResponse<T> {
-  items: T[];
-  pagination: {
-    currentPage: number;
-    pageSize: number;
-    totalItems: number;
-    totalPages: number;
-    hasMore: boolean;
-  };
-}
-
-export type UsersResponse = PaginatedResponse<User>;
-
-// Define the response type from our API
-type ProductsResponse = {
-  contents: TProduct[];
-  hasMore: boolean;
-  totalPages: number;
-  totalItems: number;
-  currentPage: number;
-};
-
-// Types derived from the schemas
-type SignInRequest = z.infer<typeof SignInRequestSchema>;
-type SignInResponse = z.infer<typeof SignInResponseSchema>;
-type UserCreateRequest = z.infer<typeof createUserRequestSchema>;
-
-type UserProfile = z.infer<typeof UserProfileSchema>;
-type TCartProduct = z.infer<typeof CartProductSchema>;
-type TCart = z.infer<typeof TCartSchema>;
-type TAddress = z.infer<typeof AddressSchema>;
-type TApprovedTerminal = z.infer<typeof ApprovedTerminalSchema>;
-
-export type {
-  SignInRequest,
-  SignInResponse,
-  UserCreateRequest,
-  UserProfile,
-  TCartProduct,
-  TCart,
-  TAddress,
-  TApprovedTerminal,
-  ProductsResponse,
 };

@@ -7,7 +7,7 @@ export const Route = createLazyFileRoute("/terms-of-use")({
 function RouteComponent() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-primary">
+      <h1 className="text-3xl font-bold text-center mb-8 text-secondary">
         Terms of Use
       </h1>
 
