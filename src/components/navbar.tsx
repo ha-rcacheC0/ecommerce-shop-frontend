@@ -20,7 +20,7 @@ export const Navbar = () => {
     navigate({ to: "/" });
   };
 
-  const cartId = auth.user?.userInfo?.Cart?.id ?? "";
+  const cartId = auth.user?.userInfo?.cart?.id ?? "";
 
   const { data: cartInfo } = useQuery(cartItemsQueryOptions(cartId, !!cartId));
 

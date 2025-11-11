@@ -24,7 +24,7 @@ export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
   );
 
   const { authState, user } = useAuth();
-  const userCartId = user?.userInfo?.Cart?.id;
+  const userCartId = user?.userInfo?.cart?.id;
 
   const addItem = useAddItemToCartMutation(
     userCartId!,

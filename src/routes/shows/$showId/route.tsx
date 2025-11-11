@@ -26,7 +26,7 @@ function ShowDetailPage() {
 
   const { data: show, isLoading } = useQuery(getShowByIdQueryOptions(showId));
 
-  const userCartId = user?.userInfo?.Cart!.id;
+  const userCartId = user?.userInfo?.cart!.id;
 
   const addToCart = useAddItemToCartMutation(
     userCartId!,
