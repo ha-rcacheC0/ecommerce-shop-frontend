@@ -49,7 +49,7 @@ const ApparelProductDetailPage = () => {
     }
   }, [product.data, selectedVariant]);
 
-  const userCartId = user?.userInfo?.Cart?.id;
+  const userCartId = user?.userInfo?.cart?.id;
   const addItem = useAddItemToCartMutation(
     userCartId!,
     () => {

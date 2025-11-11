@@ -449,10 +449,13 @@ export interface SignInRequest {
 export interface SignInResponse {
   token?: string;
   userInfo?: {
+    id: string;
     email: string;
     role: "USER" | "MANAGER" | "ADMIN" | "MEMBER";
+    lastLogin: string | null;
+    createdOn: string | null;
     profile?: UserProfile;
-    Cart?: TCart;
+    cart?: TCart;
   };
   message?: string;
 }
@@ -758,10 +761,13 @@ export const SignInResponseSchema = z.object({
   token: z.string().optional(),
   userInfo: z
     .object({
+      id: z.string(),
       email: z.string().email(),
       role: z.enum(["USER", "MANAGER", "ADMIN", "MEMBER"]),
+      lastLogin: z.string().nullable(),
+      createdOn: z.string().nullable(),
       profile: UserProfileSchema.optional(),
-      Cart: TCartSchema.optional(),
+      cart: TCartSchema.optional(),
     })
     .optional(),
   message: z.string().optional(),

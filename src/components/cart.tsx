@@ -69,8 +69,16 @@ const Cart = ({
   const subtotal = products.reduce((acc, elm) => {
     const productCaseSubtotal =
       parseFloat(elm.product.casePrice) * elm.caseQuantity;
-    const productUnitSubtotal =
-      parseFloat(elm.product.unitProduct?.unitPrice || "0") * elm.unitQuantity;
+
+    // Handle variant pricing for apparel products
+    const variant = elm.product.variants?.find((v) => v.id === elm.variantId);
+    const unitPrice = variant
+      ? parseFloat(variant.unitPrice)
+      : elm.product.unitProduct
+        ? parseFloat(elm.product.unitProduct.unitPrice)
+        : 0;
+
+    const productUnitSubtotal = unitPrice * elm.unitQuantity;
 
     caseSubtotal += productCaseSubtotal;
     unitSubtotal += productUnitSubtotal;
@@ -457,14 +465,14 @@ const Cart = ({
             </div>
             <div className="mt-6">
               <HelcimPayButton
-                cartId={user!.userInfo!.Cart!.id}
+                cartId={user!.userInfo!.cart!.id}
                 amounts={{ subtotal, tax, liftGateFee, shipping, grandTotal }}
                 btnDisabled={
                   (!isShippingAddressSet && !isUpdatingValues) ||
                   !isShippableState ||
                   !isToSAccepted
                 }
-                userId={user!.userInfo!.Cart!.userId!}
+                userId={user!.userInfo!.cart!.userId!}
                 shippingAddressId={
                   isShippingAddressSet ? currentShippingAddress!.id : ""
                 }

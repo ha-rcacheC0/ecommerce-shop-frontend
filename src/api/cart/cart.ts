@@ -19,7 +19,12 @@ export const addProductToCart = async ({
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/add`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, isUnit, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      isUnit,
+      variantId: variantId || null // Convert empty string/undefined to null
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -37,7 +42,11 @@ export const removeProductFromCart = async ({
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/remove`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      variantId: variantId || null // Convert empty string to null
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -59,7 +68,13 @@ export const updateProductQuantity = async ({
 }) => {
   return await fetch(`${BASE_URL}/${cartId}/updateQuantity`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, quantity, isUnit, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      quantity,
+      isUnit,
+      variantId: variantId || null // Convert empty string to null
+    }),
     headers: {
       "Content-Type": "application/json",
     },
