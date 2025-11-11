@@ -1,8 +1,6 @@
 // src/config.ts
 
-// http://localhost:4000/
+// Use environment variable or fallback to production API
 export const API_CONFIG = {
-  BASE_URL: "https://crew-fireworks-api.fly.dev/api",
-
-  // BASE_URL: "http://localhost:4000/api",
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || "https://crew-fireworks-api.fly.dev/api",
 };
