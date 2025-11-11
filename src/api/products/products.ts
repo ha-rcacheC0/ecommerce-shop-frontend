@@ -24,6 +24,9 @@ export const getAllProductsQuery = async (
   if (filters.isShow !== undefined) {
     params.append("isShow", filters.isShow.toString());
   }
+  if (filters.isApparel !== undefined) {
+    params.append("isApparel", filters.isApparel.toString());
+  }
   if (filters.inStock !== undefined) {
     params.append("inStock", filters.inStock.toString());
   }

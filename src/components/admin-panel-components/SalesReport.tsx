@@ -17,6 +17,7 @@ import {
   faBox,
   faTheaterMasks,
   faBoxes,
+  faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useAuth } from "@providers/auth.provider";
@@ -161,6 +162,16 @@ const SalesReport: React.FC = () => {
   };
 
   function showProductTypeBadge(purchaseItem: TPurchaseItem): React.ReactNode {
+    if (purchaseItem.variant) {
+      return (
+        <div className="badge badge-accent mr-2">
+          <span className="mr-1">
+            <FontAwesomeIcon icon={faTShirt} />
+          </span>
+          Apparel
+        </div>
+      );
+    }
     if (purchaseItem.product.isShow)
       return (
         <div className="badge badge-primary mr-2">
@@ -189,6 +200,22 @@ const SalesReport: React.FC = () => {
       </div>
     );
   }
+
+  // Helper function to get the display name for a product/variant
+  const getProductDisplayName = (purchaseItem: TPurchaseItem): string => {
+    return purchaseItem.product.title;
+  };
+
+  // Helper function to get the SKU for display
+  const getDisplaySku = (purchaseItem: TPurchaseItem): string => {
+    if (purchaseItem.variant) {
+      // For apparel items with variants, show variant SKU if available
+      return purchaseItem.variant.sku || purchaseItem.product.sku;
+    }
+    // For regular products, show the product SKU
+    return purchaseItem.product.sku;
+  };
+  console.log(selectedOrderDetail);
 
   return (
     <>
@@ -546,19 +573,33 @@ const SalesReport: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {selectedOrderDetail.purchaseItems.map((item) => (
-                          <tr key={item.product.id}>
-                            <td className="font-mono font-bold">
-                              {item.product.sku}
-                            </td>
-                            <td>{item.product.title}</td>
-                            <td>{showProductTypeBadge(item)}</td>
-                            <td>{item.quantity}</td>
-                            <td className="font-medium">
-                              ${Number(item.itemSubTotal).toFixed(2)}
-                            </td>
-                          </tr>
-                        ))}
+                        {selectedOrderDetail.purchaseItems.map(
+                          (item, index) => (
+                            <tr key={`${item.product.id}-${index}`}>
+                              <td className="font-mono font-bold">
+                                {getDisplaySku(item)}
+                              </td>
+                              <td>
+                                <div>
+                                  <div className="font-medium">
+                                    {getProductDisplayName(item)}
+                                  </div>
+                                  {item.variant && (
+                                    <div className="text-sm text-base-content/60">
+                                      {item.variant.color?.name} /{" "}
+                                      {item.variant.size}
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+                              <td>{showProductTypeBadge(item)}</td>
+                              <td>{item.quantity}</td>
+                              <td className="font-medium">
+                                ${Number(item.itemSubTotal).toFixed(2)}
+                              </td>
+                            </tr>
+                          )
+                        )}
                       </tbody>
                     </table>
                   </div>

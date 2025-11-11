@@ -90,7 +90,6 @@ const ApparelProducts: React.FC = () => {
       inStock: showOutOfStock ? undefined : true,
     })
   );
-  console.log("Apparel Products:", apparelProducts);
 
   const updateUrl = useCallback(() => {
     const searchParams: Record<string, string | string[]> = {

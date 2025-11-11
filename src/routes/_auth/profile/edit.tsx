@@ -1,8 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useMemo } from "react";
 import { States, UserProfileSchema } from "@/types";
 import {
   useUserInfoPostMutation,
@@ -19,6 +17,39 @@ export const ProfileForm = () => {
   const navigate = useNavigate();
   const [sameAddress, setSameAddress] = useState(true);
 
+  // Transform API response to match form structure
+  const transformedUserProfile = useMemo(() => {
+    if (!userProfile) return undefined;
+
+    return {
+      firstName: userProfile.firstName || "",
+      lastName: userProfile.lastName || "",
+      dateOfBirth: userProfile.dateOfBirth
+        ? new Date(userProfile.dateOfBirth).toISOString().split("T")[0]
+        : "",
+      phoneNumber: userProfile.phoneNumber || "",
+      canContact: userProfile.canContact || false,
+      acceptedTerms: userProfile.acceptedTerms || false,
+      userId: userProfile.userId,
+      billingAddress: userProfile.billingAddress || {
+        id: "",
+        street1: "",
+        street2: "",
+        city: "",
+        state: "" as keyof typeof States,
+        postalCode: "",
+      },
+      shippingAddress: userProfile.shippingAddress || {
+        id: "",
+        street1: "",
+        street2: "",
+        city: "",
+        state: "" as keyof typeof States,
+        postalCode: "",
+      },
+    };
+  }, [userProfile]);
+
   const mutation = useUserInfoPostMutation(
     auth.user!.token!,
     () => {
@@ -31,18 +62,57 @@ export const ProfileForm = () => {
 
   const form = useForm({
     validators: {
-      onChange: (values) => {
-        UserProfileSchema.parse(values.value);
+      // Only validate on submit - no onChange validation at form level
+      onSubmit: (values) => {
+        const transformedValues = {
+          ...values.value,
+          dateOfBirth: values.value.dateOfBirth || null,
+          billingAddress:
+            values.value.billingAddress && values.value.billingAddress.street1
+              ? values.value.billingAddress
+              : undefined,
+          shippingAddress:
+            values.value.shippingAddress && values.value.shippingAddress.street1
+              ? values.value.shippingAddress
+              : undefined,
+        };
+
+        UserProfileSchema.parse(transformedValues);
       },
     },
-    defaultValues: userProfile,
+    defaultValues: transformedUserProfile,
     onSubmit: ({ value }) => {
-      if (sameAddress && value.billingAddress) {
-        value.shippingAddress = { ...value.billingAddress };
-      }
-      mutation.mutate({ token: auth.user!.token!, body: value });
+      const submitData = {
+        ...value,
+        dateOfBirth: value.dateOfBirth ? new Date(value.dateOfBirth) : null,
+        shippingAddress:
+          sameAddress && value.billingAddress
+            ? { ...value.billingAddress }
+            : value.shippingAddress,
+      };
+      mutation.mutate({ token: auth.user!.token!, body: submitData });
     },
   });
+
+  useEffect(() => {
+    if (transformedUserProfile) {
+      form.setFieldValue("firstName", transformedUserProfile.firstName);
+      form.setFieldValue("lastName", transformedUserProfile.lastName);
+      form.setFieldValue("dateOfBirth", transformedUserProfile.dateOfBirth);
+      form.setFieldValue("phoneNumber", transformedUserProfile.phoneNumber);
+      form.setFieldValue("canContact", transformedUserProfile.canContact);
+      form.setFieldValue("acceptedTerms", transformedUserProfile.acceptedTerms);
+      form.setFieldValue("userId", transformedUserProfile.userId);
+      form.setFieldValue(
+        "billingAddress",
+        transformedUserProfile.billingAddress
+      );
+      form.setFieldValue(
+        "shippingAddress",
+        transformedUserProfile.shippingAddress
+      );
+    }
+  }, [transformedUserProfile, form]);
 
   useEffect(() => {
     if (userProfile) {
@@ -85,14 +155,26 @@ export const ProfileForm = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* First Name */}
-            <form.Field name="firstName">
+            <form.Field
+              name="firstName"
+              validators={{
+                onChangeAsync: async ({ value }) => {
+                  if (!value || value.trim().length === 0) {
+                    return "First name is required";
+                  }
+                  return undefined;
+                },
+              }}
+            >
               {(field) => (
                 <div>
                   <label className="floating-label">
                     <span>First Name</span>
                     <input
                       type="text"
-                      className="input input-bordered w-full"
+                      className={`input input-bordered w-full ${
+                        field.state.meta.errors.length > 0 ? "input-error" : ""
+                      }`}
                       value={field.state.value ?? ""}
                       onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
@@ -104,14 +186,26 @@ export const ProfileForm = () => {
             </form.Field>
 
             {/* Last Name */}
-            <form.Field name="lastName">
+            <form.Field
+              name="lastName"
+              validators={{
+                onChangeAsync: async ({ value }) => {
+                  if (!value || value.trim().length === 0) {
+                    return "Last name is required";
+                  }
+                  return undefined;
+                },
+              }}
+            >
               {(field) => (
                 <div>
                   <label className="floating-label">
                     <span>Last Name</span>
                     <input
                       type="text"
-                      className="input input-bordered w-full"
+                      className={`input input-bordered w-full ${
+                        field.state.meta.errors.length > 0 ? "input-error" : ""
+                      }`}
                       value={field.state.value ?? ""}
                       onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
@@ -123,27 +217,33 @@ export const ProfileForm = () => {
             </form.Field>
 
             {/* Date of Birth */}
-            <form.Field name="dateOfBirth">
+            <form.Field
+              name="dateOfBirth"
+              validators={{
+                onChangeAsync: async ({ value }) => {
+                  if (!value || value.trim().length === 0) {
+                    return "Date of birth is required";
+                  }
+                  // Basic date validation
+                  const date = new Date(value);
+                  if (isNaN(date.getTime())) {
+                    return "Please enter a valid date";
+                  }
+                  return undefined;
+                },
+              }}
+            >
               {(field) => (
                 <div>
                   <label className="floating-label">
                     <span>Date of Birth</span>
                     <input
                       type="date"
-                      className="input input-bordered w-full"
-                      value={
-                        field.state.value
-                          ? new Date(field.state.value)
-                              .toISOString()
-                              .split("T")[0]
-                          : ""
-                      }
-                      onChange={(e) => {
-                        const dateValue = e.target.value
-                          ? new Date(e.target.value)
-                          : undefined;
-                        field.handleChange(dateValue);
-                      }}
+                      className={`input input-bordered w-full ${
+                        field.state.meta.errors.length > 0 ? "input-error" : ""
+                      }`}
+                      value={field.state.value ?? ""}
+                      onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
                     />
                   </label>
@@ -153,14 +253,31 @@ export const ProfileForm = () => {
             </form.Field>
 
             {/* Phone Number */}
-            <form.Field name="phoneNumber">
+            <form.Field
+              name="phoneNumber"
+              validators={{
+                onChangeAsync: async ({ value }) => {
+                  if (!value || value.trim().length === 0) {
+                    return "Phone number is required";
+                  }
+                  // Basic phone validation
+                  const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+                  if (!phoneRegex.test(value.replace(/[\s\-()]/g, ""))) {
+                    return "Please enter a valid phone number";
+                  }
+                  return undefined;
+                },
+              }}
+            >
               {(field) => (
                 <div>
                   <label className="floating-label">
                     <span>Phone Number</span>
                     <input
                       type="tel"
-                      className="input input-bordered w-full"
+                      className={`input input-bordered w-full ${
+                        field.state.meta.errors.length > 0 ? "input-error" : ""
+                      }`}
                       value={field.state.value ?? ""}
                       onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
@@ -195,12 +312,12 @@ export const ProfileForm = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    id="canContact"
+                    id="acceptedTerms"
                     className="checkbox checkbox-primary"
                     checked={field.state.value ?? false}
                     onChange={(e) => field.handleChange(e.target.checked)}
                   />
-                  <label htmlFor="canContact" className="cursor-pointer">
+                  <label htmlFor="acceptedTerms" className="cursor-pointer">
                     I accept the Terms and Conditions outlined{" "}
                     <Link className="link" to="/terms-of-use">
                       here
@@ -220,14 +337,26 @@ export const ProfileForm = () => {
 
           <div className="grid grid-cols-1 gap-4">
             {/* Street 1 */}
-            <form.Field name="billingAddress.street1">
+            <form.Field
+              name="billingAddress.street1"
+              validators={{
+                onChangeAsync: async ({ value }) => {
+                  if (!value || value.trim().length === 0) {
+                    return "Street address is required";
+                  }
+                  return undefined;
+                },
+              }}
+            >
               {(field) => (
                 <div>
                   <label className="floating-label">
                     <span>Street Address</span>
                     <input
                       type="text"
-                      className="input input-bordered w-full"
+                      className={`input input-bordered w-full ${
+                        field.state.meta.errors.length > 0 ? "input-error" : ""
+                      }`}
                       value={field.state.value ?? ""}
                       onChange={(e) => field.handleChange(e.target.value)}
                       onBlur={field.handleBlur}
@@ -259,14 +388,28 @@ export const ProfileForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* City */}
-              <form.Field name="billingAddress.city">
+              <form.Field
+                name="billingAddress.city"
+                validators={{
+                  onChangeAsync: async ({ value }) => {
+                    if (!value || value.trim().length === 0) {
+                      return "City is required";
+                    }
+                    return undefined;
+                  },
+                }}
+              >
                 {(field) => (
                   <div>
                     <label className="floating-label">
                       <span>City</span>
                       <input
                         type="text"
-                        className="input input-bordered w-full"
+                        className={`input input-bordered w-full ${
+                          field.state.meta.errors.length > 0
+                            ? "input-error"
+                            : ""
+                        }`}
                         value={field.state.value ?? ""}
                         onChange={(e) => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
@@ -278,13 +421,30 @@ export const ProfileForm = () => {
               </form.Field>
 
               {/* State */}
-              <form.Field name="billingAddress.state">
+              <form.Field
+                name="billingAddress.state"
+                validators={{
+                  onChangeAsync: async ({ value }) => {
+                    if (!value || value.trim().length === 0) {
+                      return "State is required";
+                    }
+                    if (!(value in States)) {
+                      return "Please select a valid state";
+                    }
+                    return undefined;
+                  },
+                }}
+              >
                 {(field) => (
                   <div>
                     <label className="floating-label">
                       <span>State</span>
                       <select
-                        className="select select-bordered w-full"
+                        className={`select select-bordered w-full ${
+                          field.state.meta.errors.length > 0
+                            ? "select-error"
+                            : ""
+                        }`}
                         value={field.state.value ?? ""}
                         onChange={(e) =>
                           field.handleChange(
@@ -309,14 +469,33 @@ export const ProfileForm = () => {
               </form.Field>
 
               {/* Postal Code */}
-              <form.Field name="billingAddress.postalCode">
+              <form.Field
+                name="billingAddress.postalCode"
+                validators={{
+                  onChangeAsync: async ({ value }) => {
+                    if (!value || value.trim().length === 0) {
+                      return "Postal code is required";
+                    }
+                    // Basic postal code validation (US format)
+                    const postalRegex = /^\d{5}(-\d{4})?$/;
+                    if (!postalRegex.test(value)) {
+                      return "Please enter a valid postal code (e.g., 12345 or 12345-6789)";
+                    }
+                    return undefined;
+                  },
+                }}
+              >
                 {(field) => (
                   <div>
                     <label className="floating-label">
                       <span>Postal Code</span>
                       <input
                         type="text"
-                        className="input input-bordered w-full"
+                        className={`input input-bordered w-full ${
+                          field.state.meta.errors.length > 0
+                            ? "input-error"
+                            : ""
+                        }`}
                         value={field.state.value ?? ""}
                         onChange={(e) => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
@@ -353,14 +532,28 @@ export const ProfileForm = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {/* Street 1 */}
-              <form.Field name="shippingAddress.street1">
+              <form.Field
+                name="shippingAddress.street1"
+                validators={{
+                  onChangeAsync: async ({ value }) => {
+                    if (!value || value.trim().length === 0) {
+                      return "Street address is required";
+                    }
+                    return undefined;
+                  },
+                }}
+              >
                 {(field) => (
                   <div>
                     <label className="floating-label">
                       <span>Street Address</span>
                       <input
                         type="text"
-                        className="input input-bordered w-full"
+                        className={`input input-bordered w-full ${
+                          field.state.meta.errors.length > 0
+                            ? "input-error"
+                            : ""
+                        }`}
                         value={field.state.value ?? ""}
                         onChange={(e) => field.handleChange(e.target.value)}
                         onBlur={field.handleBlur}
@@ -392,14 +585,28 @@ export const ProfileForm = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* City */}
-                <form.Field name="shippingAddress.city">
+                <form.Field
+                  name="shippingAddress.city"
+                  validators={{
+                    onChangeAsync: async ({ value }) => {
+                      if (!value || value.trim().length === 0) {
+                        return "City is required";
+                      }
+                      return undefined;
+                    },
+                  }}
+                >
                   {(field) => (
                     <div>
                       <label className="floating-label">
                         <span>City</span>
                         <input
                           type="text"
-                          className="input input-bordered w-full"
+                          className={`input input-bordered w-full ${
+                            field.state.meta.errors.length > 0
+                              ? "input-error"
+                              : ""
+                          }`}
                           value={field.state.value ?? ""}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -411,13 +618,30 @@ export const ProfileForm = () => {
                 </form.Field>
 
                 {/* State */}
-                <form.Field name="shippingAddress.state">
+                <form.Field
+                  name="shippingAddress.state"
+                  validators={{
+                    onChangeAsync: async ({ value }) => {
+                      if (!value || value.trim().length === 0) {
+                        return "State is required";
+                      }
+                      if (!(value in States)) {
+                        return "Please select a valid state";
+                      }
+                      return undefined;
+                    },
+                  }}
+                >
                   {(field) => (
                     <div>
                       <label className="floating-label">
                         <span>State</span>
                         <select
-                          className="select select-bordered w-full"
+                          className={`select select-bordered w-full ${
+                            field.state.meta.errors.length > 0
+                              ? "select-error"
+                              : ""
+                          }`}
                           value={field.state.value ?? ""}
                           onChange={(e) =>
                             field.handleChange(
@@ -442,14 +666,33 @@ export const ProfileForm = () => {
                 </form.Field>
 
                 {/* Postal Code */}
-                <form.Field name="shippingAddress.postalCode">
+                <form.Field
+                  name="shippingAddress.postalCode"
+                  validators={{
+                    onChangeAsync: async ({ value }) => {
+                      if (!value || value.trim().length === 0) {
+                        return "Postal code is required";
+                      }
+                      // Basic postal code validation (US format)
+                      const postalRegex = /^\d{5}(-\d{4})?$/;
+                      if (!postalRegex.test(value)) {
+                        return "Please enter a valid postal code (e.g., 12345 or 12345-6789)";
+                      }
+                      return undefined;
+                    },
+                  }}
+                >
                   {(field) => (
                     <div>
                       <label className="floating-label">
                         <span>Postal Code</span>
                         <input
                           type="text"
-                          className="input input-bordered w-full"
+                          className={`input input-bordered w-full ${
+                            field.state.meta.errors.length > 0
+                              ? "input-error"
+                              : ""
+                          }`}
                           value={field.state.value ?? ""}
                           onChange={(e) => field.handleChange(e.target.value)}
                           onBlur={field.handleBlur}
@@ -478,7 +721,7 @@ export const ProfileForm = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || !form.state.canSubmit}
           >
             {mutation.isPending ? (
               <>

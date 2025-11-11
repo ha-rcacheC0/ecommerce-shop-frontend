@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { TAddress, TApprovedTerminal, TCartProduct } from "../types";
@@ -9,7 +9,7 @@ import {
 } from "../utils/utils";
 import CartItem from "./component-parts/cart-item";
 import HelcimPayButton from "./component-parts/helcimPayButton";
-import { isObjectEmpty } from "../utils/validationUtils";
+import { isObjectEmpty, validateAddress } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
 import StateZipInput from "./component-parts/state-zip-input";
 import TerminalSelection from "./component-parts/terminal-selection";
@@ -22,6 +22,7 @@ import {
   faTheaterMasks,
   faTruck,
   faWarehouse,
+  faTShirt,
 } from "@fortawesome/free-solid-svg-icons";
 import { getOneTerminalQueryOptions } from "../api/terminals/terminalQueries";
 import TosModal from "./component-parts/tos-Modal";
@@ -38,10 +39,7 @@ const Cart = ({
   shippingAddress: TAddress;
 }) => {
   const [isTerminalDestination, setIsTerminalDestination] = useState(false);
-  const [isUpdatingValues, setIsUpdatingValues] = useState(true);
   const [needLiftGate, setNeedLiftGate] = useState(false);
-  const [shipping, setShipping] = useState(0);
-  const [tax, setTax] = useState(0);
   const [isShippableState, setIsShippableState] = useState(true);
   const [currentShippingAddress, setCurrentShippingAddress] = useState<
     TAddress | undefined
@@ -50,7 +48,32 @@ const Cart = ({
   const [state, setState] = useState("");
   const [zipcode, setZipcode] = useState("");
   const [isTosModalOpen, setIsTosModalOpen] = useState(false);
+  const [isCartUpdating, setIsCartUpdating] = useState(false);
+  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const { user } = useAuth();
+
+  // Track cart updates with debouncing
+  useEffect(() => {
+    setIsCartUpdating(true);
+
+    // Clear existing timeout
+    if (updateTimeoutRef.current) {
+      clearTimeout(updateTimeoutRef.current);
+    }
+
+    // Set new timeout to mark cart as stable after 1 second of no changes
+    updateTimeoutRef.current = setTimeout(() => {
+      setIsCartUpdating(false);
+    }, 1000);
+
+    // Cleanup on unmount
+    return () => {
+      if (updateTimeoutRef.current) {
+        clearTimeout(updateTimeoutRef.current);
+      }
+    };
+  }, [products]); // Trigger when products array changes
 
   const { data: userProfile } = useQuery(userInfoQueryOptions(user!.token!));
   const { mutate } = useUserInfoPostMutation(
@@ -63,79 +86,91 @@ const Cart = ({
     }
   );
 
-  let caseSubtotal = 0;
-  let unitSubtotal = 0;
+  // Calculate all values using useMemo for better performance and consistency
+  const calculations = useMemo(() => {
+    let caseSubtotal = 0;
+    let unitSubtotal = 0;
+    let _apparelSubtotal = 0;
 
-  const subtotal = products.reduce((acc, elm) => {
-    const productCaseSubtotal =
-      parseFloat(elm.product.casePrice) * elm.caseQuantity;
-    const productUnitSubtotal =
-      parseFloat(elm.product.unitProduct?.unitPrice || "0") * elm.unitQuantity;
+    const subtotal = products.reduce((acc, elm) => {
+      if (elm.product.isApparel) {
+        const itemSubtotal =
+          parseFloat(elm.variant?.unitPrice || "0") * elm.unitQuantity;
+        _apparelSubtotal += itemSubtotal;
+        return acc + itemSubtotal;
+      } else {
+        const itemCaseSubtotal =
+          parseFloat(elm.product.casePrice) * elm.caseQuantity;
+        const itemUnitSubtotal =
+          parseFloat(elm.product.unitProduct?.unitPrice || "0") *
+          elm.unitQuantity;
+        const itemSubtotal = itemCaseSubtotal + itemUnitSubtotal;
 
-    caseSubtotal += productCaseSubtotal;
-    unitSubtotal += productUnitSubtotal;
+        caseSubtotal += itemCaseSubtotal;
+        unitSubtotal += itemUnitSubtotal;
 
-    return acc + productCaseSubtotal + productUnitSubtotal;
-  }, 0);
-
-  // Check if there's any show product in the cart
-  const hasShow = !!products.find((elm) => elm.product.isShow);
-  const onlyApparel = !!products.every((elm) => elm.product.isApparel);
-
-  // Pass the hasShow flag to checkOrderType
-  const orderType = checkOrderType(
-    caseSubtotal,
-    unitSubtotal,
-    hasShow,
-    onlyApparel
-  );
-
-  // Calculate tax and grand total with tax included
-  useEffect(() => {
-    setIsUpdatingValues(true);
-
-    // Only calculate tax if we have a valid shipping address
-    if (currentShippingAddress && !isObjectEmpty(currentShippingAddress)) {
-      try {
-        const stateTax = calculateStateTax(
-          currentShippingAddress.state,
-          subtotal
-        );
-        setTax(stateTax);
-        setIsShippableState(true);
-      } catch (error) {
-        if (error instanceof Error && error.message.includes("don't ship")) {
-          setIsShippableState(false);
-          setTax(0);
-        } else {
-          // Handle other errors
-          console.error("Tax calculation error:", error);
-          setTax(0);
-        }
+        return acc + itemSubtotal;
       }
-    } else {
-      setTax(0);
-    }
+    }, 0);
 
-    setIsUpdatingValues(false);
-  }, [currentShippingAddress, subtotal]);
+    const hasShow = !!products.find((elm) => elm.product.isShow);
+    const onlyApparel = !!products.every((elm) => elm.product.isApparel);
 
-  // Calculate the lift gate fee
-  const liftGateFee = needLiftGate ? 100 : 0;
+    const orderType = checkOrderType(
+      caseSubtotal,
+      unitSubtotal,
+      hasShow,
+      onlyApparel
+    );
 
-  const grandTotal = subtotal + shipping + tax + liftGateFee;
-
-  useEffect(() => {
-    setIsUpdatingValues(true);
-    const newShipping = calculateShipping({
+    // Calculate shipping
+    const shipping = calculateShipping({
       orderAmount: subtotal,
       orderType: orderType,
       destination: isTerminalDestination ? "terminal" : "anywhere",
-      needLiftGate: false, // Don't include lift gate in shipping calculation
+      needLiftGate: false,
     });
-    setShipping(newShipping);
-    setIsUpdatingValues(false);
-  }, [subtotal, isTerminalDestination, orderType, terminalDestination]);
+
+    // Calculate tax
+    let tax = 0;
+    let shippableState = true;
+
+    if (currentShippingAddress && !isObjectEmpty(currentShippingAddress)) {
+      try {
+        tax = calculateStateTax(currentShippingAddress.state, subtotal);
+        shippableState = true;
+      } catch (error) {
+        if (error instanceof Error && error.message.includes("don't ship")) {
+          shippableState = false;
+          tax = 0;
+        } else {
+          console.error("Tax calculation error:", error);
+          tax = 0;
+        }
+      }
+    }
+
+    const liftGateFee = needLiftGate ? 100 : 0;
+    const grandTotal = subtotal + shipping + tax + liftGateFee;
+
+    return {
+      subtotal,
+      shipping,
+      tax,
+      liftGateFee,
+      grandTotal,
+      orderType,
+      hasShow,
+      shippableState,
+      caseSubtotal,
+      unitSubtotal,
+    };
+  }, [products, isTerminalDestination, needLiftGate, currentShippingAddress]);
+
+  // Update isShippableState when calculations change
+  useEffect(() => {
+    setIsShippableState(calculations.shippableState);
+  }, [calculations.shippableState]);
 
   const { data: terminalData }: { data: TApprovedTerminal | undefined } =
     useQuery(
@@ -146,7 +181,6 @@ const Cart = ({
     );
 
   useEffect(() => {
-    setIsUpdatingValues(true);
     if (isTerminalDestination && terminalData) {
       setCurrentShippingAddress({
         id: terminalData.address.id,
@@ -157,18 +191,16 @@ const Cart = ({
         postalCode: terminalData.address.postalCode,
       });
     } else if (!isTerminalDestination) {
-      // When switching from terminal to user address
       setCurrentShippingAddress(
         isObjectEmpty(shippingAddress) ? undefined : shippingAddress
       );
     }
-    setIsUpdatingValues(false);
   }, [isTerminalDestination, terminalData, shippingAddress]);
 
   const isToSAccepted = userProfile?.acceptedTerms || false;
+
   const handleTosAccept = async () => {
     try {
-      // Update user profile with TOS acceptance
       mutate({
         token: user!.token!,
         body: { userId: user!.userInfo!.profile!.userId, acceptedTerms: true },
@@ -178,8 +210,43 @@ const Cart = ({
     }
   };
 
-  const isShippingAddressSet =
-    currentShippingAddress && !isObjectEmpty(currentShippingAddress);
+  const getCheckoutValidation = (
+    currentShippingAddress: TAddress | undefined,
+    isShippableState: boolean,
+    isToSAccepted: boolean,
+    isCartUpdating: boolean
+  ) => {
+    const addressValidation = validateAddress(currentShippingAddress);
+
+    const conditions = {
+      hasValidAddress: addressValidation.isComplete,
+      canShipToState: isShippableState,
+      hasAcceptedTerms: isToSAccepted,
+      cartNotUpdating: !isCartUpdating,
+    };
+
+    const canCheckout = Object.values(conditions).every(Boolean);
+
+    return { canCheckout, conditions, addressValidation };
+  };
+
+  const addressValidation = validateAddress(currentShippingAddress);
+  const isShippingAddressSet = addressValidation.isComplete;
+  const validation = getCheckoutValidation(
+    currentShippingAddress,
+    isShippableState,
+    isToSAccepted,
+    isCartUpdating
+  );
+
+  // Create amounts object for HelcimPayButton
+  const amounts = {
+    subtotal: calculations.subtotal,
+    tax: calculations.tax,
+    liftGateFee: calculations.liftGateFee,
+    shipping: calculations.shipping,
+    grandTotal: calculations.grandTotal,
+  };
 
   if (products.length === 0) {
     return (
@@ -259,7 +326,7 @@ const Cart = ({
               </div>
             ) : (
               // Only show free shipping banner if state is shippable
-              hasShow && (
+              calculations.hasShow && (
                 <div className="alert alert-success mb-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -375,11 +442,13 @@ const Cart = ({
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span>Subtotal:</span>
-                <span className="font-medium">${subtotal.toFixed(2)}</span>
+                <span className="font-medium">
+                  ${calculations.subtotal.toFixed(2)}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="flex items-center gap-2">
-                  {orderType === "show" && (
+                  {calculations.orderType === "show" && (
                     <>
                       <FontAwesomeIcon
                         icon={faTheaterMasks}
@@ -389,28 +458,34 @@ const Cart = ({
                       <span className="badge badge-success badge-sm">FREE</span>
                     </>
                   )}
-                  {orderType === "retail" && (
+                  {calculations.orderType === "retail" && (
                     <>
                       <FontAwesomeIcon icon={faShoppingBag} />
                       <span>Retail Shipping</span>
                     </>
                   )}
-                  {orderType === "wholesale" && (
+                  {calculations.orderType === "wholesale" && (
                     <>
                       <FontAwesomeIcon icon={faWarehouse} />
                       <span>Wholesale Shipping</span>
                     </>
                   )}
-                  {orderType === "combo" && (
+                  {calculations.orderType === "combo" && (
                     <>
                       <FontAwesomeIcon icon={faStore} />
                       <span>Combo Shipping</span>
                     </>
                   )}
+                  {calculations.orderType === "apparelOnly" && (
+                    <>
+                      <FontAwesomeIcon icon={faTShirt} />
+                      <span>Apparel Shipping</span>
+                    </>
+                  )}
                 </span>
                 <span className="font-medium flex items-center">
-                  {shipping > 0 ? (
-                    `$${shipping.toFixed(2)}`
+                  {calculations.shipping > 0 ? (
+                    `$${calculations.shipping.toFixed(2)}`
                   ) : (
                     <>
                       <span className="text-success font-bold">FREE</span>
@@ -428,7 +503,9 @@ const Cart = ({
                   <span className="flex items-center gap-2">
                     <span>Lift Gate Fee</span>
                   </span>
-                  <span className="font-medium">${liftGateFee.toFixed(2)}</span>
+                  <span className="font-medium">
+                    ${calculations.liftGateFee.toFixed(2)}
+                  </span>
                 </div>
               )}
 
@@ -443,7 +520,9 @@ const Cart = ({
                     </span>
                   )}
                 </span>
-                <span className="font-medium">${tax.toFixed(2)}</span>
+                <span className="font-medium">
+                  ${calculations.tax.toFixed(2)}
+                </span>
               </div>
 
               <div className="h-px bg-base-300 my-2"></div>
@@ -451,28 +530,38 @@ const Cart = ({
               <div className="flex justify-between items-center">
                 <span className="text-lg font-bold">Total:</span>
                 <span className="text-lg font-bold">
-                  ${grandTotal.toFixed(2)}
+                  ${calculations.grandTotal.toFixed(2)}
                 </span>
               </div>
             </div>
             <div className="mt-6">
               <HelcimPayButton
                 cartId={user!.userInfo!.Cart!.id}
-                amounts={{ subtotal, tax, liftGateFee, shipping, grandTotal }}
-                btnDisabled={
-                  (!isShippingAddressSet && !isUpdatingValues) ||
-                  !isShippableState ||
-                  !isToSAccepted
-                }
+                amounts={amounts}
+                btnDisabled={!validation.canCheckout}
                 userId={user!.userInfo!.Cart!.userId!}
                 shippingAddressId={
                   isShippingAddressSet ? currentShippingAddress!.id : ""
                 }
+                isCartUpdating={isCartUpdating}
               />
 
-              {!isShippingAddressSet && (
+              {isCartUpdating && (
+                <div className="mt-3 text-info text-sm">
+                  Updating cart totals...
+                </div>
+              )}
+
+              {!isShippingAddressSet && !addressValidation.isEmpty && (
                 <div className="mt-3 text-warning text-sm">
-                  Please update your shipping address in the user profile to
+                  {addressValidation.message ||
+                    "Please complete your shipping address"}
+                </div>
+              )}
+
+              {addressValidation.isEmpty && (
+                <div className="mt-3 text-warning text-sm">
+                  Please set your shipping address in the user profile to
                   proceed to checkout
                 </div>
               )}

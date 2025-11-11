@@ -81,10 +81,10 @@ function Index() {
       </div>
 
       {/* Featured Cody B Banner */}
-      <div className="py-16  relative overflow-hidden">
+      <div className="py-16 bg-gradient-to-tr from-primary via-secondary to-accent relative overflow-hidden">
         {/* Animated Background Elements */}
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-2 relative z-10 bg-white/30 backdrop-blur-md rounded-lg py-6  shadow-md ">
           <div className="text-center text-white mb-8">
             <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full mb-4">
               <FontAwesomeIcon icon={faStar} className="text-yellow-300" />
@@ -193,8 +193,8 @@ function Index() {
               <div className="text-4xl mb-4">🏆</div>
               <h3 className="text-xl font-semibold mb-3">Premium Brands</h3>
               <p className="text-gray-600">
-                Featuring exclusive collections from top manufacturers like Cody
-                B, ensuring quality and reliability in every product.
+                Featuring exclusive collections from top experts like Cody B,
+                ensuring quality and reliability in every product.
               </p>
             </div>
 

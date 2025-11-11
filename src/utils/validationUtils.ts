@@ -1,3 +1,4 @@
+import { TAddress } from "@/types";
 import { ZodError, ZodSchema, z } from "zod";
 
 type ValidationResult<T> = { success: boolean; data?: T; error?: ZodError<T> };
@@ -64,4 +65,105 @@ export function isObjectEmpty(obj: any) {
     }
   }
   return true;
+}
+
+export function isAddressComplete(
+  address: TAddress | undefined | null
+): boolean {
+  if (!address) return false;
+
+  // Check that all required fields are present and not empty
+  return !!(
+    address.street1?.trim() &&
+    address.city?.trim() &&
+    address.state?.trim() &&
+    address.postalCode?.trim()
+  );
+}
+
+// Zod schema for complete address validation
+export const completeAddressSchema = z.object({
+  id: z.string(),
+  street1: z.string().min(1, "Street address is required"),
+  street2: z.string().nullable().optional(),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  postalCode: z.string().min(5, "Postal code is required"),
+});
+
+export function isAddressEmpty(address: TAddress | undefined | null): boolean {
+  if (!address) return true;
+
+  // Address is considered empty if all required fields are empty or just whitespace
+  return !(
+    address.street1?.trim() ||
+    address.city?.trim() ||
+    address.postalCode?.trim()
+  );
+  // Note: We don't check state here since it might have a default value
+}
+
+// Check if address has partial data (some fields filled, others empty)
+export function isAddressPartial(
+  address: TAddress | undefined | null
+): boolean {
+  if (!address) return false;
+
+  const hasStreet = !!address.street1?.trim();
+  const hasCity = !!address.city?.trim();
+  const hasPostal = !!address.postalCode?.trim();
+
+  // Partial if some but not all required fields are filled
+  const filledFields = [hasStreet, hasCity, hasPostal].filter(Boolean).length;
+  return filledFields > 0 && filledFields < 3;
+}
+
+// Comprehensive address validation
+export function validateAddress(address: TAddress | undefined | null): {
+  isValid: boolean;
+  isEmpty: boolean;
+  isPartial: boolean;
+  isComplete: boolean;
+  message?: string;
+} {
+  const isEmpty = isAddressEmpty(address);
+  const isPartial = isAddressPartial(address);
+  const isComplete = isAddressComplete(address);
+
+  if (isEmpty) {
+    return {
+      isValid: true,
+      isEmpty: true,
+      isPartial: false,
+      isComplete: false,
+    };
+  }
+
+  if (isPartial) {
+    return {
+      isValid: false,
+      isEmpty: false,
+      isPartial: true,
+      isComplete: false,
+      message:
+        "Please complete all required address fields (street, city, postal code)",
+    };
+  }
+
+  if (isComplete) {
+    return {
+      isValid: true,
+      isEmpty: false,
+      isPartial: false,
+      isComplete: true,
+    };
+  }
+
+  return {
+    isValid: false,
+    isEmpty: false,
+    isPartial: false,
+    isComplete: false,
+    message: "Invalid address format",
+  };
 }

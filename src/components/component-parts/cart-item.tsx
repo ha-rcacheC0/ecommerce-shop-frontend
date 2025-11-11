@@ -77,7 +77,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       cartId: product.cartId,
       quantity: product.caseQuantity + 1,
       isUnit: false,
-      variantId: variant?.id || "",
+      variantId: variant?.id,
     });
   };
 
@@ -88,7 +88,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         cartId: product.cartId,
         quantity: product.caseQuantity - 1,
         isUnit: false,
-        variantId: variant?.id || "",
+        variantId: variant?.id,
       });
     }
   };
@@ -99,7 +99,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
       cartId: product.cartId,
       quantity: product.unitQuantity + 1,
       isUnit: true,
-      variantId: variant?.id || "",
+      variantId: variant?.id,
     });
   };
 
@@ -110,7 +110,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
         cartId: product.cartId,
         quantity: product.unitQuantity - 1,
         isUnit: true,
-        variantId: variant?.id || "",
+        variantId: variant?.id,
       });
     }
   };
@@ -288,7 +288,7 @@ const CartItem = ({ product }: { product: TCartProduct }) => {
             removeItem.mutate({
               productId: product.product.id,
               cartId: product.cartId,
-              variantId: variant?.id || "", // Include variant ID for removal
+              variantId: variant?.id, // Include variant ID for removal
             })
           }
           className="btn btn-ghost btn-md btn-error"

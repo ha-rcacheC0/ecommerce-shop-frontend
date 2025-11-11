@@ -6,6 +6,14 @@ const PURCHASE_URL = API_CONFIG.BASE_URL + "/purchase";
 export const getCartItems = async (cartId: string): Promise<TCart> =>
   await fetch(`${BASE_URL}/${cartId}`, {}).then((response) => response.json());
 
+// Helper function to normalize variant ID
+const normalizeVariantId = (variantId?: string): string | undefined => {
+  if (!variantId || variantId === "unit" || variantId === "case") {
+    return undefined; // Don't send placeholder values
+  }
+  return variantId;
+};
+
 export const addProductToCart = async ({
   productId,
   cartId,
@@ -17,9 +25,16 @@ export const addProductToCart = async ({
   isUnit: boolean;
   variantId?: string;
 }) => {
+  const normalizedVariantId = normalizeVariantId(variantId);
+
   return await fetch(`${BASE_URL}/${cartId}/add`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, isUnit, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      isUnit,
+      variantId: normalizedVariantId,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -33,11 +48,17 @@ export const removeProductFromCart = async ({
 }: {
   productId: string;
   cartId: string;
-  variantId: string;
+  variantId?: string;
 }) => {
+  const normalizedVariantId = normalizeVariantId(variantId);
+
   return await fetch(`${BASE_URL}/${cartId}/remove`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      variantId: normalizedVariantId,
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -55,11 +76,19 @@ export const updateProductQuantity = async ({
   cartId: string;
   quantity: number;
   isUnit: boolean;
-  variantId: string;
+  variantId?: string;
 }) => {
+  const normalizedVariantId = normalizeVariantId(variantId);
+
   return await fetch(`${BASE_URL}/${cartId}/updateQuantity`, {
     method: "POST",
-    body: JSON.stringify({ productId, cartId, quantity, isUnit, variantId }),
+    body: JSON.stringify({
+      productId,
+      cartId,
+      quantity,
+      isUnit,
+      variantId: normalizedVariantId,
+    }),
     headers: {
       "Content-Type": "application/json",
     },

@@ -51,7 +51,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({
 
   // Use the fetched metadata or empty arrays if still loading
   const availableBrands = metadata?.brands || [];
-  const availableCategories = metadata?.categories || [];
+  const availableCategories =
+    metadata?.categories.filter(
+      (val: { name: string }) => val.name !== "Apparel"
+    ) || [];
   const availableColors = metadata?.colors || [];
   const availableEffects = metadata?.effects || [];
 

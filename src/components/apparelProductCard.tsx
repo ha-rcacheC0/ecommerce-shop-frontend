@@ -260,7 +260,7 @@ export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
                 {isInStock && selectedVariant ? (
                   <>
                     <button
-                      className="btn btn-secondary btn-outline"
+                      className="btn btn-secondary btn-outline col-span-2"
                       onClick={() =>
                         addItem.mutate({
                           productId: product.id,
@@ -270,7 +270,9 @@ export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
                         })
                       }
                     >
-                      Add Item <FontAwesomeIcon icon={faCartPlus} />
+                      Add{" "}
+                      {product.apparelType ? product.apparelType.name : "Item"}
+                      <FontAwesomeIcon icon={faCartPlus} />
                     </button>
                   </>
                 ) : (

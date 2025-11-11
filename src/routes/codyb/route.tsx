@@ -5,6 +5,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ProductCard } from "@components/product-card";
 import { ShowCard } from "@components/show-card";
 import { getAllProductsQueryOptions } from "@api/products/productsQueries";
+import { getAllApparelQueryOptions } from "@api/apparel/apparelQueries";
 import {
   getShowsByBrandQueryOptions,
   getAllShowTypesQueryOptions,
@@ -15,6 +16,7 @@ import { getAllProductsQuery } from "@api/products/products";
 import FilterPanel from "@components/component-parts/filterPanel";
 import { PageButtons } from "@components/component-parts/pageButtons";
 import { z } from "zod";
+import { ApparelProductCard } from "@/components/apparelProductCard";
 
 const CodyBPage: React.FC = () => {
   const navigate = useNavigate();
@@ -51,6 +53,30 @@ const CodyBPage: React.FC = () => {
         : []
   );
 
+  // Apparel-specific filter states
+  const [selectedApparelTypes, setSelectedApparelTypes] = useState<string[]>(
+    () =>
+      Array.isArray(search.apparelTypes)
+        ? search.apparelTypes.filter(Boolean)
+        : typeof search.apparelTypes === "string"
+          ? search.apparelTypes.split(",").filter(Boolean)
+          : []
+  );
+  const [selectedGenders, setSelectedGenders] = useState<string[]>(() =>
+    Array.isArray(search.genders)
+      ? search.genders.filter(Boolean)
+      : typeof search.genders === "string"
+        ? search.genders.split(",").filter(Boolean)
+        : []
+  );
+  const [selectedSizes, setSelectedSizes] = useState<string[]>(() =>
+    Array.isArray(search.sizes)
+      ? search.sizes.filter(Boolean)
+      : typeof search.sizes === "string"
+        ? search.sizes.split(",").filter(Boolean)
+        : []
+  );
+
   // Show filter states
   const [selectedShowType, setSelectedShowType] = useState<string | null>(
     search.showType || null
@@ -64,18 +90,18 @@ const CodyBPage: React.FC = () => {
   // Always include Cody B in the brand filter
   const selectedBrands = [CODY_B_BRAND];
 
-  // Products query
+  // Regular products query (excludes apparel items)
   const {
-    data: products,
-    isPending: productsLoading,
-    isError: productsError,
-    error: productsErrorMessage,
-    isFetching: productsFetching,
-    isPlaceholderData: productsPlaceholderData,
+    data: regularProducts,
+    isPending: regularProductsLoading,
+    isError: regularProductsError,
+    error: regularProductsErrorMessage,
+    isFetching: regularProductsFetching,
+    isPlaceholderData: regularProductsPlaceholderData,
   } = useQuery({
     queryKey: [
       "products",
-      "codyb",
+      "codyb-regular",
       {
         page: activeTab === "products" ? page : 1,
         pageSize,
@@ -85,6 +111,7 @@ const CodyBPage: React.FC = () => {
         selectedEffects,
         searchTitle,
         inStock: showOutOfStock ? undefined : true,
+        isApparel: false, // Exclude apparel items
       },
     ],
     queryFn: () =>
@@ -97,10 +124,38 @@ const CodyBPage: React.FC = () => {
         selectedEffects,
         searchTitle,
         inStock: showOutOfStock ? undefined : true,
+        isApparel: false, // Exclude apparel items
       }),
     placeholderData: keepPreviousData,
-    enabled: activeTab === "products",
   });
+
+  // Apparel products query (only apparel items)
+  const {
+    data: apparelProducts,
+    isPending: apparelProductsLoading,
+    isError: apparelProductsError,
+    error: apparelProductsErrorMessage,
+    isFetching: apparelProductsFetching,
+    isPlaceholderData: apparelProductsPlaceholderData,
+  } = useQuery(
+    getAllApparelQueryOptions({
+      page: activeTab === "products" ? page : 1,
+      pageSize,
+      selectedBrands,
+      selectedCategories,
+      selectedColors,
+      selectedApparelTypes,
+      selectedGenders,
+      selectedSizes,
+      searchTitle,
+      showOutOfStock,
+      isFetching: false,
+      isPlaceholderData: false,
+      setPage: () => {},
+      hasMore: false,
+      setPageAmount: () => {},
+    })
+  );
 
   // Shows query
   const {
@@ -116,11 +171,36 @@ const CodyBPage: React.FC = () => {
       typeId: selectedShowType || undefined,
       searchTitle,
     }),
-    enabled: activeTab === "shows",
   });
 
   // Show types query
   const { data: showTypes } = useQuery(getAllShowTypesQueryOptions());
+
+  // Combine regular products and apparel products for display
+  const combinedProducts = React.useMemo(() => {
+    if (!regularProducts && !apparelProducts) return null;
+
+    const regularItems = regularProducts?.contents || [];
+    const apparelItems = apparelProducts?.contents || [];
+
+    // Sort combined products by title or any other criteria
+    const allProducts = [...regularItems, ...apparelItems].sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
+
+    return {
+      contents: allProducts,
+      totalItems:
+        (regularProducts?.totalItems || 0) + (apparelProducts?.totalItems || 0),
+      hasMore:
+        regularProducts?.hasMore || false || apparelProducts?.hasMore || false,
+      currentPage: page,
+      totalPages: Math.max(
+        regularProducts?.totalPages || 0,
+        apparelProducts?.totalPages || 0
+      ),
+    };
+  }, [regularProducts, apparelProducts, page]);
 
   const updateUrl = useCallback(() => {
     const searchParams: Record<string, string | string[]> = {
@@ -134,6 +214,10 @@ const CodyBPage: React.FC = () => {
       searchParams.categories = selectedCategories;
     if (selectedColors.length > 0) searchParams.colors = selectedColors;
     if (selectedEffects.length > 0) searchParams.effects = selectedEffects;
+    if (selectedApparelTypes.length > 0)
+      searchParams.apparelTypes = selectedApparelTypes;
+    if (selectedGenders.length > 0) searchParams.genders = selectedGenders;
+    if (selectedSizes.length > 0) searchParams.sizes = selectedSizes;
     if (selectedShowType) searchParams.showType = selectedShowType;
     if (showOutOfStock) searchParams.showOutOfStock = "true";
 
@@ -151,6 +235,10 @@ const CodyBPage: React.FC = () => {
           newSearch.categories = searchParams.categories;
         if ("colors" in searchParams) newSearch.colors = searchParams.colors;
         if ("effects" in searchParams) newSearch.effects = searchParams.effects;
+        if ("apparelTypes" in searchParams)
+          newSearch.apparelTypes = searchParams.apparelTypes;
+        if ("genders" in searchParams) newSearch.genders = searchParams.genders;
+        if ("sizes" in searchParams) newSearch.sizes = searchParams.sizes;
         if ("showType" in searchParams)
           newSearch.showType = searchParams.showType;
         if ("showOutOfStock" in searchParams)
@@ -168,6 +256,9 @@ const CodyBPage: React.FC = () => {
     selectedCategories,
     selectedColors,
     selectedEffects,
+    selectedApparelTypes,
+    selectedGenders,
+    selectedSizes,
     selectedShowType,
     searchTitle,
     showOutOfStock,
@@ -197,6 +288,9 @@ const CodyBPage: React.FC = () => {
       setSelectedCategories([]);
       setSelectedColors([]);
       setSelectedEffects([]);
+      setSelectedApparelTypes([]);
+      setSelectedGenders([]);
+      setSelectedSizes([]);
     } else {
       setSelectedShowType(null);
     }
@@ -206,23 +300,34 @@ const CodyBPage: React.FC = () => {
     updateUrl();
   }, [updateUrl]);
 
-  const isLoading =
-    (activeTab === "products" && productsLoading) ||
-    (activeTab === "shows" && showsLoading);
-  const isError =
-    (activeTab === "products" && productsError) ||
+  // Loading states
+  const isInitialLoading =
+    (regularProductsLoading || apparelProductsLoading || showsLoading) &&
+    !combinedProducts &&
+    !showsData;
+
+  const isTabSpecificError =
+    (activeTab === "products" &&
+      (regularProductsError || apparelProductsError)) ||
     (activeTab === "shows" && showsError);
+
   const errorMessage =
-    activeTab === "products" ? productsErrorMessage : showsErrorMessage;
+    activeTab === "products"
+      ? regularProductsErrorMessage || apparelProductsErrorMessage
+      : showsErrorMessage;
 
-  if (isLoading) return <div>Loading Cody B {activeTab}...</div>;
-  if (isError) return <div>Error: {errorMessage?.message}</div>;
+  if (isInitialLoading) return <div>Loading Cody B collection...</div>;
+  if (isTabSpecificError) return <div>Error: {errorMessage?.message}</div>;
 
-  const currentData = activeTab === "products" ? products : showsData;
+  const currentData = activeTab === "products" ? combinedProducts : showsData;
   const isFetching =
-    activeTab === "products" ? productsFetching : showsFetching;
+    activeTab === "products"
+      ? regularProductsFetching || apparelProductsFetching
+      : showsFetching;
   const isPlaceholderData =
-    activeTab === "products" ? productsPlaceholderData : false;
+    activeTab === "products"
+      ? regularProductsPlaceholderData || apparelProductsPlaceholderData
+      : false;
 
   return (
     <div className="min-h-screen bg-base-200">
@@ -236,7 +341,7 @@ const CodyBPage: React.FC = () => {
             </p>
             <div className="mt-4 flex justify-center gap-4">
               <div className="badge badge-accent badge-lg">
-                {products?.totalItems || 0} Products
+                {combinedProducts?.totalItems || 0} Products
               </div>
               <div className="badge badge-accent badge-lg">
                 {showsData?.pagination?.total || 0} Shows
@@ -254,7 +359,11 @@ const CodyBPage: React.FC = () => {
             onClick={() => handleTabChange("products")}
           >
             <span className="mr-2">🎆</span>
-            Products ({products?.totalItems || 0})
+            Products ({combinedProducts?.totalItems || 0})
+            {(regularProductsFetching || apparelProductsFetching) &&
+              activeTab !== "products" && (
+                <span className="loading loading-spinner loading-xs ml-2"></span>
+              )}
           </button>
           <button
             className={`tab tab-lg ${activeTab === "shows" ? "tab-active" : ""}`}
@@ -262,6 +371,9 @@ const CodyBPage: React.FC = () => {
           >
             <span className="mr-2">🎪</span>
             Shows ({showsData?.pagination?.total || 0})
+            {showsFetching && activeTab !== "shows" && (
+              <span className="loading loading-spinner loading-xs ml-2"></span>
+            )}
           </button>
         </div>
       </div>
@@ -299,6 +411,29 @@ const CodyBPage: React.FC = () => {
               activeTab === "products"
                 ? (effect: string) =>
                     handleFilterChange(setSelectedEffects, effect)
+                : () => {}
+            }
+            // Apparel-specific filters (only show for products tab)
+            selectedApparelTypes={
+              activeTab === "products" ? selectedApparelTypes : []
+            }
+            setSelectedApparelTypes={
+              activeTab === "products"
+                ? (apparelType: string) =>
+                    handleFilterChange(setSelectedApparelTypes, apparelType)
+                : () => {}
+            }
+            selectedGenders={activeTab === "products" ? selectedGenders : []}
+            setSelectedGenders={
+              activeTab === "products"
+                ? (gender: string) =>
+                    handleFilterChange(setSelectedGenders, gender)
+                : () => {}
+            }
+            selectedSizes={activeTab === "products" ? selectedSizes : []}
+            setSelectedSizes={
+              activeTab === "products"
+                ? (size: string) => handleFilterChange(setSelectedSizes, size)
                 : () => {}
             }
             // Show filters (only show for shows tab)
@@ -341,11 +476,11 @@ const CodyBPage: React.FC = () => {
                 <p className="text-sm text-gray-600">
                   Showing{" "}
                   {activeTab === "products"
-                    ? products?.contents.length || 0
+                    ? combinedProducts?.contents.length || 0
                     : showsData?.shows.length || 0}{" "}
                   of{" "}
                   {activeTab === "products"
-                    ? products?.totalItems || 0
+                    ? combinedProducts?.totalItems || 0
                     : showsData?.pagination?.total || 0}{" "}
                   {activeTab}
                 </p>
@@ -370,6 +505,21 @@ const CodyBPage: React.FC = () => {
                         {selectedEffects.length} Effects
                       </div>
                     )}
+                    {selectedApparelTypes.length > 0 && (
+                      <div className="badge badge-outline">
+                        {selectedApparelTypes.length} Apparel Types
+                      </div>
+                    )}
+                    {selectedGenders.length > 0 && (
+                      <div className="badge badge-outline">
+                        {selectedGenders.length} Genders
+                      </div>
+                    )}
+                    {selectedSizes.length > 0 && (
+                      <div className="badge badge-outline">
+                        {selectedSizes.length} Sizes
+                      </div>
+                    )}
                   </>
                 )}
                 {activeTab === "shows" && selectedShowType && (
@@ -385,7 +535,7 @@ const CodyBPage: React.FC = () => {
           <div className="bg-base-100 sm:p-4">
             {(
               activeTab === "products"
-                ? products?.contents.length === 0
+                ? combinedProducts?.contents.length === 0
                 : showsData?.shows.length === 0
             ) ? (
               <div className="text-center py-12">
@@ -408,6 +558,9 @@ const CodyBPage: React.FC = () => {
                       setSelectedCategories([]);
                       setSelectedColors([]);
                       setSelectedEffects([]);
+                      setSelectedApparelTypes([]);
+                      setSelectedGenders([]);
+                      setSelectedSizes([]);
                     } else {
                       setSelectedShowType(null);
                     }
@@ -418,15 +571,27 @@ const CodyBPage: React.FC = () => {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4 gap-4 sm:p-4">
                 {activeTab === "products"
-                  ? products?.contents.map((product: TProduct) => (
-                      <ProductCard
-                        key={product.id}
-                        product={product}
-                        searchParams={search}
-                      />
-                    ))
+                  ? combinedProducts?.contents.map((product: TProduct) => {
+                      if (product.isApparel) {
+                        return (
+                          <ApparelProductCard
+                            key={product.id}
+                            product={product}
+                            searchParams={search}
+                          />
+                        );
+                      } else {
+                        return (
+                          <ProductCard
+                            key={product.id}
+                            product={product}
+                            searchParams={search}
+                          />
+                        );
+                      }
+                    })
                   : showsData?.shows.map((show) => (
                       <ShowCard key={show.id} show={show} />
                     ))}
@@ -442,7 +607,7 @@ const CodyBPage: React.FC = () => {
               page={page}
               hasMore={
                 activeTab === "products"
-                  ? (products?.hasMore ?? false)
+                  ? (combinedProducts?.hasMore ?? false)
                   : (showsData?.pagination?.page || 0) <
                     (showsData?.pagination?.totalPages || 0)
               }
@@ -477,6 +642,9 @@ export const Route = createFileRoute("/codyb")({
     categories: z.union([z.string(), z.array(z.string())]).optional(),
     colors: z.union([z.string(), z.array(z.string())]).optional(),
     effects: z.union([z.string(), z.array(z.string())]).optional(),
+    apparelTypes: z.union([z.string(), z.array(z.string())]).optional(),
+    genders: z.union([z.string(), z.array(z.string())]).optional(),
+    sizes: z.union([z.string(), z.array(z.string())]).optional(),
     showType: z.string().optional(),
     searchTitle: z.string().optional(),
     showOutOfStock: z.enum(["true", "false"]).optional(),
@@ -486,51 +654,95 @@ export const Route = createFileRoute("/codyb")({
     const page = Number(deps.page) || 1;
     const pageSize = Number(deps.pageSize) || 25;
     const activeTab = deps.tab || "products";
-
     const selectedBrands = ["CODY_B"];
 
-    if (activeTab === "products") {
-      const selectedCategories = Array.isArray(deps.categories)
-        ? deps.categories.filter(Boolean)
-        : typeof deps.categories === "string"
-          ? deps.categories.split(",").filter(Boolean)
-          : [];
-      const selectedColors = Array.isArray(deps.colors)
-        ? deps.colors.filter(Boolean)
-        : typeof deps.colors === "string"
-          ? deps.colors.split(",").filter(Boolean)
-          : [];
-      const selectedEffects = Array.isArray(deps.effects)
-        ? deps.effects.filter(Boolean)
-        : typeof deps.effects === "string"
-          ? deps.effects.split(",").filter(Boolean)
-          : [];
-      const searchTitle = deps.searchTitle || "";
-      const showOutOfStock = deps.showOutOfStock === "true";
+    // Prepare filter arrays
+    const selectedCategories = Array.isArray(deps.categories)
+      ? deps.categories.filter(Boolean)
+      : typeof deps.categories === "string"
+        ? deps.categories.split(",").filter(Boolean)
+        : [];
+    const selectedColors = Array.isArray(deps.colors)
+      ? deps.colors.filter(Boolean)
+      : typeof deps.colors === "string"
+        ? deps.colors.split(",").filter(Boolean)
+        : [];
+    const selectedEffects = Array.isArray(deps.effects)
+      ? deps.effects.filter(Boolean)
+      : typeof deps.effects === "string"
+        ? deps.effects.split(",").filter(Boolean)
+        : [];
+    const selectedApparelTypes = Array.isArray(deps.apparelTypes)
+      ? deps.apparelTypes.filter(Boolean)
+      : typeof deps.apparelTypes === "string"
+        ? deps.apparelTypes.split(",").filter(Boolean)
+        : [];
+    const selectedGenders = Array.isArray(deps.genders)
+      ? deps.genders.filter(Boolean)
+      : typeof deps.genders === "string"
+        ? deps.genders.split(",").filter(Boolean)
+        : [];
+    const selectedSizes = Array.isArray(deps.sizes)
+      ? deps.sizes.filter(Boolean)
+      : typeof deps.sizes === "string"
+        ? deps.sizes.split(",").filter(Boolean)
+        : [];
+    const searchTitle = deps.searchTitle || "";
+    const showOutOfStock = deps.showOutOfStock === "true";
 
-      queryClient.ensureQueryData(
-        getAllProductsQueryOptions({
-          page,
-          pageSize,
-          selectedBrands,
-          selectedCategories,
-          selectedColors,
-          selectedEffects,
-          searchTitle,
-          inStock: showOutOfStock ? undefined : true,
-        })
-      );
-    } else {
-      queryClient.ensureQueryData(
-        getShowsByBrandQueryOptions("CODY_B", {
-          page,
-          pageSize,
-          typeId: deps.showType || undefined,
-          searchTitle: deps.searchTitle || "",
-        })
-      );
-    }
+    // Load regular products (non-apparel)
+    const regularProductsPromise = queryClient.ensureQueryData(
+      getAllProductsQueryOptions({
+        page: activeTab === "products" ? page : 1,
+        pageSize,
+        selectedBrands,
+        selectedCategories,
+        selectedColors,
+        selectedEffects,
+        searchTitle,
+        inStock: showOutOfStock ? undefined : true,
+        isApparel: false,
+      })
+    );
 
-    return Promise.resolve();
+    const apparelProductsPromise = queryClient.ensureQueryData(
+      getAllApparelQueryOptions({
+        page: activeTab === "products" ? page : 1,
+        pageSize,
+        selectedBrands,
+        selectedCategories,
+        selectedColors,
+        selectedApparelTypes,
+        selectedGenders,
+        selectedSizes,
+        searchTitle,
+        showOutOfStock,
+        isFetching: false,
+        isPlaceholderData: false,
+        setPage: () => {},
+        hasMore: false,
+        setPageAmount: () => {},
+      })
+    );
+
+    const showsPromise = queryClient.ensureQueryData(
+      getShowsByBrandQueryOptions("CODY_B", {
+        page: activeTab === "shows" ? page : 1,
+        pageSize,
+        typeId: deps.showType || undefined,
+        searchTitle: deps.searchTitle || "",
+      })
+    );
+
+    const showTypesPromise = queryClient.ensureQueryData(
+      getAllShowTypesQueryOptions()
+    );
+
+    return Promise.all([
+      regularProductsPromise,
+      apparelProductsPromise,
+      showsPromise,
+      showTypesPromise,
+    ]);
   },
 });
