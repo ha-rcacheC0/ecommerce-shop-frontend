@@ -15,6 +15,7 @@ declare global {
 const HelcimPayButton = ({
   cartId,
   amounts,
+  isUpdatingValues,
   btnDisabled,
   userId,
   shippingAddressId,
@@ -27,6 +28,7 @@ const HelcimPayButton = ({
     shipping: number;
     grandTotal: number;
   };
+  isUpdatingValues: boolean;
   btnDisabled: boolean;
   userId: string;
   shippingAddressId: string;
@@ -45,6 +47,12 @@ const HelcimPayButton = ({
   );
 
   useEffect(() => {
+    // Only fetch checkout token when all calculations are complete
+    if (isUpdatingValues) {
+      console.log('[HelcimPay] Skipping checkout token fetch - values still updating');
+      return;
+    }
+
     const fetchCheckoutToken = async () => {
       try {
         console.log('[HelcimPay] Fetching checkout token with amount:', amounts.grandTotal);
@@ -61,7 +69,7 @@ const HelcimPayButton = ({
     };
 
     fetchCheckoutToken();
-  }, [cartId, amounts]);
+  }, [cartId, amounts, isUpdatingValues]);
 
   const handlePayNow = () => {
     console.log('[HelcimPay] Pay Now clicked');

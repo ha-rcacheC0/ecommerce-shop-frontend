@@ -480,6 +480,7 @@ const Cart = ({
               <HelcimPayButton
                 cartId={user!.userInfo!.cart!.id}
                 amounts={amounts}
+                isUpdatingValues={isUpdatingValues}
                 btnDisabled={
                   (!isShippingAddressSet && !isUpdatingValues) ||
                   !isShippableState ||
