@@ -47,13 +47,16 @@ const HelcimPayButton = ({
   useEffect(() => {
     const fetchCheckoutToken = async () => {
       try {
+        console.log('[HelcimPay] Fetching checkout token with amount:', amounts.grandTotal);
+        console.log('[HelcimPay] Full amounts:', amounts);
         const { checkoutToken } = await startPaymentProcess({
           cartId,
           amount: amounts.grandTotal,
         });
+        console.log('[HelcimPay] Checkout token received:', checkoutToken?.substring(0, 20) + '...');
         setCheckoutToken(checkoutToken);
       } catch (error) {
-        console.error("Failed to fetch checkout token", error);
+        console.error("[HelcimPay] Failed to fetch checkout token", error);
       }
     };
 
@@ -61,24 +64,28 @@ const HelcimPayButton = ({
   }, [cartId, amounts]);
 
   const handlePayNow = () => {
+    console.log('[HelcimPay] Pay Now clicked');
+    console.log('[HelcimPay] Amounts being used:', amounts);
     if (checkoutToken && typeof window.appendHelcimPayIframe === "function") {
       window.appendHelcimPayIframe(checkoutToken);
       window.addEventListener("message", async (event) => {
-        const helcimPayJsIdentifierKey = "helcim-pay-js-" + checkoutToken;
+        const helcimPayJsIdentifierKey = `helcim-pay-js-${checkoutToken}`;
 
         if (event.data.eventName === helcimPayJsIdentifierKey) {
           if (event.data.eventStatus === "ABORTED") {
-            console.error("Transaction failed!", event.data.eventMessage);
+            console.error("[HelcimPay] Transaction failed!", event.data.eventMessage);
           }
 
           if (event.data.eventStatus === "SUCCESS") {
-            console.log("Transaction success!", event.data.eventMessage);
+            console.log("[HelcimPay] Transaction success!", event.data.eventMessage);
+            console.log("[HelcimPay] Creating purchase record with amounts:", amounts);
 
             // Wait for makePurchase to resolve
             try {
               await makePurchase({ userId, shippingAddressId, amounts });
+              console.log("[HelcimPay] Purchase record created successfully");
             } catch (error) {
-              console.error("Error completing purchase:", error);
+              console.error("[HelcimPay] Error completing purchase:", error);
             }
 
             // Remove the iframe after makePurchase is resolved
@@ -88,7 +95,7 @@ const HelcimPayButton = ({
       });
     } else {
       console.error(
-        "HelcimPay function not found or checkout token is missing"
+        "[HelcimPay] HelcimPay function not found or checkout token is missing"
       );
     }
   };

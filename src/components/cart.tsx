@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { TAddress, TApprovedTerminal, TCartProduct } from "../types";
@@ -132,6 +132,13 @@ const Cart = ({
   const liftGateFee = needLiftGate ? 100 : 0;
 
   const grandTotal = subtotal + shipping + tax + liftGateFee;
+
+  // Memoize amounts object to prevent unnecessary re-fetches of checkout token
+  const amounts = useMemo(() => {
+    const amountsObj = { subtotal, tax, liftGateFee, shipping, grandTotal };
+    console.log('[Cart] Amounts calculated:', amountsObj);
+    return amountsObj;
+  }, [subtotal, tax, liftGateFee, shipping, grandTotal]);
 
   useEffect(() => {
     setIsUpdatingValues(true);
@@ -472,7 +479,7 @@ const Cart = ({
             <div className="mt-6">
               <HelcimPayButton
                 cartId={user!.userInfo!.cart!.id}
-                amounts={{ subtotal, tax, liftGateFee, shipping, grandTotal }}
+                amounts={amounts}
                 btnDisabled={
                   (!isShippingAddressSet && !isUpdatingValues) ||
                   !isShippableState ||
