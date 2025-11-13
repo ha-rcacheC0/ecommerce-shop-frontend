@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // src/api/apparel/apparel.ts - Updated for variants
 
 import {

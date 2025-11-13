@@ -136,7 +136,7 @@ const Cart = ({
   // Memoize amounts object to prevent unnecessary re-fetches of checkout token
   const amounts = useMemo(() => {
     const amountsObj = { subtotal, tax, liftGateFee, shipping, grandTotal };
-    console.log('[Cart] Amounts calculated:', amountsObj);
+    console.log("[Cart] Amounts calculated:", amountsObj);
     return amountsObj;
   }, [subtotal, tax, liftGateFee, shipping, grandTotal]);
 
@@ -150,7 +150,7 @@ const Cart = ({
     });
     setShipping(newShipping);
     setIsUpdatingValues(false);
-  }, [subtotal, isTerminalDestination, orderType, terminalDestination]);
+  }, [subtotal, isTerminalDestination, orderType]);
 
   const { data: terminalData }: { data: TApprovedTerminal | undefined } =
     useQuery(
@@ -267,7 +267,7 @@ const Cart = ({
                 <div>
                   <h3 className="font-bold">Shipping Unavailable</h3>
                   <div className="text-sm">
-                    We currently don't ship to {currentShippingAddress!.state}.
+                    We currently don't ship to {currentShippingAddress.state}.
                     Please select a different shipping address.
                   </div>
                 </div>
@@ -361,20 +361,24 @@ const Cart = ({
                 </div>
               ) : (
                 <div className="p-3 bg-base-300 rounded">
-                  <p>
-                    {currentShippingAddress!.street1}
-                    {currentShippingAddress!.street2 && (
-                      <span>
-                        <br />
-                        {currentShippingAddress!.street2}
-                      </span>
-                    )}
-                  </p>
-                  <p>
-                    {currentShippingAddress!.city},{" "}
-                    {currentShippingAddress!.state}{" "}
-                    {currentShippingAddress!.postalCode}
-                  </p>
+                  {currentShippingAddress && (
+                    <>
+                      <p>
+                        {currentShippingAddress.street1}
+                        {currentShippingAddress.street2 && (
+                          <span>
+                            <br />
+                            {currentShippingAddress.street2}
+                          </span>
+                        )}
+                      </p>
+                      <p>
+                        {currentShippingAddress.city},{" "}
+                        {currentShippingAddress.state}{" "}
+                        {currentShippingAddress.postalCode}
+                      </p>
+                    </>
+                  )}
                 </div>
               )}
             </div>
