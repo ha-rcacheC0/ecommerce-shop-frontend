@@ -13,6 +13,7 @@ import { isObjectEmpty } from "../utils/validationUtils";
 import { useAuth } from "../providers/auth.provider";
 import StateZipInput from "./component-parts/state-zip-input";
 import TerminalSelection from "./component-parts/terminal-selection";
+import { logger } from "../utils/logger";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -136,7 +137,7 @@ const Cart = ({
   // Memoize amounts object to prevent unnecessary re-fetches of checkout token
   const amounts = useMemo(() => {
     const amountsObj = { subtotal, tax, liftGateFee, shipping, grandTotal };
-    console.log("[Cart] Amounts calculated:", amountsObj);
+    logger.debug(amountsObj, "Cart: Amounts calculated");
     return amountsObj;
   }, [subtotal, tax, liftGateFee, shipping, grandTotal]);
 

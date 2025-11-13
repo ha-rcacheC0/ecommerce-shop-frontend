@@ -26,10 +26,10 @@ function ShowDetailPage() {
 
   const { data: show, isLoading } = useQuery(getShowByIdQueryOptions(showId));
 
-  const userCartId = user?.userInfo?.cart!.id;
+  const userCartId = user?.userInfo?.cart?.id;
 
   const addToCart = useAddItemToCartMutation(
-    userCartId!,
+    userCartId || "",
     () => {
       toast.success(`${show?.title} added to cart!`, {
         position: "bottom-right",

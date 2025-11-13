@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { getApparelByIdQueryOptions } from "@api/apparel/apparelQueries";
 import { ProductVariant } from "@/types";
+import { logger } from "@/utils/logger";
 
 interface VariantManagerProps {
   productId: string;
@@ -105,10 +106,10 @@ const VariantManager: React.FC<VariantManagerProps> = ({ productId }) => {
 
       // TODO: Implement actual API calls
       if (variant.isNew) {
-        console.log("Creating new variant:", variant);
+        logger.debug({ variantId, sku: variant.sku }, "Creating new variant");
         // await createVariant(variant);
       } else {
-        console.log("Updating variant:", variant);
+        logger.debug({ variantId, sku: variant.sku }, "Updating variant");
         // await updateVariant(variantId, variant);
       }
 
@@ -143,7 +144,7 @@ const VariantManager: React.FC<VariantManagerProps> = ({ productId }) => {
     try {
       if (!variant.isNew) {
         // TODO: Implement actual API call
-        console.log("Deleting variant:", variantId);
+        logger.debug({ variantId, sku: variant.sku }, "Deleting variant");
         // await deleteVariant(variantId);
       }
 

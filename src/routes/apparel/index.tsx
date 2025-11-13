@@ -12,6 +12,7 @@ import { TProduct } from "@/types";
 import { PageButtons } from "@components/component-parts/pageButtons";
 import { z } from "zod";
 import { ApparelFilterPanel } from "@/components/component-parts/apparelFilterPanel";
+import { logger } from "@/utils/logger";
 
 const ApparelProducts: React.FC = () => {
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ const ApparelProducts: React.FC = () => {
       inStock: showOutOfStock ? undefined : true,
     })
   );
-  console.log("Apparel Products:", apparelProducts);
+  logger.debug({ count: apparelProducts?.totalCount }, "Apparel Products loaded");
 
   const updateUrl = useCallback(() => {
     const searchParams: Record<string, string | string[]> = {

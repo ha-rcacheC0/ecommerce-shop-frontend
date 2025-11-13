@@ -4,6 +4,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "@tanstack/react-router";
 import { startPaymentProcess } from "../../api/cart/cart";
 import { useMakePurchaseMutation } from "../../api/cart/cartQueries";
+import { logger } from "../../utils/logger";
 
 declare global {
   interface Window {
@@ -38,7 +39,7 @@ const HelcimPayButton = ({
 
   const { mutateAsync: makePurchase, isPending } = useMakePurchaseMutation(
     () => {
-      console.log("Purchase successful!");
+      logger.info({ cartId }, "Purchase successful");
       navigate({ to: `/profile/cart/${cartId}/success` });
     },
     (error) => {
@@ -49,17 +50,18 @@ const HelcimPayButton = ({
   useEffect(() => {
     // Only fetch checkout token when all calculations are complete
     if (isUpdatingValues) {
-      console.log(
-        "[HelcimPay] Skipping checkout token fetch - values still updating"
+      logger.debug(
+        { isUpdatingValues },
+        "HelcimPay: Skipping checkout token fetch - values still updating"
       );
       return;
     }
 
     const fetchCheckoutToken = async () => {
       try {
-        console.log(
-          "[HelcimPay] Fetching checkout token with amount:",
-          amounts.grandTotal
+        logger.debug(
+          { cartId, amount: amounts.grandTotal },
+          "HelcimPay: Fetching checkout token"
         );
         const { checkoutToken } = await startPaymentProcess({
           cartId,
@@ -88,14 +90,14 @@ const HelcimPayButton = ({
           }
 
           if (event.data.eventStatus === "SUCCESS") {
-            console.log(
-              "[HelcimPay] Transaction success!",
-              event.data.eventMessage
+            logger.info(
+              { eventMessage: event.data.eventMessage },
+              "HelcimPay: Transaction success"
             );
             // Wait for makePurchase to resolve
             try {
               await makePurchase({ userId, shippingAddressId, amounts });
-              console.log("[HelcimPay] Purchase record created successfully");
+              logger.info({ userId, cartId }, "HelcimPay: Purchase record created successfully");
             } catch (error) {
               console.error("[HelcimPay] Error completing purchase:", error);
             }

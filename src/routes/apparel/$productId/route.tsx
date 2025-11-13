@@ -51,7 +51,7 @@ const ApparelProductDetailPage = () => {
 
   const userCartId = user?.userInfo?.cart?.id;
   const addItem = useAddItemToCartMutation(
-    userCartId!,
+    userCartId || "",
     () => {
       toast.success(
         `${product.data?.title} (${selectedVariant?.size} - ${genderDisplay[selectedVariant?.gender || "UNISEX"]}) added to cart!`,
