@@ -49,31 +49,31 @@ const HelcimPayButton = ({
   useEffect(() => {
     // Only fetch checkout token when all calculations are complete
     if (isUpdatingValues) {
-      console.log('[HelcimPay] Skipping checkout token fetch - values still updating');
+      console.log(
+        "[HelcimPay] Skipping checkout token fetch - values still updating"
+      );
       return;
     }
 
     const fetchCheckoutToken = async () => {
       try {
-        console.log('[HelcimPay] Fetching checkout token with amount:', amounts.grandTotal);
-        console.log('[HelcimPay] Full amounts:', amounts);
+        console.log(
+          "[HelcimPay] Fetching checkout token with amount:",
+          amounts.grandTotal
+        );
         const { checkoutToken } = await startPaymentProcess({
           cartId,
           amount: amounts.grandTotal,
         });
-        console.log('[HelcimPay] Checkout token received:', checkoutToken?.substring(0, 20) + '...');
         setCheckoutToken(checkoutToken);
       } catch (error) {
         console.error("[HelcimPay] Failed to fetch checkout token", error);
       }
     };
-
     fetchCheckoutToken();
   }, [cartId, amounts, isUpdatingValues]);
 
   const handlePayNow = () => {
-    console.log('[HelcimPay] Pay Now clicked');
-    console.log('[HelcimPay] Amounts being used:', amounts);
     if (checkoutToken && typeof window.appendHelcimPayIframe === "function") {
       window.appendHelcimPayIframe(checkoutToken);
       window.addEventListener("message", async (event) => {
@@ -81,13 +81,17 @@ const HelcimPayButton = ({
 
         if (event.data.eventName === helcimPayJsIdentifierKey) {
           if (event.data.eventStatus === "ABORTED") {
-            console.error("[HelcimPay] Transaction failed!", event.data.eventMessage);
+            console.error(
+              "[HelcimPay] Transaction failed!",
+              event.data.eventMessage
+            );
           }
 
           if (event.data.eventStatus === "SUCCESS") {
-            console.log("[HelcimPay] Transaction success!", event.data.eventMessage);
-            console.log("[HelcimPay] Creating purchase record with amounts:", amounts);
-
+            console.log(
+              "[HelcimPay] Transaction success!",
+              event.data.eventMessage
+            );
             // Wait for makePurchase to resolve
             try {
               await makePurchase({ userId, shippingAddressId, amounts });
@@ -110,6 +114,7 @@ const HelcimPayButton = ({
 
   return (
     <button
+      type="submit"
       className="btn btn-primary"
       onClick={handlePayNow}
       disabled={btnDisabled || isPending}
