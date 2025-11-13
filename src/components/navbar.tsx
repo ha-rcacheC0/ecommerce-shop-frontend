@@ -64,6 +64,11 @@ export const Navbar = () => {
                 Shows
               </Link>
             </li>
+            <li>
+              <Link to={"/apparel"} search={{ page: 1, pageSize: 25 }}>
+                Apparel
+              </Link>
+            </li>
             <div className="divider divider-secondary"></div>
             {auth.authState === "authenticated" ? (
               <>

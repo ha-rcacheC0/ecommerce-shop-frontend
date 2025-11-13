@@ -397,6 +397,12 @@ const Cart = ({
                       <span className="badge badge-success badge-sm">FREE</span>
                     </>
                   )}
+                  {orderType === "apparelOnly" && (
+                    <>
+                      <span>🎽</span>
+                      <span>Apparel Shipping</span>
+                    </>
+                  )}
                   {orderType === "retail" && (
                     <>
                       <FontAwesomeIcon icon={faShoppingBag} />
