@@ -28,14 +28,18 @@ export const getAllProductsQuery = async (
 		params.append("inStock", filters.inStock.toString());
 	}
 
-	filters.selectedBrands?.forEach((brand) => params.append("brands", brand));
-	filters.selectedCategories?.forEach((category) =>
-		params.append("categories", category),
-	);
-	filters.selectedColors?.forEach((color) => params.append("colors", color));
-	filters.selectedEffects?.forEach((effect) =>
-		params.append("effects", effect),
-	);
+	filters.selectedBrands?.forEach((brand) => {
+		params.append("brands", brand);
+	});
+	filters.selectedCategories?.forEach((category) => {
+		params.append("categories", category);
+	});
+	filters.selectedColors?.forEach((color) => {
+		params.append("colors", color);
+	});
+	filters.selectedEffects?.forEach((effect) => {
+		params.append("effects", effect);
+	});
 
 	try {
 		const response = await fetch(`${BASE_URL}?${params.toString()}`, {

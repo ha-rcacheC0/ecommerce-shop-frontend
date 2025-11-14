@@ -466,15 +466,17 @@ export interface UserCreateRequest {
 }
 
 // API Response Types
+export interface Pagination {
+	currentPage: number;
+	pageSize: number;
+	totalItems: number;
+	totalPages: number;
+	hasMore: boolean;
+}
+
 export interface PaginatedResponse<T> {
 	items: T[];
-	pagination: {
-		currentPage: number;
-		pageSize: number;
-		totalItems: number;
-		totalPages: number;
-		hasMore: boolean;
-	};
+	pagination: Pagination;
 }
 
 export interface ProductsResponse {

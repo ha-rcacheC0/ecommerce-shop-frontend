@@ -2,7 +2,9 @@
 // src/api/shows/shows.ts
 import type {
 	CreateShowData,
+	Pagination,
 	ShowWithProducts,
+	TBrand,
 	UpdateShowData,
 } from "../../types";
 import { API_CONFIG } from "../../utils/config";
@@ -16,7 +18,7 @@ export const getAllShows = async (params?: {
 	typeId?: string;
 	searchTitle?: string;
 	brandId?: string; // Add brand filter
-}): Promise<{ shows: ShowWithProducts[]; pagination: any }> => {
+}): Promise<{ shows: ShowWithProducts[]; pagination: Pagination }> => {
 	const searchParams = new URLSearchParams();
 	if (params?.page) searchParams.append("page", params.page.toString());
 	if (params?.pageSize)
@@ -48,7 +50,11 @@ export const getShowsByBrand = async (
 		typeId?: string;
 		searchTitle?: string;
 	},
-): Promise<{ shows: ShowWithProducts[]; brand: any; pagination: any }> => {
+): Promise<{
+	shows: ShowWithProducts[];
+	brand: TBrand;
+	pagination: Pagination;
+}> => {
 	const searchParams = new URLSearchParams();
 	if (params?.page) searchParams.append("page", params.page.toString());
 	if (params?.pageSize)

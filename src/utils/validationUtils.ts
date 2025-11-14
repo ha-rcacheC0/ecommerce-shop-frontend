@@ -55,10 +55,8 @@ export const validatePasswordInput = (password: string) =>
 export const validateEmailInput = (email: string) =>
 	validateInput(validateEmailSchema, email);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isObjectEmpty(obj: any) {
+export function isObjectEmpty(obj: Record<string, unknown>) {
 	for (const key in obj) {
-		// eslint-disable-next-line no-prototype-builtins
 		if (Object.hasOwn(obj, key) && obj[key] !== "") {
 			return false;
 		}

@@ -8,1016 +8,1020 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/_auth'
-import { Route as EventsRouteImport } from './routes/events/route'
-import { Route as CodybRouteImport } from './routes/codyb/route'
-import { Route as ShowsIndexImport } from './routes/shows/index'
-import { Route as ProductsIndexImport } from './routes/products/index'
-import { Route as ApparelIndexImport } from './routes/apparel/index'
-import { Route as UserRegisterImport } from './routes/user/register'
-import { Route as UserLoginImport } from './routes/user/login'
-import { Route as EventsNewYearsImport } from './routes/events/new-years'
-import { Route as EventsGenderRevealImport } from './routes/events/gender-reveal'
-import { Route as EventsFourthJulyImport } from './routes/events/fourth-july'
-import { Route as ShowsShowIdRouteImport } from './routes/shows/$showId/route'
-import { Route as ProductsProductIdRouteImport } from './routes/products/$productId/route'
-import { Route as ApparelProductIdRouteImport } from './routes/apparel/$productId/route'
-import { Route as AuthAdminRouteImport } from './routes/_auth/admin/route'
-import { Route as AuthProfileIndexImport } from './routes/_auth/profile/index'
-import { Route as AuthProfileEditImport } from './routes/_auth/profile/edit'
-import { Route as AuthAdminUsersImport } from './routes/_auth/admin/users'
-import { Route as AuthAdminInventoryImport } from './routes/_auth/admin/inventory'
-import { Route as AuthAdminAdminImport } from './routes/_auth/admin/admin'
-import { Route as AuthAdminShowsIndexImport } from './routes/_auth/admin/shows/index'
-import { Route as AuthAdminReportsIndexImport } from './routes/_auth/admin/reports/index'
-import { Route as AuthAdminProductsIndexImport } from './routes/_auth/admin/products/index'
-import { Route as AuthAdminApparelIndexImport } from './routes/_auth/admin/apparel/index'
-import { Route as AuthAdminShowsShowTypesImport } from './routes/_auth/admin/shows/showTypes'
-import { Route as AuthAdminShowsCreateImport } from './routes/_auth/admin/shows/create'
-import { Route as AuthAdminProductsCreateImport } from './routes/_auth/admin/products/create'
-import { Route as AuthAdminApparelCreateImport } from './routes/_auth/admin/apparel/create'
-import { Route as AuthProfileCartCartIdIndexImport } from './routes/_auth/profile/cart/$cartId/index'
-import { Route as AuthProfileCartCartIdSuccessImport } from './routes/_auth/profile/cart/$cartId/success'
-import { Route as AuthAdminShowsShowIdEditImport } from './routes/_auth/admin/shows/$showId/edit'
-import { Route as AuthAdminProductsProductIdEditImport } from './routes/_auth/admin/products/$productId/edit'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as AuthImport } from "./routes/_auth";
+import { Route as AuthAdminAdminImport } from "./routes/_auth/admin/admin";
+import { Route as AuthAdminApparelCreateImport } from "./routes/_auth/admin/apparel/create";
+import { Route as AuthAdminApparelIndexImport } from "./routes/_auth/admin/apparel/index";
+import { Route as AuthAdminInventoryImport } from "./routes/_auth/admin/inventory";
+import { Route as AuthAdminProductsProductIdEditImport } from "./routes/_auth/admin/products/$productId/edit";
+import { Route as AuthAdminProductsCreateImport } from "./routes/_auth/admin/products/create";
+import { Route as AuthAdminProductsIndexImport } from "./routes/_auth/admin/products/index";
+import { Route as AuthAdminReportsIndexImport } from "./routes/_auth/admin/reports/index";
+import { Route as AuthAdminRouteImport } from "./routes/_auth/admin/route";
+import { Route as AuthAdminShowsShowIdEditImport } from "./routes/_auth/admin/shows/$showId/edit";
+import { Route as AuthAdminShowsCreateImport } from "./routes/_auth/admin/shows/create";
+import { Route as AuthAdminShowsIndexImport } from "./routes/_auth/admin/shows/index";
+import { Route as AuthAdminShowsShowTypesImport } from "./routes/_auth/admin/shows/showTypes";
+import { Route as AuthAdminUsersImport } from "./routes/_auth/admin/users";
+import { Route as AuthProfileCartCartIdIndexImport } from "./routes/_auth/profile/cart/$cartId/index";
+import { Route as AuthProfileCartCartIdSuccessImport } from "./routes/_auth/profile/cart/$cartId/success";
+import { Route as AuthProfileEditImport } from "./routes/_auth/profile/edit";
+import { Route as AuthProfileIndexImport } from "./routes/_auth/profile/index";
+import { Route as ApparelProductIdRouteImport } from "./routes/apparel/$productId/route";
+import { Route as ApparelIndexImport } from "./routes/apparel/index";
+import { Route as CodybRouteImport } from "./routes/codyb/route";
+import { Route as EventsFourthJulyImport } from "./routes/events/fourth-july";
+import { Route as EventsGenderRevealImport } from "./routes/events/gender-reveal";
+import { Route as EventsNewYearsImport } from "./routes/events/new-years";
+import { Route as EventsRouteImport } from "./routes/events/route";
+import { Route as ProductsProductIdRouteImport } from "./routes/products/$productId/route";
+import { Route as ProductsIndexImport } from "./routes/products/index";
+import { Route as ShowsShowIdRouteImport } from "./routes/shows/$showId/route";
+import { Route as ShowsIndexImport } from "./routes/shows/index";
+import { Route as UserLoginImport } from "./routes/user/login";
+import { Route as UserRegisterImport } from "./routes/user/register";
 
 // Create Virtual Routes
 
-const TermsOfUseLazyImport = createFileRoute('/terms-of-use')()
-const ShippingInfoLazyImport = createFileRoute('/shipping-info')()
-const PrivacyPolicyLazyImport = createFileRoute('/privacy-policy')()
-const FireworksSafetyLazyImport = createFileRoute('/fireworks-safety')()
-const FaqLazyImport = createFileRoute('/faq')()
-const CustomerServiceLazyImport = createFileRoute('/customer-service')()
-const CookiePolicyLazyImport = createFileRoute('/cookie-policy')()
-const ContactUsLazyImport = createFileRoute('/contact-us')()
-const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
+const TermsOfUseLazyImport = createFileRoute("/terms-of-use")();
+const ShippingInfoLazyImport = createFileRoute("/shipping-info")();
+const PrivacyPolicyLazyImport = createFileRoute("/privacy-policy")();
+const FireworksSafetyLazyImport = createFileRoute("/fireworks-safety")();
+const FaqLazyImport = createFileRoute("/faq")();
+const CustomerServiceLazyImport = createFileRoute("/customer-service")();
+const CookiePolicyLazyImport = createFileRoute("/cookie-policy")();
+const ContactUsLazyImport = createFileRoute("/contact-us")();
+const AboutLazyImport = createFileRoute("/about")();
+const IndexLazyImport = createFileRoute("/")();
 
 // Create/Update Routes
 
 const TermsOfUseLazyRoute = TermsOfUseLazyImport.update({
-  id: '/terms-of-use',
-  path: '/terms-of-use',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/terms-of-use.lazy').then((d) => d.Route))
+	id: "/terms-of-use",
+	path: "/terms-of-use",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/terms-of-use.lazy").then((d) => d.Route));
 
 const ShippingInfoLazyRoute = ShippingInfoLazyImport.update({
-  id: '/shipping-info',
-  path: '/shipping-info',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/shipping-info.lazy').then((d) => d.Route))
+	id: "/shipping-info",
+	path: "/shipping-info",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+	import("./routes/shipping-info.lazy").then((d) => d.Route),
+);
 
 const PrivacyPolicyLazyRoute = PrivacyPolicyLazyImport.update({
-  id: '/privacy-policy',
-  path: '/privacy-policy',
-  getParentRoute: () => rootRoute,
+	id: "/privacy-policy",
+	path: "/privacy-policy",
+	getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/privacy-policy.lazy').then((d) => d.Route),
-)
+	import("./routes/privacy-policy.lazy").then((d) => d.Route),
+);
 
 const FireworksSafetyLazyRoute = FireworksSafetyLazyImport.update({
-  id: '/fireworks-safety',
-  path: '/fireworks-safety',
-  getParentRoute: () => rootRoute,
+	id: "/fireworks-safety",
+	path: "/fireworks-safety",
+	getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/fireworks-safety.lazy').then((d) => d.Route),
-)
+	import("./routes/fireworks-safety.lazy").then((d) => d.Route),
+);
 
 const FaqLazyRoute = FaqLazyImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/faq.lazy').then((d) => d.Route))
+	id: "/faq",
+	path: "/faq",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/faq.lazy").then((d) => d.Route));
 
 const CustomerServiceLazyRoute = CustomerServiceLazyImport.update({
-  id: '/customer-service',
-  path: '/customer-service',
-  getParentRoute: () => rootRoute,
+	id: "/customer-service",
+	path: "/customer-service",
+	getParentRoute: () => rootRoute,
 } as any).lazy(() =>
-  import('./routes/customer-service.lazy').then((d) => d.Route),
-)
+	import("./routes/customer-service.lazy").then((d) => d.Route),
+);
 
 const CookiePolicyLazyRoute = CookiePolicyLazyImport.update({
-  id: '/cookie-policy',
-  path: '/cookie-policy',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/cookie-policy.lazy').then((d) => d.Route))
+	id: "/cookie-policy",
+	path: "/cookie-policy",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() =>
+	import("./routes/cookie-policy.lazy").then((d) => d.Route),
+);
 
 const ContactUsLazyRoute = ContactUsLazyImport.update({
-  id: '/contact-us',
-  path: '/contact-us',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/contact-us.lazy').then((d) => d.Route))
+	id: "/contact-us",
+	path: "/contact-us",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/contact-us.lazy").then((d) => d.Route));
 
 const AboutLazyRoute = AboutLazyImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+	id: "/about",
+	path: "/about",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/about.lazy").then((d) => d.Route));
 
 const AuthRoute = AuthImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/_auth",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const EventsRouteRoute = EventsRouteImport.update({
-  id: '/events',
-  path: '/events',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/events",
+	path: "/events",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const CodybRouteRoute = CodybRouteImport.update({
-  id: '/codyb',
-  path: '/codyb',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/codyb",
+	path: "/codyb",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const IndexLazyRoute = IndexLazyImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+	id: "/",
+	path: "/",
+	getParentRoute: () => rootRoute,
+} as any).lazy(() => import("./routes/index.lazy").then((d) => d.Route));
 
 const ShowsIndexRoute = ShowsIndexImport.update({
-  id: '/shows/',
-  path: '/shows/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/shows/",
+	path: "/shows/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ProductsIndexRoute = ProductsIndexImport.update({
-  id: '/products/',
-  path: '/products/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/products/",
+	path: "/products/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ApparelIndexRoute = ApparelIndexImport.update({
-  id: '/apparel/',
-  path: '/apparel/',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/apparel/",
+	path: "/apparel/",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const UserRegisterRoute = UserRegisterImport.update({
-  id: '/user/register',
-  path: '/user/register',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/user/register",
+	path: "/user/register",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const UserLoginRoute = UserLoginImport.update({
-  id: '/user/login',
-  path: '/user/login',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/user/login",
+	path: "/user/login",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const EventsNewYearsRoute = EventsNewYearsImport.update({
-  id: '/new-years',
-  path: '/new-years',
-  getParentRoute: () => EventsRouteRoute,
-} as any)
+	id: "/new-years",
+	path: "/new-years",
+	getParentRoute: () => EventsRouteRoute,
+} as any);
 
 const EventsGenderRevealRoute = EventsGenderRevealImport.update({
-  id: '/gender-reveal',
-  path: '/gender-reveal',
-  getParentRoute: () => EventsRouteRoute,
-} as any)
+	id: "/gender-reveal",
+	path: "/gender-reveal",
+	getParentRoute: () => EventsRouteRoute,
+} as any);
 
 const EventsFourthJulyRoute = EventsFourthJulyImport.update({
-  id: '/fourth-july',
-  path: '/fourth-july',
-  getParentRoute: () => EventsRouteRoute,
-} as any)
+	id: "/fourth-july",
+	path: "/fourth-july",
+	getParentRoute: () => EventsRouteRoute,
+} as any);
 
 const ShowsShowIdRouteRoute = ShowsShowIdRouteImport.update({
-  id: '/shows/$showId',
-  path: '/shows/$showId',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/shows/$showId",
+	path: "/shows/$showId",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ProductsProductIdRouteRoute = ProductsProductIdRouteImport.update({
-  id: '/products/$productId',
-  path: '/products/$productId',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/products/$productId",
+	path: "/products/$productId",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const ApparelProductIdRouteRoute = ApparelProductIdRouteImport.update({
-  id: '/apparel/$productId',
-  path: '/apparel/$productId',
-  getParentRoute: () => rootRoute,
-} as any)
+	id: "/apparel/$productId",
+	path: "/apparel/$productId",
+	getParentRoute: () => rootRoute,
+} as any);
 
 const AuthAdminRouteRoute = AuthAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthRoute,
-} as any)
+	id: "/admin",
+	path: "/admin",
+	getParentRoute: () => AuthRoute,
+} as any);
 
 const AuthProfileIndexRoute = AuthProfileIndexImport.update({
-  id: '/profile/',
-  path: '/profile/',
-  getParentRoute: () => AuthRoute,
-} as any)
+	id: "/profile/",
+	path: "/profile/",
+	getParentRoute: () => AuthRoute,
+} as any);
 
 const AuthProfileEditRoute = AuthProfileEditImport.update({
-  id: '/profile/edit',
-  path: '/profile/edit',
-  getParentRoute: () => AuthRoute,
-} as any)
+	id: "/profile/edit",
+	path: "/profile/edit",
+	getParentRoute: () => AuthRoute,
+} as any);
 
 const AuthAdminUsersRoute = AuthAdminUsersImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/users",
+	path: "/users",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminInventoryRoute = AuthAdminInventoryImport.update({
-  id: '/inventory',
-  path: '/inventory',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/inventory",
+	path: "/inventory",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminAdminRoute = AuthAdminAdminImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/admin",
+	path: "/admin",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminShowsIndexRoute = AuthAdminShowsIndexImport.update({
-  id: '/shows/',
-  path: '/shows/',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/shows/",
+	path: "/shows/",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminReportsIndexRoute = AuthAdminReportsIndexImport.update({
-  id: '/reports/',
-  path: '/reports/',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/reports/",
+	path: "/reports/",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminProductsIndexRoute = AuthAdminProductsIndexImport.update({
-  id: '/products/',
-  path: '/products/',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/products/",
+	path: "/products/",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminApparelIndexRoute = AuthAdminApparelIndexImport.update({
-  id: '/apparel/',
-  path: '/apparel/',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/apparel/",
+	path: "/apparel/",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminShowsShowTypesRoute = AuthAdminShowsShowTypesImport.update({
-  id: '/shows/showTypes',
-  path: '/shows/showTypes',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/shows/showTypes",
+	path: "/shows/showTypes",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminShowsCreateRoute = AuthAdminShowsCreateImport.update({
-  id: '/shows/create',
-  path: '/shows/create',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/shows/create",
+	path: "/shows/create",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminProductsCreateRoute = AuthAdminProductsCreateImport.update({
-  id: '/products/create',
-  path: '/products/create',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/products/create",
+	path: "/products/create",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminApparelCreateRoute = AuthAdminApparelCreateImport.update({
-  id: '/apparel/create',
-  path: '/apparel/create',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/apparel/create",
+	path: "/apparel/create",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthProfileCartCartIdIndexRoute = AuthProfileCartCartIdIndexImport.update(
-  {
-    id: '/profile/cart/$cartId/',
-    path: '/profile/cart/$cartId/',
-    getParentRoute: () => AuthRoute,
-  } as any,
-)
+	{
+		id: "/profile/cart/$cartId/",
+		path: "/profile/cart/$cartId/",
+		getParentRoute: () => AuthRoute,
+	} as any,
+);
 
 const AuthProfileCartCartIdSuccessRoute =
-  AuthProfileCartCartIdSuccessImport.update({
-    id: '/profile/cart/$cartId/success',
-    path: '/profile/cart/$cartId/success',
-    getParentRoute: () => AuthRoute,
-  } as any)
+	AuthProfileCartCartIdSuccessImport.update({
+		id: "/profile/cart/$cartId/success",
+		path: "/profile/cart/$cartId/success",
+		getParentRoute: () => AuthRoute,
+	} as any);
 
 const AuthAdminShowsShowIdEditRoute = AuthAdminShowsShowIdEditImport.update({
-  id: '/shows/$showId/edit',
-  path: '/shows/$showId/edit',
-  getParentRoute: () => AuthAdminRouteRoute,
-} as any)
+	id: "/shows/$showId/edit",
+	path: "/shows/$showId/edit",
+	getParentRoute: () => AuthAdminRouteRoute,
+} as any);
 
 const AuthAdminProductsProductIdEditRoute =
-  AuthAdminProductsProductIdEditImport.update({
-    id: '/products/$productId/edit',
-    path: '/products/$productId/edit',
-    getParentRoute: () => AuthAdminRouteRoute,
-  } as any)
+	AuthAdminProductsProductIdEditImport.update({
+		id: "/products/$productId/edit",
+		path: "/products/$productId/edit",
+		getParentRoute: () => AuthAdminRouteRoute,
+	} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/codyb': {
-      id: '/codyb'
-      path: '/codyb'
-      fullPath: '/codyb'
-      preLoaderRoute: typeof CodybRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/events': {
-      id: '/events'
-      path: '/events'
-      fullPath: '/events'
-      preLoaderRoute: typeof EventsRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/contact-us': {
-      id: '/contact-us'
-      path: '/contact-us'
-      fullPath: '/contact-us'
-      preLoaderRoute: typeof ContactUsLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/cookie-policy': {
-      id: '/cookie-policy'
-      path: '/cookie-policy'
-      fullPath: '/cookie-policy'
-      preLoaderRoute: typeof CookiePolicyLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/customer-service': {
-      id: '/customer-service'
-      path: '/customer-service'
-      fullPath: '/customer-service'
-      preLoaderRoute: typeof CustomerServiceLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/fireworks-safety': {
-      id: '/fireworks-safety'
-      path: '/fireworks-safety'
-      fullPath: '/fireworks-safety'
-      preLoaderRoute: typeof FireworksSafetyLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/privacy-policy': {
-      id: '/privacy-policy'
-      path: '/privacy-policy'
-      fullPath: '/privacy-policy'
-      preLoaderRoute: typeof PrivacyPolicyLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/shipping-info': {
-      id: '/shipping-info'
-      path: '/shipping-info'
-      fullPath: '/shipping-info'
-      preLoaderRoute: typeof ShippingInfoLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/terms-of-use': {
-      id: '/terms-of-use'
-      path: '/terms-of-use'
-      fullPath: '/terms-of-use'
-      preLoaderRoute: typeof TermsOfUseLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth/admin': {
-      id: '/_auth/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthAdminRouteImport
-      parentRoute: typeof AuthImport
-    }
-    '/apparel/$productId': {
-      id: '/apparel/$productId'
-      path: '/apparel/$productId'
-      fullPath: '/apparel/$productId'
-      preLoaderRoute: typeof ApparelProductIdRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/products/$productId': {
-      id: '/products/$productId'
-      path: '/products/$productId'
-      fullPath: '/products/$productId'
-      preLoaderRoute: typeof ProductsProductIdRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/shows/$showId': {
-      id: '/shows/$showId'
-      path: '/shows/$showId'
-      fullPath: '/shows/$showId'
-      preLoaderRoute: typeof ShowsShowIdRouteImport
-      parentRoute: typeof rootRoute
-    }
-    '/events/fourth-july': {
-      id: '/events/fourth-july'
-      path: '/fourth-july'
-      fullPath: '/events/fourth-july'
-      preLoaderRoute: typeof EventsFourthJulyImport
-      parentRoute: typeof EventsRouteImport
-    }
-    '/events/gender-reveal': {
-      id: '/events/gender-reveal'
-      path: '/gender-reveal'
-      fullPath: '/events/gender-reveal'
-      preLoaderRoute: typeof EventsGenderRevealImport
-      parentRoute: typeof EventsRouteImport
-    }
-    '/events/new-years': {
-      id: '/events/new-years'
-      path: '/new-years'
-      fullPath: '/events/new-years'
-      preLoaderRoute: typeof EventsNewYearsImport
-      parentRoute: typeof EventsRouteImport
-    }
-    '/user/login': {
-      id: '/user/login'
-      path: '/user/login'
-      fullPath: '/user/login'
-      preLoaderRoute: typeof UserLoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/user/register': {
-      id: '/user/register'
-      path: '/user/register'
-      fullPath: '/user/register'
-      preLoaderRoute: typeof UserRegisterImport
-      parentRoute: typeof rootRoute
-    }
-    '/apparel/': {
-      id: '/apparel/'
-      path: '/apparel'
-      fullPath: '/apparel'
-      preLoaderRoute: typeof ApparelIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/products/': {
-      id: '/products/'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/shows/': {
-      id: '/shows/'
-      path: '/shows'
-      fullPath: '/shows'
-      preLoaderRoute: typeof ShowsIndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_auth/admin/admin': {
-      id: '/_auth/admin/admin'
-      path: '/admin'
-      fullPath: '/admin/admin'
-      preLoaderRoute: typeof AuthAdminAdminImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/inventory': {
-      id: '/_auth/admin/inventory'
-      path: '/inventory'
-      fullPath: '/admin/inventory'
-      preLoaderRoute: typeof AuthAdminInventoryImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/users': {
-      id: '/_auth/admin/users'
-      path: '/users'
-      fullPath: '/admin/users'
-      preLoaderRoute: typeof AuthAdminUsersImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/profile/edit': {
-      id: '/_auth/profile/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof AuthProfileEditImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/profile/': {
-      id: '/_auth/profile/'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof AuthProfileIndexImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/admin/apparel/create': {
-      id: '/_auth/admin/apparel/create'
-      path: '/apparel/create'
-      fullPath: '/admin/apparel/create'
-      preLoaderRoute: typeof AuthAdminApparelCreateImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/products/create': {
-      id: '/_auth/admin/products/create'
-      path: '/products/create'
-      fullPath: '/admin/products/create'
-      preLoaderRoute: typeof AuthAdminProductsCreateImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/shows/create': {
-      id: '/_auth/admin/shows/create'
-      path: '/shows/create'
-      fullPath: '/admin/shows/create'
-      preLoaderRoute: typeof AuthAdminShowsCreateImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/shows/showTypes': {
-      id: '/_auth/admin/shows/showTypes'
-      path: '/shows/showTypes'
-      fullPath: '/admin/shows/showTypes'
-      preLoaderRoute: typeof AuthAdminShowsShowTypesImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/apparel/': {
-      id: '/_auth/admin/apparel/'
-      path: '/apparel'
-      fullPath: '/admin/apparel'
-      preLoaderRoute: typeof AuthAdminApparelIndexImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/products/': {
-      id: '/_auth/admin/products/'
-      path: '/products'
-      fullPath: '/admin/products'
-      preLoaderRoute: typeof AuthAdminProductsIndexImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/reports/': {
-      id: '/_auth/admin/reports/'
-      path: '/reports'
-      fullPath: '/admin/reports'
-      preLoaderRoute: typeof AuthAdminReportsIndexImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/shows/': {
-      id: '/_auth/admin/shows/'
-      path: '/shows'
-      fullPath: '/admin/shows'
-      preLoaderRoute: typeof AuthAdminShowsIndexImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/products/$productId/edit': {
-      id: '/_auth/admin/products/$productId/edit'
-      path: '/products/$productId/edit'
-      fullPath: '/admin/products/$productId/edit'
-      preLoaderRoute: typeof AuthAdminProductsProductIdEditImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/admin/shows/$showId/edit': {
-      id: '/_auth/admin/shows/$showId/edit'
-      path: '/shows/$showId/edit'
-      fullPath: '/admin/shows/$showId/edit'
-      preLoaderRoute: typeof AuthAdminShowsShowIdEditImport
-      parentRoute: typeof AuthAdminRouteImport
-    }
-    '/_auth/profile/cart/$cartId/success': {
-      id: '/_auth/profile/cart/$cartId/success'
-      path: '/profile/cart/$cartId/success'
-      fullPath: '/profile/cart/$cartId/success'
-      preLoaderRoute: typeof AuthProfileCartCartIdSuccessImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/profile/cart/$cartId/': {
-      id: '/_auth/profile/cart/$cartId/'
-      path: '/profile/cart/$cartId'
-      fullPath: '/profile/cart/$cartId'
-      preLoaderRoute: typeof AuthProfileCartCartIdIndexImport
-      parentRoute: typeof AuthImport
-    }
-  }
+declare module "@tanstack/react-router" {
+	interface FileRoutesByPath {
+		"/": {
+			id: "/";
+			path: "/";
+			fullPath: "/";
+			preLoaderRoute: typeof IndexLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/codyb": {
+			id: "/codyb";
+			path: "/codyb";
+			fullPath: "/codyb";
+			preLoaderRoute: typeof CodybRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/events": {
+			id: "/events";
+			path: "/events";
+			fullPath: "/events";
+			preLoaderRoute: typeof EventsRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_auth": {
+			id: "/_auth";
+			path: "";
+			fullPath: "";
+			preLoaderRoute: typeof AuthImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/about": {
+			id: "/about";
+			path: "/about";
+			fullPath: "/about";
+			preLoaderRoute: typeof AboutLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/contact-us": {
+			id: "/contact-us";
+			path: "/contact-us";
+			fullPath: "/contact-us";
+			preLoaderRoute: typeof ContactUsLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/cookie-policy": {
+			id: "/cookie-policy";
+			path: "/cookie-policy";
+			fullPath: "/cookie-policy";
+			preLoaderRoute: typeof CookiePolicyLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/customer-service": {
+			id: "/customer-service";
+			path: "/customer-service";
+			fullPath: "/customer-service";
+			preLoaderRoute: typeof CustomerServiceLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/faq": {
+			id: "/faq";
+			path: "/faq";
+			fullPath: "/faq";
+			preLoaderRoute: typeof FaqLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/fireworks-safety": {
+			id: "/fireworks-safety";
+			path: "/fireworks-safety";
+			fullPath: "/fireworks-safety";
+			preLoaderRoute: typeof FireworksSafetyLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/privacy-policy": {
+			id: "/privacy-policy";
+			path: "/privacy-policy";
+			fullPath: "/privacy-policy";
+			preLoaderRoute: typeof PrivacyPolicyLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/shipping-info": {
+			id: "/shipping-info";
+			path: "/shipping-info";
+			fullPath: "/shipping-info";
+			preLoaderRoute: typeof ShippingInfoLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/terms-of-use": {
+			id: "/terms-of-use";
+			path: "/terms-of-use";
+			fullPath: "/terms-of-use";
+			preLoaderRoute: typeof TermsOfUseLazyImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_auth/admin": {
+			id: "/_auth/admin";
+			path: "/admin";
+			fullPath: "/admin";
+			preLoaderRoute: typeof AuthAdminRouteImport;
+			parentRoute: typeof AuthImport;
+		};
+		"/apparel/$productId": {
+			id: "/apparel/$productId";
+			path: "/apparel/$productId";
+			fullPath: "/apparel/$productId";
+			preLoaderRoute: typeof ApparelProductIdRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/products/$productId": {
+			id: "/products/$productId";
+			path: "/products/$productId";
+			fullPath: "/products/$productId";
+			preLoaderRoute: typeof ProductsProductIdRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/shows/$showId": {
+			id: "/shows/$showId";
+			path: "/shows/$showId";
+			fullPath: "/shows/$showId";
+			preLoaderRoute: typeof ShowsShowIdRouteImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/events/fourth-july": {
+			id: "/events/fourth-july";
+			path: "/fourth-july";
+			fullPath: "/events/fourth-july";
+			preLoaderRoute: typeof EventsFourthJulyImport;
+			parentRoute: typeof EventsRouteImport;
+		};
+		"/events/gender-reveal": {
+			id: "/events/gender-reveal";
+			path: "/gender-reveal";
+			fullPath: "/events/gender-reveal";
+			preLoaderRoute: typeof EventsGenderRevealImport;
+			parentRoute: typeof EventsRouteImport;
+		};
+		"/events/new-years": {
+			id: "/events/new-years";
+			path: "/new-years";
+			fullPath: "/events/new-years";
+			preLoaderRoute: typeof EventsNewYearsImport;
+			parentRoute: typeof EventsRouteImport;
+		};
+		"/user/login": {
+			id: "/user/login";
+			path: "/user/login";
+			fullPath: "/user/login";
+			preLoaderRoute: typeof UserLoginImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/user/register": {
+			id: "/user/register";
+			path: "/user/register";
+			fullPath: "/user/register";
+			preLoaderRoute: typeof UserRegisterImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/apparel/": {
+			id: "/apparel/";
+			path: "/apparel";
+			fullPath: "/apparel";
+			preLoaderRoute: typeof ApparelIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/products/": {
+			id: "/products/";
+			path: "/products";
+			fullPath: "/products";
+			preLoaderRoute: typeof ProductsIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/shows/": {
+			id: "/shows/";
+			path: "/shows";
+			fullPath: "/shows";
+			preLoaderRoute: typeof ShowsIndexImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/_auth/admin/admin": {
+			id: "/_auth/admin/admin";
+			path: "/admin";
+			fullPath: "/admin/admin";
+			preLoaderRoute: typeof AuthAdminAdminImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/inventory": {
+			id: "/_auth/admin/inventory";
+			path: "/inventory";
+			fullPath: "/admin/inventory";
+			preLoaderRoute: typeof AuthAdminInventoryImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/users": {
+			id: "/_auth/admin/users";
+			path: "/users";
+			fullPath: "/admin/users";
+			preLoaderRoute: typeof AuthAdminUsersImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/profile/edit": {
+			id: "/_auth/profile/edit";
+			path: "/profile/edit";
+			fullPath: "/profile/edit";
+			preLoaderRoute: typeof AuthProfileEditImport;
+			parentRoute: typeof AuthImport;
+		};
+		"/_auth/profile/": {
+			id: "/_auth/profile/";
+			path: "/profile";
+			fullPath: "/profile";
+			preLoaderRoute: typeof AuthProfileIndexImport;
+			parentRoute: typeof AuthImport;
+		};
+		"/_auth/admin/apparel/create": {
+			id: "/_auth/admin/apparel/create";
+			path: "/apparel/create";
+			fullPath: "/admin/apparel/create";
+			preLoaderRoute: typeof AuthAdminApparelCreateImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/products/create": {
+			id: "/_auth/admin/products/create";
+			path: "/products/create";
+			fullPath: "/admin/products/create";
+			preLoaderRoute: typeof AuthAdminProductsCreateImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/shows/create": {
+			id: "/_auth/admin/shows/create";
+			path: "/shows/create";
+			fullPath: "/admin/shows/create";
+			preLoaderRoute: typeof AuthAdminShowsCreateImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/shows/showTypes": {
+			id: "/_auth/admin/shows/showTypes";
+			path: "/shows/showTypes";
+			fullPath: "/admin/shows/showTypes";
+			preLoaderRoute: typeof AuthAdminShowsShowTypesImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/apparel/": {
+			id: "/_auth/admin/apparel/";
+			path: "/apparel";
+			fullPath: "/admin/apparel";
+			preLoaderRoute: typeof AuthAdminApparelIndexImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/products/": {
+			id: "/_auth/admin/products/";
+			path: "/products";
+			fullPath: "/admin/products";
+			preLoaderRoute: typeof AuthAdminProductsIndexImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/reports/": {
+			id: "/_auth/admin/reports/";
+			path: "/reports";
+			fullPath: "/admin/reports";
+			preLoaderRoute: typeof AuthAdminReportsIndexImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/shows/": {
+			id: "/_auth/admin/shows/";
+			path: "/shows";
+			fullPath: "/admin/shows";
+			preLoaderRoute: typeof AuthAdminShowsIndexImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/products/$productId/edit": {
+			id: "/_auth/admin/products/$productId/edit";
+			path: "/products/$productId/edit";
+			fullPath: "/admin/products/$productId/edit";
+			preLoaderRoute: typeof AuthAdminProductsProductIdEditImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/admin/shows/$showId/edit": {
+			id: "/_auth/admin/shows/$showId/edit";
+			path: "/shows/$showId/edit";
+			fullPath: "/admin/shows/$showId/edit";
+			preLoaderRoute: typeof AuthAdminShowsShowIdEditImport;
+			parentRoute: typeof AuthAdminRouteImport;
+		};
+		"/_auth/profile/cart/$cartId/success": {
+			id: "/_auth/profile/cart/$cartId/success";
+			path: "/profile/cart/$cartId/success";
+			fullPath: "/profile/cart/$cartId/success";
+			preLoaderRoute: typeof AuthProfileCartCartIdSuccessImport;
+			parentRoute: typeof AuthImport;
+		};
+		"/_auth/profile/cart/$cartId/": {
+			id: "/_auth/profile/cart/$cartId/";
+			path: "/profile/cart/$cartId";
+			fullPath: "/profile/cart/$cartId";
+			preLoaderRoute: typeof AuthProfileCartCartIdIndexImport;
+			parentRoute: typeof AuthImport;
+		};
+	}
 }
 
 // Create and export the route tree
 
 interface EventsRouteRouteChildren {
-  EventsFourthJulyRoute: typeof EventsFourthJulyRoute
-  EventsGenderRevealRoute: typeof EventsGenderRevealRoute
-  EventsNewYearsRoute: typeof EventsNewYearsRoute
+	EventsFourthJulyRoute: typeof EventsFourthJulyRoute;
+	EventsGenderRevealRoute: typeof EventsGenderRevealRoute;
+	EventsNewYearsRoute: typeof EventsNewYearsRoute;
 }
 
 const EventsRouteRouteChildren: EventsRouteRouteChildren = {
-  EventsFourthJulyRoute: EventsFourthJulyRoute,
-  EventsGenderRevealRoute: EventsGenderRevealRoute,
-  EventsNewYearsRoute: EventsNewYearsRoute,
-}
+	EventsFourthJulyRoute: EventsFourthJulyRoute,
+	EventsGenderRevealRoute: EventsGenderRevealRoute,
+	EventsNewYearsRoute: EventsNewYearsRoute,
+};
 
 const EventsRouteRouteWithChildren = EventsRouteRoute._addFileChildren(
-  EventsRouteRouteChildren,
-)
+	EventsRouteRouteChildren,
+);
 
 interface AuthAdminRouteRouteChildren {
-  AuthAdminAdminRoute: typeof AuthAdminAdminRoute
-  AuthAdminInventoryRoute: typeof AuthAdminInventoryRoute
-  AuthAdminUsersRoute: typeof AuthAdminUsersRoute
-  AuthAdminApparelCreateRoute: typeof AuthAdminApparelCreateRoute
-  AuthAdminProductsCreateRoute: typeof AuthAdminProductsCreateRoute
-  AuthAdminShowsCreateRoute: typeof AuthAdminShowsCreateRoute
-  AuthAdminShowsShowTypesRoute: typeof AuthAdminShowsShowTypesRoute
-  AuthAdminApparelIndexRoute: typeof AuthAdminApparelIndexRoute
-  AuthAdminProductsIndexRoute: typeof AuthAdminProductsIndexRoute
-  AuthAdminReportsIndexRoute: typeof AuthAdminReportsIndexRoute
-  AuthAdminShowsIndexRoute: typeof AuthAdminShowsIndexRoute
-  AuthAdminProductsProductIdEditRoute: typeof AuthAdminProductsProductIdEditRoute
-  AuthAdminShowsShowIdEditRoute: typeof AuthAdminShowsShowIdEditRoute
+	AuthAdminAdminRoute: typeof AuthAdminAdminRoute;
+	AuthAdminInventoryRoute: typeof AuthAdminInventoryRoute;
+	AuthAdminUsersRoute: typeof AuthAdminUsersRoute;
+	AuthAdminApparelCreateRoute: typeof AuthAdminApparelCreateRoute;
+	AuthAdminProductsCreateRoute: typeof AuthAdminProductsCreateRoute;
+	AuthAdminShowsCreateRoute: typeof AuthAdminShowsCreateRoute;
+	AuthAdminShowsShowTypesRoute: typeof AuthAdminShowsShowTypesRoute;
+	AuthAdminApparelIndexRoute: typeof AuthAdminApparelIndexRoute;
+	AuthAdminProductsIndexRoute: typeof AuthAdminProductsIndexRoute;
+	AuthAdminReportsIndexRoute: typeof AuthAdminReportsIndexRoute;
+	AuthAdminShowsIndexRoute: typeof AuthAdminShowsIndexRoute;
+	AuthAdminProductsProductIdEditRoute: typeof AuthAdminProductsProductIdEditRoute;
+	AuthAdminShowsShowIdEditRoute: typeof AuthAdminShowsShowIdEditRoute;
 }
 
 const AuthAdminRouteRouteChildren: AuthAdminRouteRouteChildren = {
-  AuthAdminAdminRoute: AuthAdminAdminRoute,
-  AuthAdminInventoryRoute: AuthAdminInventoryRoute,
-  AuthAdminUsersRoute: AuthAdminUsersRoute,
-  AuthAdminApparelCreateRoute: AuthAdminApparelCreateRoute,
-  AuthAdminProductsCreateRoute: AuthAdminProductsCreateRoute,
-  AuthAdminShowsCreateRoute: AuthAdminShowsCreateRoute,
-  AuthAdminShowsShowTypesRoute: AuthAdminShowsShowTypesRoute,
-  AuthAdminApparelIndexRoute: AuthAdminApparelIndexRoute,
-  AuthAdminProductsIndexRoute: AuthAdminProductsIndexRoute,
-  AuthAdminReportsIndexRoute: AuthAdminReportsIndexRoute,
-  AuthAdminShowsIndexRoute: AuthAdminShowsIndexRoute,
-  AuthAdminProductsProductIdEditRoute: AuthAdminProductsProductIdEditRoute,
-  AuthAdminShowsShowIdEditRoute: AuthAdminShowsShowIdEditRoute,
-}
+	AuthAdminAdminRoute: AuthAdminAdminRoute,
+	AuthAdminInventoryRoute: AuthAdminInventoryRoute,
+	AuthAdminUsersRoute: AuthAdminUsersRoute,
+	AuthAdminApparelCreateRoute: AuthAdminApparelCreateRoute,
+	AuthAdminProductsCreateRoute: AuthAdminProductsCreateRoute,
+	AuthAdminShowsCreateRoute: AuthAdminShowsCreateRoute,
+	AuthAdminShowsShowTypesRoute: AuthAdminShowsShowTypesRoute,
+	AuthAdminApparelIndexRoute: AuthAdminApparelIndexRoute,
+	AuthAdminProductsIndexRoute: AuthAdminProductsIndexRoute,
+	AuthAdminReportsIndexRoute: AuthAdminReportsIndexRoute,
+	AuthAdminShowsIndexRoute: AuthAdminShowsIndexRoute,
+	AuthAdminProductsProductIdEditRoute: AuthAdminProductsProductIdEditRoute,
+	AuthAdminShowsShowIdEditRoute: AuthAdminShowsShowIdEditRoute,
+};
 
 const AuthAdminRouteRouteWithChildren = AuthAdminRouteRoute._addFileChildren(
-  AuthAdminRouteRouteChildren,
-)
+	AuthAdminRouteRouteChildren,
+);
 
 interface AuthRouteChildren {
-  AuthAdminRouteRoute: typeof AuthAdminRouteRouteWithChildren
-  AuthProfileEditRoute: typeof AuthProfileEditRoute
-  AuthProfileIndexRoute: typeof AuthProfileIndexRoute
-  AuthProfileCartCartIdSuccessRoute: typeof AuthProfileCartCartIdSuccessRoute
-  AuthProfileCartCartIdIndexRoute: typeof AuthProfileCartCartIdIndexRoute
+	AuthAdminRouteRoute: typeof AuthAdminRouteRouteWithChildren;
+	AuthProfileEditRoute: typeof AuthProfileEditRoute;
+	AuthProfileIndexRoute: typeof AuthProfileIndexRoute;
+	AuthProfileCartCartIdSuccessRoute: typeof AuthProfileCartCartIdSuccessRoute;
+	AuthProfileCartCartIdIndexRoute: typeof AuthProfileCartCartIdIndexRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthAdminRouteRoute: AuthAdminRouteRouteWithChildren,
-  AuthProfileEditRoute: AuthProfileEditRoute,
-  AuthProfileIndexRoute: AuthProfileIndexRoute,
-  AuthProfileCartCartIdSuccessRoute: AuthProfileCartCartIdSuccessRoute,
-  AuthProfileCartCartIdIndexRoute: AuthProfileCartCartIdIndexRoute,
-}
+	AuthAdminRouteRoute: AuthAdminRouteRouteWithChildren,
+	AuthProfileEditRoute: AuthProfileEditRoute,
+	AuthProfileIndexRoute: AuthProfileIndexRoute,
+	AuthProfileCartCartIdSuccessRoute: AuthProfileCartCartIdSuccessRoute,
+	AuthProfileCartCartIdIndexRoute: AuthProfileCartCartIdIndexRoute,
+};
 
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/codyb': typeof CodybRouteRoute
-  '/events': typeof EventsRouteRouteWithChildren
-  '': typeof AuthRouteWithChildren
-  '/about': typeof AboutLazyRoute
-  '/contact-us': typeof ContactUsLazyRoute
-  '/cookie-policy': typeof CookiePolicyLazyRoute
-  '/customer-service': typeof CustomerServiceLazyRoute
-  '/faq': typeof FaqLazyRoute
-  '/fireworks-safety': typeof FireworksSafetyLazyRoute
-  '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping-info': typeof ShippingInfoLazyRoute
-  '/terms-of-use': typeof TermsOfUseLazyRoute
-  '/admin': typeof AuthAdminRouteRouteWithChildren
-  '/apparel/$productId': typeof ApparelProductIdRouteRoute
-  '/products/$productId': typeof ProductsProductIdRouteRoute
-  '/shows/$showId': typeof ShowsShowIdRouteRoute
-  '/events/fourth-july': typeof EventsFourthJulyRoute
-  '/events/gender-reveal': typeof EventsGenderRevealRoute
-  '/events/new-years': typeof EventsNewYearsRoute
-  '/user/login': typeof UserLoginRoute
-  '/user/register': typeof UserRegisterRoute
-  '/apparel': typeof ApparelIndexRoute
-  '/products': typeof ProductsIndexRoute
-  '/shows': typeof ShowsIndexRoute
-  '/admin/admin': typeof AuthAdminAdminRoute
-  '/admin/inventory': typeof AuthAdminInventoryRoute
-  '/admin/users': typeof AuthAdminUsersRoute
-  '/profile/edit': typeof AuthProfileEditRoute
-  '/profile': typeof AuthProfileIndexRoute
-  '/admin/apparel/create': typeof AuthAdminApparelCreateRoute
-  '/admin/products/create': typeof AuthAdminProductsCreateRoute
-  '/admin/shows/create': typeof AuthAdminShowsCreateRoute
-  '/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
-  '/admin/apparel': typeof AuthAdminApparelIndexRoute
-  '/admin/products': typeof AuthAdminProductsIndexRoute
-  '/admin/reports': typeof AuthAdminReportsIndexRoute
-  '/admin/shows': typeof AuthAdminShowsIndexRoute
-  '/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
-  '/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
-  '/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
-  '/profile/cart/$cartId': typeof AuthProfileCartCartIdIndexRoute
+	"/": typeof IndexLazyRoute;
+	"/codyb": typeof CodybRouteRoute;
+	"/events": typeof EventsRouteRouteWithChildren;
+	"": typeof AuthRouteWithChildren;
+	"/about": typeof AboutLazyRoute;
+	"/contact-us": typeof ContactUsLazyRoute;
+	"/cookie-policy": typeof CookiePolicyLazyRoute;
+	"/customer-service": typeof CustomerServiceLazyRoute;
+	"/faq": typeof FaqLazyRoute;
+	"/fireworks-safety": typeof FireworksSafetyLazyRoute;
+	"/privacy-policy": typeof PrivacyPolicyLazyRoute;
+	"/shipping-info": typeof ShippingInfoLazyRoute;
+	"/terms-of-use": typeof TermsOfUseLazyRoute;
+	"/admin": typeof AuthAdminRouteRouteWithChildren;
+	"/apparel/$productId": typeof ApparelProductIdRouteRoute;
+	"/products/$productId": typeof ProductsProductIdRouteRoute;
+	"/shows/$showId": typeof ShowsShowIdRouteRoute;
+	"/events/fourth-july": typeof EventsFourthJulyRoute;
+	"/events/gender-reveal": typeof EventsGenderRevealRoute;
+	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/login": typeof UserLoginRoute;
+	"/user/register": typeof UserRegisterRoute;
+	"/apparel": typeof ApparelIndexRoute;
+	"/products": typeof ProductsIndexRoute;
+	"/shows": typeof ShowsIndexRoute;
+	"/admin/admin": typeof AuthAdminAdminRoute;
+	"/admin/inventory": typeof AuthAdminInventoryRoute;
+	"/admin/users": typeof AuthAdminUsersRoute;
+	"/profile/edit": typeof AuthProfileEditRoute;
+	"/profile": typeof AuthProfileIndexRoute;
+	"/admin/apparel/create": typeof AuthAdminApparelCreateRoute;
+	"/admin/products/create": typeof AuthAdminProductsCreateRoute;
+	"/admin/shows/create": typeof AuthAdminShowsCreateRoute;
+	"/admin/shows/showTypes": typeof AuthAdminShowsShowTypesRoute;
+	"/admin/apparel": typeof AuthAdminApparelIndexRoute;
+	"/admin/products": typeof AuthAdminProductsIndexRoute;
+	"/admin/reports": typeof AuthAdminReportsIndexRoute;
+	"/admin/shows": typeof AuthAdminShowsIndexRoute;
+	"/admin/products/$productId/edit": typeof AuthAdminProductsProductIdEditRoute;
+	"/admin/shows/$showId/edit": typeof AuthAdminShowsShowIdEditRoute;
+	"/profile/cart/$cartId/success": typeof AuthProfileCartCartIdSuccessRoute;
+	"/profile/cart/$cartId": typeof AuthProfileCartCartIdIndexRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/codyb': typeof CodybRouteRoute
-  '/events': typeof EventsRouteRouteWithChildren
-  '': typeof AuthRouteWithChildren
-  '/about': typeof AboutLazyRoute
-  '/contact-us': typeof ContactUsLazyRoute
-  '/cookie-policy': typeof CookiePolicyLazyRoute
-  '/customer-service': typeof CustomerServiceLazyRoute
-  '/faq': typeof FaqLazyRoute
-  '/fireworks-safety': typeof FireworksSafetyLazyRoute
-  '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping-info': typeof ShippingInfoLazyRoute
-  '/terms-of-use': typeof TermsOfUseLazyRoute
-  '/admin': typeof AuthAdminRouteRouteWithChildren
-  '/apparel/$productId': typeof ApparelProductIdRouteRoute
-  '/products/$productId': typeof ProductsProductIdRouteRoute
-  '/shows/$showId': typeof ShowsShowIdRouteRoute
-  '/events/fourth-july': typeof EventsFourthJulyRoute
-  '/events/gender-reveal': typeof EventsGenderRevealRoute
-  '/events/new-years': typeof EventsNewYearsRoute
-  '/user/login': typeof UserLoginRoute
-  '/user/register': typeof UserRegisterRoute
-  '/apparel': typeof ApparelIndexRoute
-  '/products': typeof ProductsIndexRoute
-  '/shows': typeof ShowsIndexRoute
-  '/admin/admin': typeof AuthAdminAdminRoute
-  '/admin/inventory': typeof AuthAdminInventoryRoute
-  '/admin/users': typeof AuthAdminUsersRoute
-  '/profile/edit': typeof AuthProfileEditRoute
-  '/profile': typeof AuthProfileIndexRoute
-  '/admin/apparel/create': typeof AuthAdminApparelCreateRoute
-  '/admin/products/create': typeof AuthAdminProductsCreateRoute
-  '/admin/shows/create': typeof AuthAdminShowsCreateRoute
-  '/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
-  '/admin/apparel': typeof AuthAdminApparelIndexRoute
-  '/admin/products': typeof AuthAdminProductsIndexRoute
-  '/admin/reports': typeof AuthAdminReportsIndexRoute
-  '/admin/shows': typeof AuthAdminShowsIndexRoute
-  '/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
-  '/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
-  '/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
-  '/profile/cart/$cartId': typeof AuthProfileCartCartIdIndexRoute
+	"/": typeof IndexLazyRoute;
+	"/codyb": typeof CodybRouteRoute;
+	"/events": typeof EventsRouteRouteWithChildren;
+	"": typeof AuthRouteWithChildren;
+	"/about": typeof AboutLazyRoute;
+	"/contact-us": typeof ContactUsLazyRoute;
+	"/cookie-policy": typeof CookiePolicyLazyRoute;
+	"/customer-service": typeof CustomerServiceLazyRoute;
+	"/faq": typeof FaqLazyRoute;
+	"/fireworks-safety": typeof FireworksSafetyLazyRoute;
+	"/privacy-policy": typeof PrivacyPolicyLazyRoute;
+	"/shipping-info": typeof ShippingInfoLazyRoute;
+	"/terms-of-use": typeof TermsOfUseLazyRoute;
+	"/admin": typeof AuthAdminRouteRouteWithChildren;
+	"/apparel/$productId": typeof ApparelProductIdRouteRoute;
+	"/products/$productId": typeof ProductsProductIdRouteRoute;
+	"/shows/$showId": typeof ShowsShowIdRouteRoute;
+	"/events/fourth-july": typeof EventsFourthJulyRoute;
+	"/events/gender-reveal": typeof EventsGenderRevealRoute;
+	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/login": typeof UserLoginRoute;
+	"/user/register": typeof UserRegisterRoute;
+	"/apparel": typeof ApparelIndexRoute;
+	"/products": typeof ProductsIndexRoute;
+	"/shows": typeof ShowsIndexRoute;
+	"/admin/admin": typeof AuthAdminAdminRoute;
+	"/admin/inventory": typeof AuthAdminInventoryRoute;
+	"/admin/users": typeof AuthAdminUsersRoute;
+	"/profile/edit": typeof AuthProfileEditRoute;
+	"/profile": typeof AuthProfileIndexRoute;
+	"/admin/apparel/create": typeof AuthAdminApparelCreateRoute;
+	"/admin/products/create": typeof AuthAdminProductsCreateRoute;
+	"/admin/shows/create": typeof AuthAdminShowsCreateRoute;
+	"/admin/shows/showTypes": typeof AuthAdminShowsShowTypesRoute;
+	"/admin/apparel": typeof AuthAdminApparelIndexRoute;
+	"/admin/products": typeof AuthAdminProductsIndexRoute;
+	"/admin/reports": typeof AuthAdminReportsIndexRoute;
+	"/admin/shows": typeof AuthAdminShowsIndexRoute;
+	"/admin/products/$productId/edit": typeof AuthAdminProductsProductIdEditRoute;
+	"/admin/shows/$showId/edit": typeof AuthAdminShowsShowIdEditRoute;
+	"/profile/cart/$cartId/success": typeof AuthProfileCartCartIdSuccessRoute;
+	"/profile/cart/$cartId": typeof AuthProfileCartCartIdIndexRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/codyb': typeof CodybRouteRoute
-  '/events': typeof EventsRouteRouteWithChildren
-  '/_auth': typeof AuthRouteWithChildren
-  '/about': typeof AboutLazyRoute
-  '/contact-us': typeof ContactUsLazyRoute
-  '/cookie-policy': typeof CookiePolicyLazyRoute
-  '/customer-service': typeof CustomerServiceLazyRoute
-  '/faq': typeof FaqLazyRoute
-  '/fireworks-safety': typeof FireworksSafetyLazyRoute
-  '/privacy-policy': typeof PrivacyPolicyLazyRoute
-  '/shipping-info': typeof ShippingInfoLazyRoute
-  '/terms-of-use': typeof TermsOfUseLazyRoute
-  '/_auth/admin': typeof AuthAdminRouteRouteWithChildren
-  '/apparel/$productId': typeof ApparelProductIdRouteRoute
-  '/products/$productId': typeof ProductsProductIdRouteRoute
-  '/shows/$showId': typeof ShowsShowIdRouteRoute
-  '/events/fourth-july': typeof EventsFourthJulyRoute
-  '/events/gender-reveal': typeof EventsGenderRevealRoute
-  '/events/new-years': typeof EventsNewYearsRoute
-  '/user/login': typeof UserLoginRoute
-  '/user/register': typeof UserRegisterRoute
-  '/apparel/': typeof ApparelIndexRoute
-  '/products/': typeof ProductsIndexRoute
-  '/shows/': typeof ShowsIndexRoute
-  '/_auth/admin/admin': typeof AuthAdminAdminRoute
-  '/_auth/admin/inventory': typeof AuthAdminInventoryRoute
-  '/_auth/admin/users': typeof AuthAdminUsersRoute
-  '/_auth/profile/edit': typeof AuthProfileEditRoute
-  '/_auth/profile/': typeof AuthProfileIndexRoute
-  '/_auth/admin/apparel/create': typeof AuthAdminApparelCreateRoute
-  '/_auth/admin/products/create': typeof AuthAdminProductsCreateRoute
-  '/_auth/admin/shows/create': typeof AuthAdminShowsCreateRoute
-  '/_auth/admin/shows/showTypes': typeof AuthAdminShowsShowTypesRoute
-  '/_auth/admin/apparel/': typeof AuthAdminApparelIndexRoute
-  '/_auth/admin/products/': typeof AuthAdminProductsIndexRoute
-  '/_auth/admin/reports/': typeof AuthAdminReportsIndexRoute
-  '/_auth/admin/shows/': typeof AuthAdminShowsIndexRoute
-  '/_auth/admin/products/$productId/edit': typeof AuthAdminProductsProductIdEditRoute
-  '/_auth/admin/shows/$showId/edit': typeof AuthAdminShowsShowIdEditRoute
-  '/_auth/profile/cart/$cartId/success': typeof AuthProfileCartCartIdSuccessRoute
-  '/_auth/profile/cart/$cartId/': typeof AuthProfileCartCartIdIndexRoute
+	__root__: typeof rootRoute;
+	"/": typeof IndexLazyRoute;
+	"/codyb": typeof CodybRouteRoute;
+	"/events": typeof EventsRouteRouteWithChildren;
+	"/_auth": typeof AuthRouteWithChildren;
+	"/about": typeof AboutLazyRoute;
+	"/contact-us": typeof ContactUsLazyRoute;
+	"/cookie-policy": typeof CookiePolicyLazyRoute;
+	"/customer-service": typeof CustomerServiceLazyRoute;
+	"/faq": typeof FaqLazyRoute;
+	"/fireworks-safety": typeof FireworksSafetyLazyRoute;
+	"/privacy-policy": typeof PrivacyPolicyLazyRoute;
+	"/shipping-info": typeof ShippingInfoLazyRoute;
+	"/terms-of-use": typeof TermsOfUseLazyRoute;
+	"/_auth/admin": typeof AuthAdminRouteRouteWithChildren;
+	"/apparel/$productId": typeof ApparelProductIdRouteRoute;
+	"/products/$productId": typeof ProductsProductIdRouteRoute;
+	"/shows/$showId": typeof ShowsShowIdRouteRoute;
+	"/events/fourth-july": typeof EventsFourthJulyRoute;
+	"/events/gender-reveal": typeof EventsGenderRevealRoute;
+	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/login": typeof UserLoginRoute;
+	"/user/register": typeof UserRegisterRoute;
+	"/apparel/": typeof ApparelIndexRoute;
+	"/products/": typeof ProductsIndexRoute;
+	"/shows/": typeof ShowsIndexRoute;
+	"/_auth/admin/admin": typeof AuthAdminAdminRoute;
+	"/_auth/admin/inventory": typeof AuthAdminInventoryRoute;
+	"/_auth/admin/users": typeof AuthAdminUsersRoute;
+	"/_auth/profile/edit": typeof AuthProfileEditRoute;
+	"/_auth/profile/": typeof AuthProfileIndexRoute;
+	"/_auth/admin/apparel/create": typeof AuthAdminApparelCreateRoute;
+	"/_auth/admin/products/create": typeof AuthAdminProductsCreateRoute;
+	"/_auth/admin/shows/create": typeof AuthAdminShowsCreateRoute;
+	"/_auth/admin/shows/showTypes": typeof AuthAdminShowsShowTypesRoute;
+	"/_auth/admin/apparel/": typeof AuthAdminApparelIndexRoute;
+	"/_auth/admin/products/": typeof AuthAdminProductsIndexRoute;
+	"/_auth/admin/reports/": typeof AuthAdminReportsIndexRoute;
+	"/_auth/admin/shows/": typeof AuthAdminShowsIndexRoute;
+	"/_auth/admin/products/$productId/edit": typeof AuthAdminProductsProductIdEditRoute;
+	"/_auth/admin/shows/$showId/edit": typeof AuthAdminShowsShowIdEditRoute;
+	"/_auth/profile/cart/$cartId/success": typeof AuthProfileCartCartIdSuccessRoute;
+	"/_auth/profile/cart/$cartId/": typeof AuthProfileCartCartIdIndexRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/codyb'
-    | '/events'
-    | ''
-    | '/about'
-    | '/contact-us'
-    | '/cookie-policy'
-    | '/customer-service'
-    | '/faq'
-    | '/fireworks-safety'
-    | '/privacy-policy'
-    | '/shipping-info'
-    | '/terms-of-use'
-    | '/admin'
-    | '/apparel/$productId'
-    | '/products/$productId'
-    | '/shows/$showId'
-    | '/events/fourth-july'
-    | '/events/gender-reveal'
-    | '/events/new-years'
-    | '/user/login'
-    | '/user/register'
-    | '/apparel'
-    | '/products'
-    | '/shows'
-    | '/admin/admin'
-    | '/admin/inventory'
-    | '/admin/users'
-    | '/profile/edit'
-    | '/profile'
-    | '/admin/apparel/create'
-    | '/admin/products/create'
-    | '/admin/shows/create'
-    | '/admin/shows/showTypes'
-    | '/admin/apparel'
-    | '/admin/products'
-    | '/admin/reports'
-    | '/admin/shows'
-    | '/admin/products/$productId/edit'
-    | '/admin/shows/$showId/edit'
-    | '/profile/cart/$cartId/success'
-    | '/profile/cart/$cartId'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/codyb'
-    | '/events'
-    | ''
-    | '/about'
-    | '/contact-us'
-    | '/cookie-policy'
-    | '/customer-service'
-    | '/faq'
-    | '/fireworks-safety'
-    | '/privacy-policy'
-    | '/shipping-info'
-    | '/terms-of-use'
-    | '/admin'
-    | '/apparel/$productId'
-    | '/products/$productId'
-    | '/shows/$showId'
-    | '/events/fourth-july'
-    | '/events/gender-reveal'
-    | '/events/new-years'
-    | '/user/login'
-    | '/user/register'
-    | '/apparel'
-    | '/products'
-    | '/shows'
-    | '/admin/admin'
-    | '/admin/inventory'
-    | '/admin/users'
-    | '/profile/edit'
-    | '/profile'
-    | '/admin/apparel/create'
-    | '/admin/products/create'
-    | '/admin/shows/create'
-    | '/admin/shows/showTypes'
-    | '/admin/apparel'
-    | '/admin/products'
-    | '/admin/reports'
-    | '/admin/shows'
-    | '/admin/products/$productId/edit'
-    | '/admin/shows/$showId/edit'
-    | '/profile/cart/$cartId/success'
-    | '/profile/cart/$cartId'
-  id:
-    | '__root__'
-    | '/'
-    | '/codyb'
-    | '/events'
-    | '/_auth'
-    | '/about'
-    | '/contact-us'
-    | '/cookie-policy'
-    | '/customer-service'
-    | '/faq'
-    | '/fireworks-safety'
-    | '/privacy-policy'
-    | '/shipping-info'
-    | '/terms-of-use'
-    | '/_auth/admin'
-    | '/apparel/$productId'
-    | '/products/$productId'
-    | '/shows/$showId'
-    | '/events/fourth-july'
-    | '/events/gender-reveal'
-    | '/events/new-years'
-    | '/user/login'
-    | '/user/register'
-    | '/apparel/'
-    | '/products/'
-    | '/shows/'
-    | '/_auth/admin/admin'
-    | '/_auth/admin/inventory'
-    | '/_auth/admin/users'
-    | '/_auth/profile/edit'
-    | '/_auth/profile/'
-    | '/_auth/admin/apparel/create'
-    | '/_auth/admin/products/create'
-    | '/_auth/admin/shows/create'
-    | '/_auth/admin/shows/showTypes'
-    | '/_auth/admin/apparel/'
-    | '/_auth/admin/products/'
-    | '/_auth/admin/reports/'
-    | '/_auth/admin/shows/'
-    | '/_auth/admin/products/$productId/edit'
-    | '/_auth/admin/shows/$showId/edit'
-    | '/_auth/profile/cart/$cartId/success'
-    | '/_auth/profile/cart/$cartId/'
-  fileRoutesById: FileRoutesById
+	fileRoutesByFullPath: FileRoutesByFullPath;
+	fullPaths:
+		| "/"
+		| "/codyb"
+		| "/events"
+		| ""
+		| "/about"
+		| "/contact-us"
+		| "/cookie-policy"
+		| "/customer-service"
+		| "/faq"
+		| "/fireworks-safety"
+		| "/privacy-policy"
+		| "/shipping-info"
+		| "/terms-of-use"
+		| "/admin"
+		| "/apparel/$productId"
+		| "/products/$productId"
+		| "/shows/$showId"
+		| "/events/fourth-july"
+		| "/events/gender-reveal"
+		| "/events/new-years"
+		| "/user/login"
+		| "/user/register"
+		| "/apparel"
+		| "/products"
+		| "/shows"
+		| "/admin/admin"
+		| "/admin/inventory"
+		| "/admin/users"
+		| "/profile/edit"
+		| "/profile"
+		| "/admin/apparel/create"
+		| "/admin/products/create"
+		| "/admin/shows/create"
+		| "/admin/shows/showTypes"
+		| "/admin/apparel"
+		| "/admin/products"
+		| "/admin/reports"
+		| "/admin/shows"
+		| "/admin/products/$productId/edit"
+		| "/admin/shows/$showId/edit"
+		| "/profile/cart/$cartId/success"
+		| "/profile/cart/$cartId";
+	fileRoutesByTo: FileRoutesByTo;
+	to:
+		| "/"
+		| "/codyb"
+		| "/events"
+		| ""
+		| "/about"
+		| "/contact-us"
+		| "/cookie-policy"
+		| "/customer-service"
+		| "/faq"
+		| "/fireworks-safety"
+		| "/privacy-policy"
+		| "/shipping-info"
+		| "/terms-of-use"
+		| "/admin"
+		| "/apparel/$productId"
+		| "/products/$productId"
+		| "/shows/$showId"
+		| "/events/fourth-july"
+		| "/events/gender-reveal"
+		| "/events/new-years"
+		| "/user/login"
+		| "/user/register"
+		| "/apparel"
+		| "/products"
+		| "/shows"
+		| "/admin/admin"
+		| "/admin/inventory"
+		| "/admin/users"
+		| "/profile/edit"
+		| "/profile"
+		| "/admin/apparel/create"
+		| "/admin/products/create"
+		| "/admin/shows/create"
+		| "/admin/shows/showTypes"
+		| "/admin/apparel"
+		| "/admin/products"
+		| "/admin/reports"
+		| "/admin/shows"
+		| "/admin/products/$productId/edit"
+		| "/admin/shows/$showId/edit"
+		| "/profile/cart/$cartId/success"
+		| "/profile/cart/$cartId";
+	id:
+		| "__root__"
+		| "/"
+		| "/codyb"
+		| "/events"
+		| "/_auth"
+		| "/about"
+		| "/contact-us"
+		| "/cookie-policy"
+		| "/customer-service"
+		| "/faq"
+		| "/fireworks-safety"
+		| "/privacy-policy"
+		| "/shipping-info"
+		| "/terms-of-use"
+		| "/_auth/admin"
+		| "/apparel/$productId"
+		| "/products/$productId"
+		| "/shows/$showId"
+		| "/events/fourth-july"
+		| "/events/gender-reveal"
+		| "/events/new-years"
+		| "/user/login"
+		| "/user/register"
+		| "/apparel/"
+		| "/products/"
+		| "/shows/"
+		| "/_auth/admin/admin"
+		| "/_auth/admin/inventory"
+		| "/_auth/admin/users"
+		| "/_auth/profile/edit"
+		| "/_auth/profile/"
+		| "/_auth/admin/apparel/create"
+		| "/_auth/admin/products/create"
+		| "/_auth/admin/shows/create"
+		| "/_auth/admin/shows/showTypes"
+		| "/_auth/admin/apparel/"
+		| "/_auth/admin/products/"
+		| "/_auth/admin/reports/"
+		| "/_auth/admin/shows/"
+		| "/_auth/admin/products/$productId/edit"
+		| "/_auth/admin/shows/$showId/edit"
+		| "/_auth/profile/cart/$cartId/success"
+		| "/_auth/profile/cart/$cartId/";
+	fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  CodybRouteRoute: typeof CodybRouteRoute
-  EventsRouteRoute: typeof EventsRouteRouteWithChildren
-  AuthRoute: typeof AuthRouteWithChildren
-  AboutLazyRoute: typeof AboutLazyRoute
-  ContactUsLazyRoute: typeof ContactUsLazyRoute
-  CookiePolicyLazyRoute: typeof CookiePolicyLazyRoute
-  CustomerServiceLazyRoute: typeof CustomerServiceLazyRoute
-  FaqLazyRoute: typeof FaqLazyRoute
-  FireworksSafetyLazyRoute: typeof FireworksSafetyLazyRoute
-  PrivacyPolicyLazyRoute: typeof PrivacyPolicyLazyRoute
-  ShippingInfoLazyRoute: typeof ShippingInfoLazyRoute
-  TermsOfUseLazyRoute: typeof TermsOfUseLazyRoute
-  ApparelProductIdRouteRoute: typeof ApparelProductIdRouteRoute
-  ProductsProductIdRouteRoute: typeof ProductsProductIdRouteRoute
-  ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute
-  UserLoginRoute: typeof UserLoginRoute
-  UserRegisterRoute: typeof UserRegisterRoute
-  ApparelIndexRoute: typeof ApparelIndexRoute
-  ProductsIndexRoute: typeof ProductsIndexRoute
-  ShowsIndexRoute: typeof ShowsIndexRoute
+	IndexLazyRoute: typeof IndexLazyRoute;
+	CodybRouteRoute: typeof CodybRouteRoute;
+	EventsRouteRoute: typeof EventsRouteRouteWithChildren;
+	AuthRoute: typeof AuthRouteWithChildren;
+	AboutLazyRoute: typeof AboutLazyRoute;
+	ContactUsLazyRoute: typeof ContactUsLazyRoute;
+	CookiePolicyLazyRoute: typeof CookiePolicyLazyRoute;
+	CustomerServiceLazyRoute: typeof CustomerServiceLazyRoute;
+	FaqLazyRoute: typeof FaqLazyRoute;
+	FireworksSafetyLazyRoute: typeof FireworksSafetyLazyRoute;
+	PrivacyPolicyLazyRoute: typeof PrivacyPolicyLazyRoute;
+	ShippingInfoLazyRoute: typeof ShippingInfoLazyRoute;
+	TermsOfUseLazyRoute: typeof TermsOfUseLazyRoute;
+	ApparelProductIdRouteRoute: typeof ApparelProductIdRouteRoute;
+	ProductsProductIdRouteRoute: typeof ProductsProductIdRouteRoute;
+	ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute;
+	UserLoginRoute: typeof UserLoginRoute;
+	UserRegisterRoute: typeof UserRegisterRoute;
+	ApparelIndexRoute: typeof ApparelIndexRoute;
+	ProductsIndexRoute: typeof ProductsIndexRoute;
+	ShowsIndexRoute: typeof ShowsIndexRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  CodybRouteRoute: CodybRouteRoute,
-  EventsRouteRoute: EventsRouteRouteWithChildren,
-  AuthRoute: AuthRouteWithChildren,
-  AboutLazyRoute: AboutLazyRoute,
-  ContactUsLazyRoute: ContactUsLazyRoute,
-  CookiePolicyLazyRoute: CookiePolicyLazyRoute,
-  CustomerServiceLazyRoute: CustomerServiceLazyRoute,
-  FaqLazyRoute: FaqLazyRoute,
-  FireworksSafetyLazyRoute: FireworksSafetyLazyRoute,
-  PrivacyPolicyLazyRoute: PrivacyPolicyLazyRoute,
-  ShippingInfoLazyRoute: ShippingInfoLazyRoute,
-  TermsOfUseLazyRoute: TermsOfUseLazyRoute,
-  ApparelProductIdRouteRoute: ApparelProductIdRouteRoute,
-  ProductsProductIdRouteRoute: ProductsProductIdRouteRoute,
-  ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
-  UserLoginRoute: UserLoginRoute,
-  UserRegisterRoute: UserRegisterRoute,
-  ApparelIndexRoute: ApparelIndexRoute,
-  ProductsIndexRoute: ProductsIndexRoute,
-  ShowsIndexRoute: ShowsIndexRoute,
-}
+	IndexLazyRoute: IndexLazyRoute,
+	CodybRouteRoute: CodybRouteRoute,
+	EventsRouteRoute: EventsRouteRouteWithChildren,
+	AuthRoute: AuthRouteWithChildren,
+	AboutLazyRoute: AboutLazyRoute,
+	ContactUsLazyRoute: ContactUsLazyRoute,
+	CookiePolicyLazyRoute: CookiePolicyLazyRoute,
+	CustomerServiceLazyRoute: CustomerServiceLazyRoute,
+	FaqLazyRoute: FaqLazyRoute,
+	FireworksSafetyLazyRoute: FireworksSafetyLazyRoute,
+	PrivacyPolicyLazyRoute: PrivacyPolicyLazyRoute,
+	ShippingInfoLazyRoute: ShippingInfoLazyRoute,
+	TermsOfUseLazyRoute: TermsOfUseLazyRoute,
+	ApparelProductIdRouteRoute: ApparelProductIdRouteRoute,
+	ProductsProductIdRouteRoute: ProductsProductIdRouteRoute,
+	ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
+	UserLoginRoute: UserLoginRoute,
+	UserRegisterRoute: UserRegisterRoute,
+	ApparelIndexRoute: ApparelIndexRoute,
+	ProductsIndexRoute: ProductsIndexRoute,
+	ShowsIndexRoute: ShowsIndexRoute,
+};
 
 export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+	._addFileChildren(rootRouteChildren)
+	._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

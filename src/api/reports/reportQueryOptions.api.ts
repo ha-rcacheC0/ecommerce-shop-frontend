@@ -36,10 +36,10 @@ export const useProcessCaseBreakMutation = (
 			queryClient.invalidateQueries({ queryKey: ["caseBreakReport"] });
 		},
 		onError: (error) => {
-			onError(error),
-				toast.error(
-					`Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`,
-				);
+			onError(error);
+			toast.error(
+				`Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`,
+			);
 		},
 	});
 };
@@ -69,10 +69,10 @@ export const useUpdatePurchaseOrderMutation = (
 			});
 		},
 		onError: (error) => {
-			onError(error),
-				toast.error(
-					`Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`,
-				);
+			onError(error);
+			toast.error(
+				`Failed to process request: ${error instanceof Error ? error.message : "Unknown error"}`,
+			);
 		},
 	});
 };

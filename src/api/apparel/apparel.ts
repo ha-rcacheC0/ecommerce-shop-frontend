@@ -23,16 +23,24 @@ export const getAllApparel = async (filters: ApparelFilter) => {
 	} else {
 		params.append("showOutOfStock", "false");
 	}
-	filters.selectedBrands.forEach((brand) => params.append("brands", brand));
-	filters.selectedCategories.forEach((category) =>
-		params.append("categories", category),
-	);
-	filters.selectedColors.forEach((color) => params.append("colors", color));
-	filters.selectedApparelTypes.forEach((apparelType) =>
-		params.append("apparelTypes", apparelType),
-	);
-	filters.selectedGenders.forEach((gender) => params.append("genders", gender));
-	filters.selectedSizes.forEach((size) => params.append("sizes", size));
+	filters.selectedBrands.forEach((brand) => {
+		params.append("brands", brand);
+	});
+	filters.selectedCategories.forEach((category) => {
+		params.append("categories", category);
+	});
+	filters.selectedColors.forEach((color) => {
+		params.append("colors", color);
+	});
+	filters.selectedApparelTypes.forEach((apparelType) => {
+		params.append("apparelTypes", apparelType);
+	});
+	filters.selectedGenders.forEach((gender) => {
+		params.append("genders", gender);
+	});
+	filters.selectedSizes.forEach((size) => {
+		params.append("sizes", size);
+	});
 
 	const response = await fetch(`${BASE_URL}?${params.toString()}`, {
 		headers: {
