@@ -135,15 +135,53 @@ tsc && vite build
 2. **Start frontend dev server**: `npm run dev`
 3. **Make changes** - Hot Module Replacement (HMR) updates instantly
 4. **Check types**: TypeScript errors shown in terminal and IDE
-5. **Fix linting**: Run `npm run lint` before committing
+5. **Commit changes** - Pre-commit hooks automatically lint your code
 
-### Code Quality
+### Code Quality & Pre-Commit Hooks
 
-The project uses:
-- **TypeScript strict mode** for type safety
-- **ESLint** for code quality
-- **Path aliases** for clean imports
+This project uses **Husky** and **lint-staged** to automatically enforce code quality standards.
+
+#### What Runs Automatically
+
+Every time you commit code, the following checks run automatically:
+
+1. **ESLint** - Lints all staged `.ts` and `.tsx` files and auto-fixes issues
+   - Enforces React best practices
+   - Warns about unused variables and imports
+   - Auto-fixes formatting where possible
+
+If the linting fails, your commit will be blocked until you fix the errors.
+
+#### Manual Code Quality Checks
+
+```bash
+# Check for linting errors
+npm run lint
+
+# Run TypeScript type checking
+npm run type-check
+
+# Build with type checking (runs tsc before vite build)
+npm run build
+```
+
+#### Bypassing Pre-Commit Hooks
+
+**⚠️ Not recommended**, but if you absolutely need to bypass the hooks:
+
+```bash
+git commit --no-verify -m "your message"
+```
+
+Only use this in emergencies. Your code should pass all checks before committing.
+
+#### Key Quality Features
+
+- **TypeScript strict mode** for maximum type safety
+- **ESLint** with React and TypeScript rules
+- **Path aliases** for clean imports (`@components`, `@api`, `@providers`)
 - **TanStack Router** for type-safe routing
+- **Pino logger** for structured browser logging
 
 ## 📁 Project Structure
 
