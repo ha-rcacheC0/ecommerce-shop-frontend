@@ -1,121 +1,121 @@
 import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
+	createContext,
+	type ReactNode,
+	useContext,
+	useEffect,
+	useState,
 } from "react";
 import { z } from "zod";
 
 // Define your ThemeType as a Zod schema
 export const ThemeTypeSchema = z.enum([
-  "dark",
-  "light",
-  "coffee",
-  "sunset",
-  "emerald",
-  "cupcake",
-  "bumblebee",
-  "corporate",
-  "synthwave",
-  "retro",
-  "cyberpunk",
-  "valentine",
-  "halloween",
-  "garden",
-  "forest",
-  "aqua",
-  "lofi",
-  "pastel",
-  "fantasy",
-  "wireframe",
-  "black",
-  "luxury",
-  "dracula",
-  "cmyk",
-  "autumn",
-  "business",
-  "acid",
-  "lemonade",
-  "night",
-  "winter",
-  "dim",
-  "nord",
-  "caramellatte",
-  "abyss",
-  "silk",
+	"dark",
+	"light",
+	"coffee",
+	"sunset",
+	"emerald",
+	"cupcake",
+	"bumblebee",
+	"corporate",
+	"synthwave",
+	"retro",
+	"cyberpunk",
+	"valentine",
+	"halloween",
+	"garden",
+	"forest",
+	"aqua",
+	"lofi",
+	"pastel",
+	"fantasy",
+	"wireframe",
+	"black",
+	"luxury",
+	"dracula",
+	"cmyk",
+	"autumn",
+	"business",
+	"acid",
+	"lemonade",
+	"night",
+	"winter",
+	"dim",
+	"nord",
+	"caramellatte",
+	"abyss",
+	"silk",
 ]);
 
 export type ThemeType = z.infer<typeof ThemeTypeSchema>;
 
 export type ThemeContextType = {
-  theme: ThemeType;
-  updateTheme: (newTheme: ThemeType) => void; // Add updateTheme function to context
+	theme: ThemeType;
+	updateTheme: (newTheme: ThemeType) => void; // Add updateTheme function to context
 };
 
 export const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const resetThemeDefault = () => {
-  localStorage.setItem("theme", "light");
+	localStorage.setItem("theme", "light");
 };
 
 const getThemeFromLocalStorage = (): ThemeType | null => {
-  const themeFromLocalStorage = localStorage.getItem("theme");
+	const themeFromLocalStorage = localStorage.getItem("theme");
 
-  // Use Zod schema to validate the theme value
-  const validation = ThemeTypeSchema.safeParse(themeFromLocalStorage);
+	// Use Zod schema to validate the theme value
+	const validation = ThemeTypeSchema.safeParse(themeFromLocalStorage);
 
-  if (validation.success) {
-    return validation.data;
-  } else {
-    resetThemeDefault();
-    return null;
-  }
+	if (validation.success) {
+		return validation.data;
+	} else {
+		resetThemeDefault();
+		return null;
+	}
 };
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeType>("light");
+	const [theme, setTheme] = useState<ThemeType>("light");
 
-  useEffect(() => {
-    const storedTheme = getThemeFromLocalStorage();
-    if (storedTheme) {
-      updateTheme(storedTheme);
-      document.documentElement.setAttribute("data-theme", storedTheme);
-    }
-  }, []);
+	useEffect(() => {
+		const storedTheme = getThemeFromLocalStorage();
+		if (storedTheme) {
+			updateTheme(storedTheme);
+			document.documentElement.setAttribute("data-theme", storedTheme);
+		}
+	}, [updateTheme]);
 
-  useEffect(() => {
-    // This effect updates the HTML tag whenever the theme changes
-    const storedTheme = getThemeFromLocalStorage();
-    if (storedTheme !== theme && storedTheme !== null) {
-      updateTheme(storedTheme);
-    } else {
-      document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme); // Save the theme to local storage
-    }
-  }, [theme]);
+	useEffect(() => {
+		// This effect updates the HTML tag whenever the theme changes
+		const storedTheme = getThemeFromLocalStorage();
+		if (storedTheme !== theme && storedTheme !== null) {
+			updateTheme(storedTheme);
+		} else {
+			document.documentElement.setAttribute("data-theme", theme);
+			localStorage.setItem("theme", theme); // Save the theme to local storage
+		}
+	}, [theme, updateTheme]);
 
-  const updateTheme = (newTheme: ThemeType) => {
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-    setTheme(newTheme);
-  };
+	const updateTheme = (newTheme: ThemeType) => {
+		localStorage.setItem("theme", newTheme);
+		document.documentElement.setAttribute("data-theme", newTheme);
+		setTheme(newTheme);
+	};
 
-  return (
-    <ThemeContext.Provider
-      value={{
-        theme,
-        updateTheme, // Provide the updateTheme function to context consumers
-      }}
-    >
-      {children}
-    </ThemeContext.Provider>
-  );
+	return (
+		<ThemeContext.Provider
+			value={{
+				theme,
+				updateTheme, // Provide the updateTheme function to context consumers
+			}}
+		>
+			{children}
+		</ThemeContext.Provider>
+	);
 };
 
 export function useThemeProvider() {
-  const context = useContext(ThemeContext);
-  if (!context)
-    throw new Error("useTheme must be used within the ThemeProvider");
-  return context;
+	const context = useContext(ThemeContext);
+	if (!context)
+		throw new Error("useTheme must be used within the ThemeProvider");
+	return context;
 }
