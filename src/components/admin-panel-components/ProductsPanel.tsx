@@ -58,7 +58,7 @@ const ProductsPanel = () => {
 	);
 
 	const deleteMutation = useDeleteProductMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Product deleted successfully"),
 		(error) => toast.error(`Error deleting product: ${error.message}`),
 	);

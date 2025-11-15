@@ -27,7 +27,7 @@ import type { ReportStatus } from "@/types";
 
 const CaseBreakReport: React.FC = () => {
 	const { user } = useAuth();
-	const token = user?.token!;
+	const token = user?.token ?? "";
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [selectedItem, setSelectedItem] = useState<{
 		id: string;
@@ -331,6 +331,7 @@ const CaseBreakReport: React.FC = () => {
 								</tr>
 							</thead>
 							<tbody>
+								{/* biome-ignore lint/suspicious/noExplicitAny: Report data has complex dynamic structure */}
 								{filteredData.map((item: any) => (
 									<tr key={item.id}>
 										<td>{item.sku}</td>

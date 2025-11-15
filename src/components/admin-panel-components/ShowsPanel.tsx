@@ -39,7 +39,7 @@ const ShowsPanel = () => {
 	} = useQuery(getAllShowsQueryOptions());
 
 	const deleteShowMutation = useDeleteShowMutation(
-		auth.user?.token!,
+		auth.user?.token ?? "",
 		() => toast.success("Show deleted successfully"),
 		(error) => toast.error(`Error deleting show: ${error.message}`),
 	);

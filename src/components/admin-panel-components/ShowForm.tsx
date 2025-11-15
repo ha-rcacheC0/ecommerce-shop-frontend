@@ -81,7 +81,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
 
 	// Mutations
 	const createShowMutation = useCreateShowMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Show created successfully!");
 			navigate({ to: "/admin/shows" });
@@ -93,7 +93,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
 
 	const updateShowMutation = useUpdateShowMutation(
 		showId || "",
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Show updated successfully!");
 			navigate({ to: "/admin/shows" });

@@ -35,8 +35,8 @@ const AdminDashboard = () => {
 				<div className="flex-1 px-2 mx-2">Admin Dashboard</div>
 				<div className="flex-none block">
 					<ul className="menu menu-horizontal">
-						{menuItems.map((item, index) => (
-							<li key={index}>
+						{menuItems.map((item) => (
+							<li key={item.toDest}>
 								<Link
 									to={item.toDest}
 									className="tooltip"

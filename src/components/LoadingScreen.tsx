@@ -3,6 +3,7 @@ const LoadingScreen = () => {
 		<div className="flex items-center justify-center h-screen">
 			<div className="flex items-center space-x-2">
 				<svg className="animate-spin h-5 w-5 text-primary" viewBox="0 0 24 24">
+					<title>Loading spinner</title>
 					<circle
 						className="opacity-25"
 						cx="12"

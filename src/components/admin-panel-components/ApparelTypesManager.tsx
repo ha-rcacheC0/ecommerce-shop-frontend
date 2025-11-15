@@ -52,7 +52,7 @@ const ApparelTypesManager = () => {
 
 	// Mutations
 	const createMutation = useCreateApparelTypeMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Apparel type created successfully!");
 			setIsCreating(false);
@@ -64,7 +64,7 @@ const ApparelTypesManager = () => {
 
 	const updateMutation = useUpdateApparelTypeMutation(
 		editingId || "",
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Apparel type updated successfully!");
 			setEditingId(null);
@@ -75,7 +75,7 @@ const ApparelTypesManager = () => {
 	);
 
 	const deleteMutation = useDeleteApparelTypeMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Apparel type deleted successfully!"),
 		(error) => toast.error(`Error deleting apparel type: ${error.message}`),
 	);
@@ -407,9 +407,8 @@ const ApparelTypesManager = () => {
 						<div className="stat-title">With Descriptions</div>
 						<div className="stat-value text-accent">
 							{
-								apparelTypes.filter(
-									(type: { description: any }) => type.description,
-								).length
+								apparelTypes.filter((type: ApparelType) => type.description)
+									.length
 							}
 						</div>
 						<div className="stat-desc">Types have descriptions</div>

@@ -9,7 +9,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth/profile/")({
 	loader: async ({ context: { queryClient, auth } }) => {
-		await queryClient.prefetchQuery(userInfoQueryOptions(auth.user?.token!));
+		await queryClient.prefetchQuery(
+			userInfoQueryOptions(auth.user?.token ?? ""),
+		);
 		await queryClient.prefetchQuery(
 			cartItemsQueryOptions(auth.user?.userInfo?.cart?.id),
 		);
@@ -24,7 +26,7 @@ function ProfilePage() {
 		isLoading,
 		isError,
 		error,
-	} = useQuery(userInfoQueryOptions(auth.user?.token!));
+	} = useQuery(userInfoQueryOptions(auth.user?.token ?? ""));
 
 	const { data: cart } = useQuery(
 		cartItemsQueryOptions(auth.user?.userInfo?.cart?.id),
@@ -50,7 +52,7 @@ function ProfilePage() {
 							xmlns="http://www.w3.org/2000/svg"
 							className="stroke-current shrink-0 h-6 w-6"
 							fill="none"
-							viewBox="0 0 24 24"
+							viewBox="0 0 24 24">\n						<title>Error icon</title
 						>
 							<path
 								strokeLinecap="round"
@@ -85,8 +87,8 @@ function ProfilePage() {
 					{/* Profile Information */}
 
 					<ProfileCard
-						userProfile={userProfile!}
-						userEmail={auth.user?.userInfo?.email!}
+						userProfile={userProfile ?? null}
+						userEmail={auth.user?.userInfo?.email ?? ""}
 					/>
 
 					{/* Cart Section */}

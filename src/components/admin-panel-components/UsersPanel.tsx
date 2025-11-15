@@ -38,7 +38,7 @@ const UsersPanel = () => {
 		isFetching,
 		isPlaceholderData,
 	} = useQuery({
-		...getUsersQueryOptions(auth.user?.token!, {
+		...getUsersQueryOptions(auth.user?.token ?? "", {
 			page: currentPage,
 			pageSize: pageSize,
 			search: searchTerm,
@@ -49,7 +49,7 @@ const UsersPanel = () => {
 		data: allData,
 		isLoading: allDataIsLoading,
 		isError: allDataIsError,
-	} = useQuery(getAllUsersQueryOptions(auth.user?.token!));
+	} = useQuery(getAllUsersQueryOptions(auth.user?.token ?? ""));
 
 	// Create column helper
 	const columnHelper = createColumnHelper<UserTableItem>();

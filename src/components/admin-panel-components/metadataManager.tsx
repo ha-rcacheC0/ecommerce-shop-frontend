@@ -83,7 +83,7 @@ const MetadataManager = () => {
 
 	// Initialize mutations for all types
 	const createBrandMutation = useCreateBrandMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Brand created successfully!");
 			setIsCreating(false);
@@ -93,7 +93,7 @@ const MetadataManager = () => {
 	);
 
 	const updateBrandMutation = useUpdateBrandMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Brand updated successfully!");
 			setEditingId(null);
@@ -103,13 +103,13 @@ const MetadataManager = () => {
 	);
 
 	const deleteBrandMutation = useDeleteBrandMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Brand deleted successfully!"),
 		(error) => toast.error(`Error deleting brand: ${error.message}`),
 	);
 
 	const createCategoryMutation = useCreateCategoryMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Category created successfully!");
 			setIsCreating(false);
@@ -119,7 +119,7 @@ const MetadataManager = () => {
 	);
 
 	const updateCategoryMutation = useUpdateCategoryMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Category updated successfully!");
 			setEditingId(null);
@@ -129,13 +129,13 @@ const MetadataManager = () => {
 	);
 
 	const deleteCategoryMutation = useDeleteCategoryMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Category deleted successfully!"),
 		(error) => toast.error(`Error deleting category: ${error.message}`),
 	);
 
 	const createColorMutation = useCreateColorMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Color created successfully!");
 			setIsCreating(false);
@@ -145,7 +145,7 @@ const MetadataManager = () => {
 	);
 
 	const updateColorMutation = useUpdateColorMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Color updated successfully!");
 			setEditingId(null);
@@ -155,13 +155,13 @@ const MetadataManager = () => {
 	);
 
 	const deleteColorMutation = useDeleteColorMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Color deleted successfully!"),
 		(error) => toast.error(`Error deleting color: ${error.message}`),
 	);
 
 	const createEffectMutation = useCreateEffectMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Effect created successfully!");
 			setIsCreating(false);
@@ -171,7 +171,7 @@ const MetadataManager = () => {
 	);
 
 	const updateEffectMutation = useUpdateEffectMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Effect updated successfully!");
 			setEditingId(null);
@@ -181,7 +181,7 @@ const MetadataManager = () => {
 	);
 
 	const deleteEffectMutation = useDeleteEffectMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Effect deleted successfully!"),
 		(error) => toast.error(`Error deleting effect: ${error.message}`),
 	);

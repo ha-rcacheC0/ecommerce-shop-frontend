@@ -51,7 +51,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
 	// Mutations
 	const createProductMutation = useCreateProductMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Product created successfully!");
 			navigate({ to: "/admin/products" });
@@ -62,7 +62,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 	);
 
 	const updateProductMutation = useUpdateProductMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success("Product updated successfully!");
 			navigate({ to: "/admin/products" });

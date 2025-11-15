@@ -34,7 +34,7 @@ const DashboardContent: React.FC = () => {
 		isLoading: usersIsLoading,
 		isError: usersIsError,
 		refetch: refetchUsers,
-	} = useQuery(getAllUsersQueryOptions(auth.user?.token!));
+	} = useQuery(getAllUsersQueryOptions(auth.user?.token ?? ""));
 
 	const {
 		data: inventory,
@@ -73,7 +73,7 @@ const DashboardContent: React.FC = () => {
 	} = useQuery(getAllShowsQueryOptions());
 
 	const inventoryCount =
-		inventory?.items.reduce((acc, elm) => (acc += elm.availableStock), 0) || 0;
+		inventory?.items.reduce((acc, elm) => acc + elm.availableStock, 0) || 0;
 
 	const dashboardCards: DashboardCard[] = [
 		{
@@ -155,7 +155,11 @@ const DashboardContent: React.FC = () => {
 				<p className="text-base-content/70 mt-2 mb-4">
 					There was a problem fetching the dashboard data.
 				</p>
-				<button className="btn btn-primary" onClick={handleRefreshAll}>
+				<button
+					type="button"
+					className="btn btn-primary"
+					onClick={handleRefreshAll}
+				>
 					<FontAwesomeIcon icon={faRefresh} className="mr-2" />
 					Retry
 				</button>
@@ -165,9 +169,9 @@ const DashboardContent: React.FC = () => {
 
 	return (
 		<div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-base-100">
-			{dashboardCards.map((card, index) => (
+			{dashboardCards.map((card) => (
 				<Link
-					key={index}
+					key={card.link}
 					to={card.link}
 					className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300"
 				>

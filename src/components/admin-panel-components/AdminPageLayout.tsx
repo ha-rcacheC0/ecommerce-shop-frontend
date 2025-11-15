@@ -46,6 +46,7 @@ const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
 						{sidebarItems.map((item) => (
 							<li key={item.id}>
 								<button
+									type="button"
 									className={`tooltip ${selectedItem === item.id ? "bg-primary-focus" : ""}`}
 									data-tip={item.label}
 									onClick={() => handleItemSelect(item.id)}

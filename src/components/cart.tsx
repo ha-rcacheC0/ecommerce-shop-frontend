@@ -53,9 +53,11 @@ const Cart = ({
 	const [isTosModalOpen, setIsTosModalOpen] = useState(false);
 	const { user } = useAuth();
 
-	const { data: userProfile } = useQuery(userInfoQueryOptions(user?.token!));
+	const { data: userProfile } = useQuery(
+		userInfoQueryOptions(user?.token ?? ""),
+	);
 	const { mutate } = useUserInfoPostMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			setIsTosModalOpen(false);
 		},
@@ -186,7 +188,7 @@ const Cart = ({
 		try {
 			// Update user profile with TOS acceptance
 			mutate({
-				token: user?.token!,
+				token: user?.token ?? "",
 				body: { userId: user?.userInfo?.profile?.userId, acceptedTerms: true },
 			});
 		} catch (error) {

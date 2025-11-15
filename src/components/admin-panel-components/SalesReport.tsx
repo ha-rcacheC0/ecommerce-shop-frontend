@@ -52,7 +52,7 @@ interface SalesReportItem {
 
 const SalesReport: React.FC = () => {
 	const { user } = useAuth();
-	const token = user?.token!;
+	const token = user?.token ?? "";
 	const [startDate, setStartDate] = useState<string>("");
 	const [endDate, setEndDate] = useState<string>("");
 	const [selectedRowId, setSelectedRowId] = useState<string | null>(null);

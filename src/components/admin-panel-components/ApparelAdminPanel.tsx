@@ -77,7 +77,7 @@ const ApparelAdminPanel = () => {
 	} = useQuery(getAllApparelQueryOptions(apparelFilters));
 
 	const deleteMutation = useDeleteApparelProductMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => toast.success("Product deleted successfully"),
 		(error) => toast.error(`Error deleting product: ${error.message}`),
 	);

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-file lint/suspicious/noExplicitAny: TanStack Form FieldApi requires many generic parameters
 import type { FieldApi } from "@tanstack/react-form";
 
 export function FieldError({

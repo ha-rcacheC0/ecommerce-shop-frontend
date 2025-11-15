@@ -85,7 +85,7 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 		getAllApparelTypesQueryOptions(),
 	);
 	const { mutate } = useCreateApparelMutation(
-		user?.token!,
+		user?.token ?? "",
 		() => {
 			toast.success(
 				isEditing

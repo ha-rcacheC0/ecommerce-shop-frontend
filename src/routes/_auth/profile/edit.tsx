@@ -12,13 +12,13 @@ import { States, UserProfileSchema } from "@/types";
 export const ProfileForm = () => {
 	const { auth } = Route.useRouteContext();
 	const { data: userProfile } = useQuery(
-		userInfoQueryOptions(auth.user?.token!),
+		userInfoQueryOptions(auth.user?.token ?? ""),
 	);
 	const navigate = useNavigate();
 	const [sameAddress, setSameAddress] = useState(true);
 
 	const mutation = useUserInfoPostMutation(
-		auth.user?.token!,
+		auth.user?.token ?? "",
 		() => {
 			navigate({ to: "/profile" });
 		},
@@ -38,7 +38,7 @@ export const ProfileForm = () => {
 			if (sameAddress && value.billingAddress) {
 				value.shippingAddress = { ...value.billingAddress };
 			}
-			mutation.mutate({ token: auth.user?.token!, body: value });
+			mutation.mutate({ token: auth.user?.token ?? "", body: value });
 		},
 	});
 
@@ -495,7 +495,9 @@ export const ProfileForm = () => {
 
 export const Route = createFileRoute("/_auth/profile/edit")({
 	loader: async ({ context: { queryClient, auth } }) => {
-		await queryClient.prefetchQuery(userInfoQueryOptions(auth.user?.token!));
+		await queryClient.prefetchQuery(
+			userInfoQueryOptions(auth.user?.token ?? ""),
+		);
 	},
 	component: ProfileForm,
 });
