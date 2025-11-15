@@ -46,7 +46,7 @@ export const ProductCard = ({
 					<img
 						className="w-full h-[280px] object-contain object-center"
 						src={product.image}
-						alt={`image for ${product.title}`}
+						alt={product.title}
 					/>
 				</Link>
 			</figure>

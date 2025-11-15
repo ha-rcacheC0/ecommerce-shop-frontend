@@ -23,6 +23,11 @@
 			},
 			"style": {
 				"noNonNullAssertion": "warn"
+			},
+			"a11y": {
+				"useButtonType": "warn",
+				"noLabelWithoutControl": "warn",
+				"noSvgWithoutTitle": "warn"
 			}
 		}
 	},
@@ -42,5 +47,19 @@
 	"assist": {
 		"enabled": true,
 		"actions": { "source": { "organizeImports": "on" } }
-	}
+	},
+	"overrides": [
+		{
+			"includes": [
+				"src/routeTree.gen.ts",
+				"src/components/component-parts/ErrorMessage.tsx"
+			],
+			"linter": {
+				"enabled": false
+			},
+			"assist": {
+				"enabled": false
+			}
+		}
+	]
 }

@@ -76,6 +76,12 @@ const getThemeFromLocalStorage = (): ThemeType | null => {
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setTheme] = useState<ThemeType>("light");
 
+	const updateTheme = (newTheme: ThemeType) => {
+		localStorage.setItem("theme", newTheme);
+		document.documentElement.setAttribute("data-theme", newTheme);
+		setTheme(newTheme);
+	};
+
 	useEffect(() => {
 		const storedTheme = getThemeFromLocalStorage();
 		if (storedTheme) {
@@ -94,12 +100,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 			localStorage.setItem("theme", theme); // Save the theme to local storage
 		}
 	}, [theme, updateTheme]);
-
-	const updateTheme = (newTheme: ThemeType) => {
-		localStorage.setItem("theme", newTheme);
-		document.documentElement.setAttribute("data-theme", newTheme);
-		setTheme(newTheme);
-	};
 
 	return (
 		<ThemeContext.Provider

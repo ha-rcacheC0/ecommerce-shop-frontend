@@ -442,6 +442,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
 							<div className="mt-4 flex justify-center">
 								<div className="w-40 h-40 rounded-md overflow-hidden">
 									<iframe
+										title="Product video preview"
 										src={videoURL}
 										className="w-full h-full object-cover"
 										onError={(e) => {

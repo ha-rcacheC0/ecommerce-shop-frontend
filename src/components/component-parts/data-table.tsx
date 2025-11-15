@@ -160,7 +160,7 @@ export function DataTable<T extends Record<string, unknown>>({
 							const params = action.getParams ? action.getParams(item) : {};
 							return (
 								<Link
-									key={actionIndex}
+									key={`${action.to || action.label || ""}-${actionIndex}`}
 									to={action.to}
 									params={params}
 									className={`btn btn-sm btn-${action.color} group-hover:shadow-lg group-hover:ring-2 group-hover:ring-white group-hover:ring-opacity-70`}
@@ -172,7 +172,7 @@ export function DataTable<T extends Record<string, unknown>>({
 						} else {
 							return (
 								<button
-									key={actionIndex}
+									key={`${action.label || "action"}-${actionIndex}`}
 									className={`btn btn-sm btn-${action.color} group-hover:shadow-lg group-hover:ring-2 group-hover:ring-white group-hover:ring-opacity-70`}
 									onClick={() => action.onClick?.(item)}
 									disabled={isDisabled}
@@ -354,7 +354,8 @@ export function DataTable<T extends Record<string, unknown>>({
 									return (
 										<th key={header.id} className={className}>
 											{header.isPlaceholder ? null : (
-												<div
+												<button
+													type="button"
 													className={
 														header.column.getCanSort()
 															? "flex items-center cursor-pointer select-none"
@@ -382,7 +383,7 @@ export function DataTable<T extends Record<string, unknown>>({
 															)}
 														</span>
 													)}
-												</div>
+												</button>
 											)}
 										</th>
 									);

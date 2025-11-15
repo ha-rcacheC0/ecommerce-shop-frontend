@@ -34,7 +34,7 @@ export const Navbar = () => {
 		<div className="navbar bg-base-100 border-b-2 border-secondary pt-3">
 			<div className="navbar-start flex-1">
 				<div className="dropdown">
-					<div tabIndex={0} role="button" className="btn btn-ghost md:hidden">
+					<button type="button" className="btn btn-ghost md:hidden">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							className="h-5 w-5"
@@ -49,7 +49,7 @@ export const Navbar = () => {
 								d="M4 6h16M4 12h8m-8 6h16"
 							/>
 						</svg>
-					</div>
+					</button>
 					<ul className="menu menu-sm dropdown-content mt-3 z-50 p-2 shadow-sm bg-base-100 rounded-box w-52">
 						<li>
 							<Link to={"/products"} search={{ page: 1, pageSize: 25 }}>
@@ -164,12 +164,13 @@ export const Navbar = () => {
 								Cart <FontAwesomeIcon icon={faCartShopping} />
 							</Link>
 						</div>
-						<div
+						<button
+							type="button"
 							onClick={handleLogout}
 							className="btn btn-error py-2 px-4 rounded-md max-md:hidden"
 						>
 							Logout
-						</div>
+						</button>
 					</div>
 				) : (
 					<div className="ml-auto mr-10 flex gap-4">

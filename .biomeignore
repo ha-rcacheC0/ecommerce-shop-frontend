@@ -1,0 +1,5 @@
+# Generated files
+src/routeTree.gen.ts
+
+# Files that legitimately need to use 'any' due to library requirements
+src/components/component-parts/ErrorMessage.tsx

@@ -240,7 +240,10 @@ const Cart = ({
 					</thead>
 					<tbody>
 						{products.map((product, index) => (
-							<CartItem key={index} product={product} />
+							<CartItem
+								key={`${product.productId}-${product.variantId || "default"}`}
+								product={product}
+							/>
 						))}
 					</tbody>
 				</table>
@@ -493,7 +496,7 @@ const Cart = ({
 									!isShippableState ||
 									!isToSAccepted
 								}
-								userId={user?.userInfo?.cart?.userId!}
+								userId={user?.userInfo?.cart?.userId ?? ""}
 								shippingAddressId={
 									isShippingAddressSet ? currentShippingAddress?.id : ""
 								}

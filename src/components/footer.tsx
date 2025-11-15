@@ -20,8 +20,8 @@ export const Footer = () => {
 					<Link to="/shipping-info" className="link link-hover">
 						Shipping
 					</Link>
-					<a className="link link-hover">Discounts</a>
-					<a className="link link-hover">Reviews</a>
+					<span className="link link-hover">Discounts</span>
+					<span className="link link-hover">Reviews</span>
 					<Link to="/contact-us" className="link link-hover">
 						Contact Us
 					</Link>
@@ -66,12 +66,12 @@ export const Footer = () => {
 							alt="company logo"
 						></img>
 					</a>
-					<a className="link link-hover text-center text-md">
+					<span className="link link-hover text-center text-md">
 						<FontAwesomeIcon icon={faLocationArrow} /> North Dakota, USA 🇺🇸
-					</a>
-					<a className="link link-hover text-center text-md">
+					</span>
+					<span className="link link-hover text-center text-md">
 						<FontAwesomeIcon icon={faPhone} /> +1 (701) 269-6703
-					</a>
+					</span>
 				</aside>
 				<div className="footer-center w-full mx-auto">
 					<p className="text-center text-xs py-2">
