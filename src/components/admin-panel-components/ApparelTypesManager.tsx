@@ -210,6 +210,7 @@ const ApparelTypesManager = () => {
 					return (
 						<div className="flex gap-2 justify-center">
 							<button
+								type="button"
 								onClick={handleUpdate}
 								className="btn btn-primary btn-sm"
 								disabled={updateMutation.isPending}
@@ -221,6 +222,7 @@ const ApparelTypesManager = () => {
 								)}
 							</button>
 							<button
+								type="button"
 								onClick={cancelEdit}
 								className="btn btn-ghost btn-sm"
 								disabled={updateMutation.isPending}
@@ -234,6 +236,7 @@ const ApparelTypesManager = () => {
 				return (
 					<div className="flex gap-2 justify-center">
 						<button
+							type="button"
 							onClick={() => startEdit(apparelType)}
 							className="btn btn-ghost btn-sm text-warning"
 							title="Edit"
@@ -241,6 +244,7 @@ const ApparelTypesManager = () => {
 							<FontAwesomeIcon icon={faEdit} />
 						</button>
 						<button
+							type="button"
 							onClick={() => handleDelete(apparelType)}
 							className="btn btn-ghost btn-sm text-error"
 							title="Delete"
@@ -289,6 +293,7 @@ const ApparelTypesManager = () => {
 
 					{!isCreating ? (
 						<button
+							type="button"
 							onClick={() => setIsCreating(true)}
 							className="btn btn-primary"
 						>
@@ -301,31 +306,32 @@ const ApparelTypesManager = () => {
 								<div>
 									<label className="label">
 										<span className="label-text">Name *</span>
+										<input
+											type="text"
+											value={newTypeName}
+											onChange={(e) => setNewTypeName(e.target.value)}
+											className="input input-bordered w-full mt-1"
+											placeholder="e.g., T-Shirt, Hoodie, Tank Top"
+										/>
 									</label>
-									<input
-										type="text"
-										value={newTypeName}
-										onChange={(e) => setNewTypeName(e.target.value)}
-										className="input input-bordered w-full"
-										placeholder="e.g., T-Shirt, Hoodie, Tank Top"
-									/>
 								</div>
 								<div>
 									<label className="label">
 										<span className="label-text">Description</span>
+										<input
+											type="text"
+											value={newTypeDescription}
+											onChange={(e) => setNewTypeDescription(e.target.value)}
+											className="input input-bordered w-full mt-1"
+											placeholder="Optional description"
+										/>
 									</label>
-									<input
-										type="text"
-										value={newTypeDescription}
-										onChange={(e) => setNewTypeDescription(e.target.value)}
-										className="input input-bordered w-full"
-										placeholder="Optional description"
-									/>
 								</div>
 							</div>
 
 							<div className="flex gap-2">
 								<button
+									type="button"
 									onClick={handleCreate}
 									className="btn btn-primary"
 									disabled={createMutation.isPending || !newTypeName.trim()}
@@ -343,6 +349,7 @@ const ApparelTypesManager = () => {
 									)}
 								</button>
 								<button
+									type="button"
 									onClick={() => {
 										setIsCreating(false);
 										setNewTypeName("");
@@ -430,6 +437,7 @@ const ApparelTypesManager = () => {
 					</p>
 					{!isCreating && (
 						<button
+							type="button"
 							onClick={() => setIsCreating(true)}
 							className="btn btn-primary"
 						>

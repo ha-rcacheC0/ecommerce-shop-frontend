@@ -159,7 +159,7 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 	const updateVariant = (
 		index: number,
 		field: keyof ProductVariantData,
-		value: any,
+		value: string | number,
 	) => {
 		setVariants((prev) =>
 			prev.map((variant, i) =>
@@ -212,7 +212,7 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 			let colorCode = "";
 			if (variant.colorId) {
 				const color = metadata?.colors?.find(
-					(c: any) => c.id === variant.colorId,
+					(c: { id: string; name: string }) => c.id === variant.colorId,
 				);
 				if (color) {
 					colorCode = `-${color.name
@@ -334,31 +334,31 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 						<div>
 							<label className="label">
 								<span className="label-text">Title *</span>
+								<input
+									type="text"
+									className="input input-bordered w-full mt-1"
+									value={title}
+									onChange={(e) => setTitle(e.target.value)}
+									required
+									placeholder="e.g., Cool Design T-Shirt"
+								/>
 							</label>
-							<input
-								type="text"
-								className="input input-bordered w-full"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-								required
-								placeholder="e.g., Cool Design T-Shirt"
-							/>
 						</div>
 
 						<div>
 							<label className="label">
 								<span className="label-text">Case Price *</span>
+								<input
+									type="number"
+									step="0.01"
+									min="0"
+									className="input input-bordered w-full mt-1"
+									value={casePrice}
+									onChange={(e) => setCasePrice(e.target.value)}
+									required
+									placeholder="120.00"
+								/>
 							</label>
-							<input
-								type="number"
-								step="0.01"
-								min="0"
-								className="input input-bordered w-full"
-								value={casePrice}
-								onChange={(e) => setCasePrice(e.target.value)}
-								required
-								placeholder="120.00"
-							/>
 						</div>
 						{/* Add SKU preview section */}
 
@@ -366,15 +366,15 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 							<div>
 								<label className="label">
 									<span className="label-text"> Preview Sku</span>
+									<input
+										type="text"
+										step="0.01"
+										min="0"
+										className="input input-bordered w-full mt-1"
+										value={skuPreview?.nextSku || ""}
+										disabled
+									/>
 								</label>
-								<input
-									type="text"
-									step="0.01"
-									min="0"
-									className="input input-bordered w-full "
-									value={skuPreview?.nextSku || ""}
-									disabled
-								/>
 								<div className="label">
 									<span className="label-text-alt">
 										Variant SKUs: {skuPreview.nextSku}
@@ -386,15 +386,15 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 						<div>
 							<label className="label">
 								<span className="label-text">Package (items per case) *</span>
+								<input
+									type="text"
+									className="input input-bordered w-full mt-1"
+									value={packageString}
+									onChange={(e) => setPackageString(e.target.value)}
+									required
+									placeholder="12,1"
+								/>
 							</label>
-							<input
-								type="text"
-								className="input input-bordered w-full"
-								value={packageString}
-								onChange={(e) => setPackageString(e.target.value)}
-								required
-								placeholder="12,1"
-							/>
 							<div className="label">
 								<span className="label-text-alt">
 									Estimated unit price: ${calculateUnitPrice()}
@@ -417,26 +417,26 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 						<div className="md:col-span-2">
 							<label className="label">
 								<span className="label-text">Description</span>
+								<textarea
+									className="textarea textarea-bordered w-full h-24 mt-1"
+									value={description}
+									onChange={(e) => setDescription(e.target.value)}
+									placeholder="Product description..."
+								/>
 							</label>
-							<textarea
-								className="textarea textarea-bordered w-full h-24"
-								value={description}
-								onChange={(e) => setDescription(e.target.value)}
-								placeholder="Product description..."
-							/>
 						</div>
 
 						<div>
 							<label className="label">
 								<span className="label-text">Image URL</span>
+								<input
+									type="url"
+									className="input input-bordered w-full mt-1"
+									value={imageUrl}
+									onChange={(e) => setImageUrl(e.target.value)}
+									placeholder="https://example.com/image.jpg"
+								/>
 							</label>
-							<input
-								type="url"
-								className="input input-bordered w-full"
-								value={imageUrl}
-								onChange={(e) => setImageUrl(e.target.value)}
-								placeholder="https://example.com/image.jpg"
-							/>
 						</div>
 					</div>
 				</div>
@@ -448,68 +448,72 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 						<div>
 							<label className="label">
 								<span className="label-text">Brand *</span>
+								<select
+									className="select select-bordered w-full mt-1"
+									value={selectedBrandId}
+									onChange={(e) => setSelectedBrandId(e.target.value)}
+									required
+								>
+									<option value="">Select Brand</option>
+									{metadata?.brands?.map(
+										(brand: { id: string; name: string }) => (
+											<option key={brand.id} value={brand.id}>
+												{brand.name}
+											</option>
+										),
+									)}
+								</select>
 							</label>
-							<select
-								className="select select-bordered w-full"
-								value={selectedBrandId}
-								onChange={(e) => setSelectedBrandId(e.target.value)}
-								required
-							>
-								<option value="">Select Brand</option>
-								{metadata?.brands?.map((brand: any) => (
-									<option key={brand.id} value={brand.id}>
-										{brand.name}
-									</option>
-								))}
-							</select>
 						</div>
 
 						<div>
 							<label className="label">
 								<span className="label-text">Category *</span>
+								<select
+									className="select select-bordered w-full mt-1"
+									value={selectedCategoryId}
+									onChange={(e) => setSelectedCategoryId(e.target.value)}
+									required
+								>
+									<option value="">Select Category</option>
+									{metadata?.categories?.map(
+										(category: { id: string; name: string }) => (
+											<option key={category.id} value={category.id}>
+												{category.name}
+											</option>
+										),
+									)}
+								</select>
 							</label>
-							<select
-								className="select select-bordered w-full"
-								value={selectedCategoryId}
-								onChange={(e) => setSelectedCategoryId(e.target.value)}
-								required
-							>
-								<option value="">Select Category</option>
-								{metadata?.categories?.map((category: any) => (
-									<option key={category.id} value={category.id}>
-										{category.name}
-									</option>
-								))}
-							</select>
 						</div>
 
 						<div>
 							<label className="label">
 								<span className="label-text">Apparel Type *</span>
+								<select
+									className="select select-bordered w-full mt-1"
+									value={selectedApparelTypeId}
+									onChange={(e) => setSelectedApparelTypeId(e.target.value)}
+									required
+								>
+									<option value="">Select Apparel Type</option>
+									{apparelTypes?.map((type: { id: string; name: string }) => (
+										<option key={type.id} value={type.id}>
+											{type.name}
+										</option>
+									))}
+								</select>
 							</label>
-							<select
-								className="select select-bordered w-full"
-								value={selectedApparelTypeId}
-								onChange={(e) => setSelectedApparelTypeId(e.target.value)}
-								required
-							>
-								<option value="">Select Apparel Type</option>
-								{apparelTypes?.map((type: any) => (
-									<option key={type.id} value={type.id}>
-										{type.name}
-									</option>
-								))}
-							</select>
 						</div>
 					</div>
 
 					{/* Colors */}
 					<div className="mt-4">
-						<label className="label">
+						<div className="label">
 							<span className="label-text">Available Colors</span>
-						</label>
+						</div>
 						<div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-							{metadata?.colors?.map((color: any) => (
+							{metadata?.colors?.map((color: { id: string; name: string }) => (
 								<label
 									key={color.id}
 									className="flex items-center gap-2 cursor-pointer"
@@ -567,7 +571,10 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 
 					<div className="space-y-4  overflow-scroll max-h-94">
 						{variants.map((variant, index) => (
-							<div key={index} className="bg-base-100 p-4 rounded-lg border ">
+							<div
+								key={`${variant.size}-${variant.gender}-${variant.colorId || "none"}-${index}`}
+								className="bg-base-100 p-4 rounded-lg border "
+							>
 								<div className="flex justify-between items-center mb-3">
 									<h3 className="font-medium">Variant {index + 1}</h3>
 									<div className="text-xs text-gray-500 mt-1">
@@ -600,120 +607,121 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 									<div>
 										<label className="label">
 											<span className="label-text text-xs">Size *</span>
-										</label>
-										<select
-											className="select select-bordered select-sm w-full"
-											value={variant.size}
-											onChange={(e) =>
-												updateVariant(index, "size", e.target.value)
-											}
-											required
-										>
-											<option value="" disabled>
-												Size
-											</option>
-											{COMMON_SIZES.map((size) => (
-												<option key={size} value={size}>
-													{size}
-												</option>
-											))}
-											<option value="custom">Custom...</option>
-										</select>
-										{variant.size === "custom" && (
-											<input
-												type="text"
-												className="input input-bordered input-sm w-full mt-1"
-												placeholder="Enter size"
+											<select
+												className="select select-bordered select-sm w-full mt-1"
+												value={variant.size}
 												onChange={(e) =>
 													updateVariant(index, "size", e.target.value)
 												}
-											/>
-										)}
+												required
+											>
+												<option value="" disabled>
+													Size
+												</option>
+												{COMMON_SIZES.map((size) => (
+													<option key={size} value={size}>
+														{size}
+													</option>
+												))}
+												<option value="custom">Custom...</option>
+											</select>
+											{variant.size === "custom" && (
+												<input
+													type="text"
+													className="input input-bordered input-sm w-full mt-1"
+													placeholder="Enter size"
+													onChange={(e) =>
+														updateVariant(index, "size", e.target.value)
+													}
+												/>
+											)}
+										</label>
 									</div>
 
 									<div>
 										<label className="label">
 											<span className="label-text text-xs">Gender *</span>
+											<select
+												className="select select-bordered select-sm w-full mt-1"
+												value={variant.gender}
+												onChange={(e) =>
+													updateVariant(index, "gender", e.target.value)
+												}
+												required
+											>
+												{GENDERS.map((gender) => (
+													<option key={gender.value} value={gender.value}>
+														{gender.label}
+													</option>
+												))}
+											</select>
 										</label>
-										<select
-											className="select select-bordered select-sm w-full"
-											value={variant.gender}
-											onChange={(e) =>
-												updateVariant(index, "gender", e.target.value)
-											}
-											required
-										>
-											{GENDERS.map((gender) => (
-												<option key={gender.value} value={gender.value}>
-													{gender.label}
-												</option>
-											))}
-										</select>
 									</div>
 
 									<div>
 										<label className="label">
 											<span className="label-text text-xs">Color</span>
+											<select
+												className="select select-bordered select-sm w-full mt-1"
+												value={variant.colorId || ""}
+												onChange={(e) =>
+													updateVariant(
+														index,
+														"colorId",
+														e.target.value || undefined,
+													)
+												}
+											>
+												<option value="">No specific color</option>
+												{selectedColors.map((colorId) => {
+													const color = metadata?.colors?.find(
+														(c: { id: string; name: string }) =>
+															c.id === colorId,
+													);
+													return color ? (
+														<option key={color.id} value={color.id}>
+															{color.name}
+														</option>
+													) : null;
+												})}
+											</select>
 										</label>
-										<select
-											className="select select-bordered select-sm w-full"
-											value={variant.colorId || ""}
-											onChange={(e) =>
-												updateVariant(
-													index,
-													"colorId",
-													e.target.value || undefined,
-												)
-											}
-										>
-											<option value="">No specific color</option>
-											{selectedColors.map((colorId) => {
-												const color = metadata?.colors?.find(
-													(c: any) => c.id === colorId,
-												);
-												return color ? (
-													<option key={color.id} value={color.id}>
-														{color.name}
-													</option>
-												) : null;
-											})}
-										</select>
 									</div>
 
 									<div>
 										<label className="label">
 											<span className="label-text text-xs">Unit Price *</span>
+											<input
+												type="number"
+												step="0.01"
+												min="0"
+												className="input input-bordered input-sm w-full mt-1"
+												value={variant.unitPrice}
+												onChange={(e) =>
+													updateVariant(index, "unitPrice", e.target.value)
+												}
+												required
+											/>
 										</label>
-										<input
-											type="number"
-											step="0.01"
-											min="0"
-											className="input input-bordered input-sm w-full"
-											value={variant.unitPrice}
-											onChange={(e) =>
-												updateVariant(index, "unitPrice", e.target.value)
-											}
-											required
-										/>
 									</div>
 
 									<div>
 										<label className="label">
 											<span className="label-text text-xs">Stock</span>
+											<input
+												type="number"
+												min="0"
+												className="input input-bordered input-sm w-full mt-1"
+												value={variant.availableStock}
+												onChange={(e) =>
+													updateVariant(
+														index,
+														"availableStock",
+														parseInt(e.target.value, 10) || 0,
+													)
+												}
+											/>
 										</label>
-										<input
-											type="number"
-											min="0"
-											className="input input-bordered input-sm w-full"
-											value={variant.availableStock}
-											onChange={(e) =>
-												updateVariant(
-													index,
-													"availableStock",
-													parseInt(e.target.value, 10) || 0,
-												)
-											}
-										/>
 									</div>
 								</div>
 							</div>

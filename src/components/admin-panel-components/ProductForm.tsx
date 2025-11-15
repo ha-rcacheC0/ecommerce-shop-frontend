@@ -91,17 +91,17 @@ const ProductForm: React.FC<ProductFormProps> = ({
 			setDescription(productData.description || "");
 			setCasePrice(parseFloat(productData.casePrice.toString()).toFixed(2));
 			setPackageString(productData.package.join(","));
-			setInStock(productData.inStock!);
+			setInStock(productData.inStock ?? true);
 			setIsCaseBreakable(productData.isCaseBreakable);
 			setImageUrl(productData.image);
 			setVideoUrl(productData.videoURL || "");
 			setSelectedBrandId(productData.brand?.id || "");
 			setSelectedCategoryId(productData.category?.id || "");
 			setSelectedColors(
-				productData.colors?.map((c: { id: any }) => c.id) || [],
+				productData.colors?.map((c: { id: string }) => c.id) || [],
 			);
 			setSelectedEffects(
-				productData.effects?.map((e: { id: any }) => e.id) || [],
+				productData.effects?.map((e: { id: string }) => e.id) || [],
 			);
 		}
 	}, [isEditing, productData]);
@@ -407,6 +407,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
 							<div className="w-40 h-40 rounded-md overflow-hidden">
 								<iframe
 									src={videoUrl}
+									title="Product video preview"
 									className="w-full h-full object-cover"
 									onError={(e) => {
 										(e.target as HTMLImageElement).src = "/placeholder.png";

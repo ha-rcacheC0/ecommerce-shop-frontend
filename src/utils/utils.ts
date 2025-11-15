@@ -81,9 +81,9 @@ function calculateShipping(options: ShippingOptions): number {
 
 	switch (orderType) {
 		case "show":
-			return (shippingCost = 0);
+			return 0;
 		case "apparelOnly":
-			return (shippingCost = 10);
+			return 10;
 		case "retail":
 			shippingCost = getShippingCost(
 				retailShippingRates,

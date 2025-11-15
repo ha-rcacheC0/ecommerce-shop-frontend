@@ -232,6 +232,7 @@ const CaseBreakReport: React.FC = () => {
 
 					<div className="flex items-end">
 						<button
+							type="button"
 							className="btn btn-primary"
 							onClick={() => refetch()}
 							disabled={isLoading}
@@ -345,6 +346,7 @@ const CaseBreakReport: React.FC = () => {
 										<td>{item.formattedDate}</td>
 										<td>
 											<button
+												type="button"
 												className="btn btn-sm btn-primary"
 												onClick={() => {
 													handleProcessRequest(
@@ -398,12 +400,14 @@ const CaseBreakReport: React.FC = () => {
 														/>
 														<div className="flex justify-end mt-4">
 															<button
+																type="button"
 																className="btn btn-outline mr-2"
 																onClick={() => setIsModalOpen(false)}
 															>
 																Cancel
 															</button>
 															<button
+																type="button"
 																className="btn btn-primary"
 																onClick={handleConfirm}
 															>

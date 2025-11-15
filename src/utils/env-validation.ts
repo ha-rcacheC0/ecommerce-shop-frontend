@@ -59,7 +59,9 @@ See README.md for details.
 	// Warn about optional variables (only in development)
 	if (missingOptional.length > 0 && import.meta.env.DEV) {
 		console.warn("\n⚠️  Optional Environment Variables Not Set:");
-		missingOptional.forEach((msg) => console.warn(`  - ${msg}`));
+		missingOptional.forEach((msg) => {
+			console.warn(`  - ${msg}`);
+		});
 		console.warn(
 			"\nThe app will work without these, but some features may be disabled.\n",
 		);
