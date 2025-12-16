@@ -1,6 +1,6 @@
 import { HttpResponse, http } from "msw";
 
-const API_BASE_URL = "http://localhost:3000/api";
+const API_BASE_URL = "http://localhost:4000/api";
 
 export const handlers = [
 	// Cart endpoints
@@ -14,7 +14,34 @@ export const handlers = [
 		});
 	}),
 
-	// User profile endpoints
+	// User profile endpoints - userInfo endpoint
+	http.get(`${API_BASE_URL}/user/userInfo`, () => {
+		return HttpResponse.json({
+			id: "test-profile-id",
+			userId: "test-user-id",
+			firstName: "Test",
+			lastName: "User",
+			email: "test@example.com",
+			phoneNumber: "555-1234",
+			acceptedTerms: true,
+			billingAddress: {
+				id: "test-billing-id",
+				street1: "123 Billing St",
+				city: "Springfield",
+				state: "IL",
+				postalCode: "62701",
+			},
+			shippingAddress: {
+				id: "test-shipping-id",
+				street1: "123 Shipping St",
+				city: "Springfield",
+				state: "IL",
+				postalCode: "62701",
+			},
+		});
+	}),
+
+	// Legacy user-profile endpoint
 	http.get(`${API_BASE_URL}/user-profile`, () => {
 		return HttpResponse.json({
 			id: "test-profile-id",
