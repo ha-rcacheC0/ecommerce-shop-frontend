@@ -56,9 +56,9 @@ export const validateEmailInput = (email: string) =>
 	validateInput(validateEmailSchema, email);
 
 export function isObjectEmpty(obj: Record<string, unknown> | object): boolean {
-	for (const key in obj) {
-		// Use hasOwnProperty instead of Object.hasOwn for broader compatibility
-		if (Object.hasOwn(obj, key) && obj[key as keyof typeof obj] !== "") {
+	const keys = Object.keys(obj);
+	for (const key of keys) {
+		if (obj[key as keyof typeof obj] !== "") {
 			return false;
 		}
 	}

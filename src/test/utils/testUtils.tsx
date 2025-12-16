@@ -1,10 +1,4 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-	createMemoryHistory,
-	createRootRoute,
-	createRouter,
-	RouterProvider,
-} from "@tanstack/react-router";
 import { type RenderOptions, render } from "@testing-library/react";
 import type { ReactElement } from "react";
 
