@@ -25,7 +25,7 @@ function CartPage() {
 	return (
 		<div className="p-4 md:p-8 w-full md:w-11/12 lg:w-4/5 xl:w-3/4 mx-auto">
 			<Cart
-				products={products?.cartProducts}
+				products={products?.cartProducts ?? []}
 				shippingAddress={
 					userProfile?.shippingAddress ?? {
 						id: "",

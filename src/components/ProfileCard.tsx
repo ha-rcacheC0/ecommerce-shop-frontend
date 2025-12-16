@@ -8,11 +8,11 @@ export const ProfileCard = ({
 	userProfile,
 	userEmail,
 }: {
-	userProfile: UserProfile;
+	userProfile: UserProfile | null;
 	userEmail: string;
 }) => {
 	const { theme, updateTheme } = useThemeProvider();
-	const dob = userProfile.dateOfBirth
+	const dob = userProfile?.dateOfBirth
 		? new Date(userProfile.dateOfBirth)
 		: null;
 

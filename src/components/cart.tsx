@@ -18,7 +18,7 @@ import {
 } from "../api/users/userQueryOptions.api";
 import { useAuth } from "../providers/auth.provider";
 import type { TAddress, TApprovedTerminal, TCartProduct } from "../types";
-import { logger } from "../utils/logger";
+import { cartLogger } from "../utils/logger";
 import {
 	calculateShipping,
 	calculateStateTax,
@@ -139,7 +139,7 @@ const Cart = ({
 	// Memoize amounts object to prevent unnecessary re-fetches of checkout token
 	const amounts = useMemo(() => {
 		const amountsObj = { subtotal, tax, liftGateFee, shipping, grandTotal };
-		logger.debug(amountsObj, "Cart: Amounts calculated");
+		cartLogger.debug(amountsObj, "Cart: Amounts calculated");
 		return amountsObj;
 	}, [subtotal, tax, liftGateFee, shipping, grandTotal]);
 
@@ -189,7 +189,10 @@ const Cart = ({
 			// Update user profile with TOS acceptance
 			mutate({
 				token: user?.token ?? "",
-				body: { userId: user?.userInfo?.profile?.userId, acceptedTerms: true },
+				body: {
+					userId: user?.userInfo?.profile?.userId ?? "",
+					acceptedTerms: true,
+				},
 			});
 		} catch (error) {
 			console.error("Failed to update TOS acceptance:", error);
@@ -239,7 +242,7 @@ const Cart = ({
 						</tr>
 					</thead>
 					<tbody>
-						{products.map((product, index) => (
+						{products.map((product) => (
 							<CartItem
 								key={`${product.productId}-${product.variantId || "default"}`}
 								product={product}
@@ -488,7 +491,7 @@ const Cart = ({
 						</div>
 						<div className="mt-6">
 							<HelcimPayButton
-								cartId={user?.userInfo?.cart?.id}
+								cartId={user?.userInfo?.cart?.id ?? ""}
 								amounts={amounts}
 								isUpdatingValues={isUpdatingValues}
 								btnDisabled={
@@ -498,7 +501,7 @@ const Cart = ({
 								}
 								userId={user?.userInfo?.cart?.userId ?? ""}
 								shippingAddressId={
-									isShippingAddressSet ? currentShippingAddress?.id : ""
+									isShippingAddressSet ? (currentShippingAddress?.id ?? "") : ""
 								}
 							/>
 

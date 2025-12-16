@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_auth/profile/")({
 			userInfoQueryOptions(auth.user?.token ?? ""),
 		);
 		await queryClient.prefetchQuery(
-			cartItemsQueryOptions(auth.user?.userInfo?.cart?.id),
+			cartItemsQueryOptions(auth.user?.userInfo?.cart?.id ?? ""),
 		);
 	},
 	component: ProfilePage,
@@ -29,7 +29,7 @@ function ProfilePage() {
 	} = useQuery(userInfoQueryOptions(auth.user?.token ?? ""));
 
 	const { data: cart } = useQuery(
-		cartItemsQueryOptions(auth.user?.userInfo?.cart?.id),
+		cartItemsQueryOptions(auth.user?.userInfo?.cart?.id ?? ""),
 	);
 
 	if (isLoading) {
@@ -99,10 +99,10 @@ function ProfilePage() {
 							<div className="bg-primary text-primary-content p-4">
 								<div className="flex justify-between items-center">
 									<h2 className="text-2xl font-bold">Your Cart</h2>
-									{cart?.cartProducts.length > 0 && (
+									{(cart?.cartProducts?.length ?? 0) > 0 && (
 										<Link
 											to="/profile/cart/$cartId"
-											params={{ cartId: auth.user?.userInfo?.cart?.id }}
+											params={{ cartId: auth.user?.userInfo?.cart?.id ?? "" }}
 											className="btn btn-sm btn-ghost"
 										>
 											View Full Cart{" "}
@@ -114,7 +114,7 @@ function ProfilePage() {
 							{/* Cart Content */}
 							<div className="p-6 bg-base-100 flex-grow">
 								<Cart
-									products={cart?.cartProducts}
+									products={cart?.cartProducts ?? []}
 									shippingAddress={
 										userProfile?.shippingAddress ?? {
 											id: "",
@@ -126,11 +126,11 @@ function ProfilePage() {
 									}
 								/>
 
-								{cart?.cartProducts.length > 0 && (
+								{(cart?.cartProducts?.length ?? 0) > 0 && (
 									<div className="mt-4 md:hidden">
 										<Link
 											to="/profile/cart/$cartId"
-											params={{ cartId: auth.user?.userInfo?.cart?.id }}
+											params={{ cartId: auth.user?.userInfo?.cart?.id ?? "" }}
 											className="btn btn-primary w-full"
 										>
 											View Full Cart{" "}
