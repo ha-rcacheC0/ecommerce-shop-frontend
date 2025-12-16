@@ -31,12 +31,36 @@ const router = createRouter({
 });
 Sentry.init({
 	dsn: "https://f8e5f04e220f6992793753fa9ec6312f@o4509347102654464.ingest.us.sentry.io/4509347102916608",
-
+	environment: import.meta.env.MODE,
+	integrations: [
+		Sentry.browserTracingIntegration(),
+		Sentry.replayIntegration({
+			maskAllText: false,
+			blockAllMedia: false,
+		}),
+		Sentry.tanstackRouterBrowserTracingIntegration(router),
+	],
+	tracesSampleRate: 1.0,
+	replaysSessionSampleRate: 0.1,
+	replaysOnErrorSampleRate: 1.0,
 	// Adds request headers and IP for users, for more info visit:
 	// https://docs.sentry.io/platforms/javascript/guides/react/configuration/options/#sendDefaultPii
 	sendDefaultPii: true,
-
-	integrations: [Sentry.tanstackRouterBrowserTracingIntegration(router)],
+	// Tag errors by domain for easier filtering
+	beforeSend(event) {
+		// Add domain tag based on URL path
+		const path = window.location.pathname;
+		if (path.includes("/cart")) {
+			event.tags = { ...event.tags, domain: "cart" };
+		} else if (path.includes("/profile")) {
+			event.tags = { ...event.tags, domain: "profile" };
+		} else if (path.includes("/products")) {
+			event.tags = { ...event.tags, domain: "products" };
+		} else if (path.includes("/admin")) {
+			event.tags = { ...event.tags, domain: "admin" };
+		}
+		return event;
+	},
 });
 
 declare module "@tanstack/react-router" {
