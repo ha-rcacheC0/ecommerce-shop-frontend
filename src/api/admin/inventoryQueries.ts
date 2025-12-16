@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getInventoryProducts, InventoryQueryParams } from "./inventory";
+import { getInventoryProducts, type InventoryQueryParams } from "./inventory";
 
 export const getInventoryQueryOptions = (params: InventoryQueryParams = {}) => {
-  return queryOptions({
-    queryKey: ["inventory", params],
-    queryFn: () => getInventoryProducts(params),
-  });
+	return queryOptions({
+		queryKey: ["inventory", params],
+		queryFn: () => getInventoryProducts(params),
+	});
 };

@@ -1,28 +1,28 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getTerminalsQuery, getOneTerminalQuery } from "./terminals";
+import { getOneTerminalQuery, getTerminalsQuery } from "./terminals";
 
 export const getTerminalsQueryOptions = ({
-  state,
-  zipcode,
+	state,
+	zipcode,
 }: {
-  state?: string;
-  zipcode?: string;
+	state?: string;
+	zipcode?: string;
 }) =>
-  queryOptions({
-    queryKey: ["terminals", state, zipcode],
-    queryFn: () => getTerminalsQuery({ state, zipcode }),
-    placeholderData: [],
-  });
+	queryOptions({
+		queryKey: ["terminals", state, zipcode],
+		queryFn: () => getTerminalsQuery({ state, zipcode }),
+		placeholderData: [],
+	});
 
 export const getOneTerminalQueryOptions = ({
-  id,
-  isTerminalDest,
+	id,
+	isTerminalDest,
 }: {
-  id: string;
-  isTerminalDest: boolean;
+	id: string;
+	isTerminalDest: boolean;
 }) =>
-  queryOptions({
-    queryKey: ["terminal", id],
-    queryFn: () => getOneTerminalQuery({ id }),
-    enabled: isTerminalDest,
-  });
+	queryOptions({
+		queryKey: ["terminal", id],
+		queryFn: () => getOneTerminalQuery({ id }),
+		enabled: isTerminalDest,
+	});
