@@ -665,11 +665,7 @@ const ApparelProductForm: React.FC<ApparelProductFormProps> = ({
 												className="select select-bordered select-sm w-full mt-1"
 												value={variant.colorId || ""}
 												onChange={(e) =>
-													updateVariant(
-														index,
-														"colorId",
-														e.target.value || undefined,
-													)
+													updateVariant(index, "colorId", e.target.value)
 												}
 											>
 												<option value="">No specific color</option>

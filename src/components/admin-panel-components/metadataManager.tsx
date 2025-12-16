@@ -499,7 +499,11 @@ const MetadataManager = () => {
 			{/* Data Table (same pattern as ProductsPanel) */}
 			<DataTable<MetadataItemTableItem>
 				title={activeTabData?.label}
-				data={metadataData[activeTabData?.id] as MetadataItemTableItem[]}
+				data={
+					activeTabData?.id
+						? (metadataData[activeTabData.id] as MetadataItemTableItem[])
+						: []
+				}
 				columns={allColumns}
 				isLoading={isLoading}
 				isError={isError}

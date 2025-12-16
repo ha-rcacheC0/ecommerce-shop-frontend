@@ -114,7 +114,7 @@ const SingleProductPage = () => {
 								Case Pkg: {packageString}
 							</p>
 							<h2 className="text-xl text-center badge badge-primary p-6">
-								Case: ${parseFloat(product.data?.casePrice).toFixed(2)}
+								Case: ${parseFloat(product.data?.casePrice ?? "0").toFixed(2)}
 							</h2>
 							{authState === "authenticated" ? (
 								product.data?.inStock ? (
