@@ -1,3 +1,4 @@
+import { adminResetPassword } from "@api/users/auth.api";
 import {
 	getAllUsersQueryOptions,
 	getUsersQueryOptions,
@@ -12,10 +13,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useAuth } from "@providers/auth.provider";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { useState } from "react";
 import { CSVLink } from "react-csv";
+import { toast } from "react-toastify";
 import type { User } from "@/types";
 import AdminPageLayout from "./AdminPageLayout";
 
@@ -25,10 +27,31 @@ interface UserTableItem extends User, Record<string, unknown> {}
 const UsersPanel = () => {
 	const auth = useAuth();
 	const [searchTerm, setSearchTerm] = useState("");
+	const [resetModalUser, setResetModalUser] = useState<UserTableItem | null>(
+		null,
+	);
 
 	// Pagination state
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
+
+	// Password reset mutation
+	const resetPasswordMutation = useMutation({
+		mutationFn: (userId: string) =>
+			adminResetPassword(auth.user?.token ?? "", {
+				userId,
+				expiresInHours: 24,
+			}),
+		onSuccess: (data) => {
+			toast.success(
+				`Password reset email sent. Expires: ${new Date(data.expiresAt).toLocaleString()}`,
+			);
+			setResetModalUser(null);
+		},
+		onError: (error: Error) => {
+			toast.error(error.message || "Failed to send password reset email");
+		},
+	});
 
 	// Query users data with pagination
 	const {
@@ -96,8 +119,7 @@ const UsersPanel = () => {
 		{
 			icon: faLock,
 			color: "warning",
-			to: "/admin/users/$id/reset-password",
-			getParams: (user: UserTableItem) => ({ id: user.id }),
+			onClick: (user: UserTableItem) => setResetModalUser(user),
 		},
 		{
 			icon: faUserPlus,
@@ -204,6 +226,53 @@ const UsersPanel = () => {
 						}}
 						manualSorting={true}
 					/>
+
+					{/* Password Reset Confirmation Modal */}
+					{resetModalUser && (
+						<dialog className="modal modal-open">
+							<div className="modal-box">
+								<h3 className="font-bold text-lg">Reset User Password</h3>
+								<p className="py-4">
+									Are you sure you want to send a password reset email to{" "}
+									<strong>{resetModalUser.email}</strong>?
+								</p>
+								<p className="text-sm text-base-content/70">
+									The user will receive an email with a link valid for 24 hours.
+								</p>
+								<div className="modal-action">
+									<button
+										className="btn btn-ghost"
+										onClick={() => setResetModalUser(null)}
+										disabled={resetPasswordMutation.isPending}
+									>
+										Cancel
+									</button>
+									<button
+										className="btn btn-warning"
+										onClick={() =>
+											resetPasswordMutation.mutate(resetModalUser.id)
+										}
+										disabled={resetPasswordMutation.isPending}
+									>
+										{resetPasswordMutation.isPending ? (
+											<>
+												<span className="loading loading-spinner loading-sm"></span>
+												Sending...
+											</>
+										) : (
+											<>
+												<FontAwesomeIcon icon={faLock} className="mr-2" />
+												Send Reset Email
+											</>
+										)}
+									</button>
+								</div>
+							</div>
+							<form method="dialog" className="modal-backdrop">
+								<button onClick={() => setResetModalUser(null)}>close</button>
+							</form>
+						</dialog>
+					)}
 				</div>
 			)}
 		</AdminPageLayout>

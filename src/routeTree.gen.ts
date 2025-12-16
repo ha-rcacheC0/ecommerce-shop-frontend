@@ -19,8 +19,10 @@ import { Route as CodybRouteImport } from "./routes/codyb/route";
 import { Route as ShowsIndexImport } from "./routes/shows/index";
 import { Route as ProductsIndexImport } from "./routes/products/index";
 import { Route as ApparelIndexImport } from "./routes/apparel/index";
+import { Route as UserResetPasswordImport } from "./routes/user/reset-password";
 import { Route as UserRegisterImport } from "./routes/user/register";
 import { Route as UserLoginImport } from "./routes/user/login";
+import { Route as UserForgotPasswordImport } from "./routes/user/forgot-password";
 import { Route as EventsNewYearsImport } from "./routes/events/new-years";
 import { Route as EventsGenderRevealImport } from "./routes/events/gender-reveal";
 import { Route as EventsFourthJulyImport } from "./routes/events/fourth-july";
@@ -166,6 +168,12 @@ const ApparelIndexRoute = ApparelIndexImport.update({
 	getParentRoute: () => rootRoute,
 } as any);
 
+const UserResetPasswordRoute = UserResetPasswordImport.update({
+	id: "/user/reset-password",
+	path: "/user/reset-password",
+	getParentRoute: () => rootRoute,
+} as any);
+
 const UserRegisterRoute = UserRegisterImport.update({
 	id: "/user/register",
 	path: "/user/register",
@@ -175,6 +183,12 @@ const UserRegisterRoute = UserRegisterImport.update({
 const UserLoginRoute = UserLoginImport.update({
 	id: "/user/login",
 	path: "/user/login",
+	getParentRoute: () => rootRoute,
+} as any);
+
+const UserForgotPasswordRoute = UserForgotPasswordImport.update({
+	id: "/user/forgot-password",
+	path: "/user/forgot-password",
 	getParentRoute: () => rootRoute,
 } as any);
 
@@ -470,6 +484,13 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof EventsNewYearsImport;
 			parentRoute: typeof EventsRouteImport;
 		};
+		"/user/forgot-password": {
+			id: "/user/forgot-password";
+			path: "/user/forgot-password";
+			fullPath: "/user/forgot-password";
+			preLoaderRoute: typeof UserForgotPasswordImport;
+			parentRoute: typeof rootRoute;
+		};
 		"/user/login": {
 			id: "/user/login";
 			path: "/user/login";
@@ -482,6 +503,13 @@ declare module "@tanstack/react-router" {
 			path: "/user/register";
 			fullPath: "/user/register";
 			preLoaderRoute: typeof UserRegisterImport;
+			parentRoute: typeof rootRoute;
+		};
+		"/user/reset-password": {
+			id: "/user/reset-password";
+			path: "/user/reset-password";
+			fullPath: "/user/reset-password";
+			preLoaderRoute: typeof UserResetPasswordImport;
 			parentRoute: typeof rootRoute;
 		};
 		"/apparel/": {
@@ -720,8 +748,10 @@ export interface FileRoutesByFullPath {
 	"/events/fourth-july": typeof EventsFourthJulyRoute;
 	"/events/gender-reveal": typeof EventsGenderRevealRoute;
 	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/forgot-password": typeof UserForgotPasswordRoute;
 	"/user/login": typeof UserLoginRoute;
 	"/user/register": typeof UserRegisterRoute;
+	"/user/reset-password": typeof UserResetPasswordRoute;
 	"/apparel": typeof ApparelIndexRoute;
 	"/products": typeof ProductsIndexRoute;
 	"/shows": typeof ShowsIndexRoute;
@@ -765,8 +795,10 @@ export interface FileRoutesByTo {
 	"/events/fourth-july": typeof EventsFourthJulyRoute;
 	"/events/gender-reveal": typeof EventsGenderRevealRoute;
 	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/forgot-password": typeof UserForgotPasswordRoute;
 	"/user/login": typeof UserLoginRoute;
 	"/user/register": typeof UserRegisterRoute;
+	"/user/reset-password": typeof UserResetPasswordRoute;
 	"/apparel": typeof ApparelIndexRoute;
 	"/products": typeof ProductsIndexRoute;
 	"/shows": typeof ShowsIndexRoute;
@@ -811,8 +843,10 @@ export interface FileRoutesById {
 	"/events/fourth-july": typeof EventsFourthJulyRoute;
 	"/events/gender-reveal": typeof EventsGenderRevealRoute;
 	"/events/new-years": typeof EventsNewYearsRoute;
+	"/user/forgot-password": typeof UserForgotPasswordRoute;
 	"/user/login": typeof UserLoginRoute;
 	"/user/register": typeof UserRegisterRoute;
+	"/user/reset-password": typeof UserResetPasswordRoute;
 	"/apparel/": typeof ApparelIndexRoute;
 	"/products/": typeof ProductsIndexRoute;
 	"/shows/": typeof ShowsIndexRoute;
@@ -858,8 +892,10 @@ export interface FileRouteTypes {
 		| "/events/fourth-july"
 		| "/events/gender-reveal"
 		| "/events/new-years"
+		| "/user/forgot-password"
 		| "/user/login"
 		| "/user/register"
+		| "/user/reset-password"
 		| "/apparel"
 		| "/products"
 		| "/shows"
@@ -902,8 +938,10 @@ export interface FileRouteTypes {
 		| "/events/fourth-july"
 		| "/events/gender-reveal"
 		| "/events/new-years"
+		| "/user/forgot-password"
 		| "/user/login"
 		| "/user/register"
+		| "/user/reset-password"
 		| "/apparel"
 		| "/products"
 		| "/shows"
@@ -946,8 +984,10 @@ export interface FileRouteTypes {
 		| "/events/fourth-july"
 		| "/events/gender-reveal"
 		| "/events/new-years"
+		| "/user/forgot-password"
 		| "/user/login"
 		| "/user/register"
+		| "/user/reset-password"
 		| "/apparel/"
 		| "/products/"
 		| "/shows/"
@@ -988,8 +1028,10 @@ export interface RootRouteChildren {
 	ApparelProductIdRouteRoute: typeof ApparelProductIdRouteRoute;
 	ProductsProductIdRouteRoute: typeof ProductsProductIdRouteRoute;
 	ShowsShowIdRouteRoute: typeof ShowsShowIdRouteRoute;
+	UserForgotPasswordRoute: typeof UserForgotPasswordRoute;
 	UserLoginRoute: typeof UserLoginRoute;
 	UserRegisterRoute: typeof UserRegisterRoute;
+	UserResetPasswordRoute: typeof UserResetPasswordRoute;
 	ApparelIndexRoute: typeof ApparelIndexRoute;
 	ProductsIndexRoute: typeof ProductsIndexRoute;
 	ShowsIndexRoute: typeof ShowsIndexRoute;
@@ -1012,8 +1054,10 @@ const rootRouteChildren: RootRouteChildren = {
 	ApparelProductIdRouteRoute: ApparelProductIdRouteRoute,
 	ProductsProductIdRouteRoute: ProductsProductIdRouteRoute,
 	ShowsShowIdRouteRoute: ShowsShowIdRouteRoute,
+	UserForgotPasswordRoute: UserForgotPasswordRoute,
 	UserLoginRoute: UserLoginRoute,
 	UserRegisterRoute: UserRegisterRoute,
+	UserResetPasswordRoute: UserResetPasswordRoute,
 	ApparelIndexRoute: ApparelIndexRoute,
 	ProductsIndexRoute: ProductsIndexRoute,
 	ShowsIndexRoute: ShowsIndexRoute,
@@ -1045,8 +1089,10 @@ export const routeTree = rootRoute
         "/apparel/$productId",
         "/products/$productId",
         "/shows/$showId",
+        "/user/forgot-password",
         "/user/login",
         "/user/register",
+        "/user/reset-password",
         "/apparel/",
         "/products/",
         "/shows/"
@@ -1143,11 +1189,17 @@ export const routeTree = rootRoute
       "filePath": "events/new-years.tsx",
       "parent": "/events"
     },
+    "/user/forgot-password": {
+      "filePath": "user/forgot-password.tsx"
+    },
     "/user/login": {
       "filePath": "user/login.tsx"
     },
     "/user/register": {
       "filePath": "user/register.tsx"
+    },
+    "/user/reset-password": {
+      "filePath": "user/reset-password.tsx"
     },
     "/apparel/": {
       "filePath": "apparel/index.tsx"

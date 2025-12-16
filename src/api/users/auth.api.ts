@@ -38,3 +38,82 @@ export const createUser = async (body: UserCreateRequest): Promise<unknown> => {
 	});
 	return await response.json();
 };
+
+// Password Reset APIs
+export interface ForgotPasswordRequest {
+	email: string;
+}
+
+export interface ForgotPasswordResponse {
+	message: string;
+}
+
+export interface ResetPasswordRequest {
+	token: string;
+	newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+	message: string;
+}
+
+export interface AdminResetPasswordRequest {
+	userId: string;
+	expiresInHours?: number;
+}
+
+export interface AdminResetPasswordResponse {
+	message: string;
+	expiresAt: string;
+}
+
+export const forgotPassword = async (
+	body: ForgotPasswordRequest,
+): Promise<ForgotPasswordResponse> => {
+	const response = await fetch(`${BASE_URL}/user/forgot-password`, {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	return await response.json();
+};
+
+export const resetPassword = async (
+	body: ResetPasswordRequest,
+): Promise<ResetPasswordResponse> => {
+	const response = await fetch(`${BASE_URL}/user/reset-password`, {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	const data = await response.json();
+	if (!response.ok) {
+		throw new Error(data.message || "Failed to reset password");
+	}
+	return data;
+};
+
+export const adminResetPassword = async (
+	token: string,
+	body: AdminResetPasswordRequest,
+): Promise<AdminResetPasswordResponse> => {
+	const response = await fetch(`${BASE_URL}/user/admin/reset-password`, {
+		method: "POST",
+		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	});
+
+	const data = await response.json();
+	if (!response.ok) {
+		throw new Error(data.message || "Failed to send password reset");
+	}
+	return data;
+};

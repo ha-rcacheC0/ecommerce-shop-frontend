@@ -135,6 +135,14 @@ export const Login = () => {
 							{passwordErrorMessage && (
 								<p className="validator-hint mt-1">{passwordErrorMessage}</p>
 							)}
+							<div className="text-right mt-1">
+								<Link
+									to="/user/forgot-password"
+									className="text-sm text-primary hover:underline"
+								>
+									Forgot password?
+								</Link>
+							</div>
 						</div>
 					</div>
 
