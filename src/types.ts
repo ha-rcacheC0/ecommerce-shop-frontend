@@ -664,7 +664,7 @@ export const BrandSchema = z.string();
 const StateEnum = z.nativeEnum(States);
 
 const AddressSchema = z.object({
-	id: z.string(),
+	id: z.string().optional(),
 	street1: z.string(),
 	street2: z.string().nullable().optional(),
 	city: z.string(),
@@ -676,13 +676,17 @@ export const UserProfileSchema = z.object({
 	firstName: z.string().nullable().optional(),
 	lastName: z.string().nullable().optional(),
 	dateOfBirth: z
-		.string()
-		.transform((str) => (str ? new Date(str) : null))
+		.union([z.string(), z.date()])
+		.transform((val) => {
+			if (val instanceof Date) return val;
+			return val ? new Date(val) : null;
+		})
+		.nullable()
 		.optional(),
 	phoneNumber: z.string().nullable().optional(),
 	acceptedTerms: z.boolean(),
-	billingAddress: AddressSchema.optional(),
-	shippingAddress: AddressSchema.optional(),
+	billingAddress: AddressSchema.nullable().optional(),
+	shippingAddress: AddressSchema.nullable().optional(),
 	canContact: z.boolean().optional(),
 	userId: z.string(),
 });
