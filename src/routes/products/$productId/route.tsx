@@ -26,7 +26,7 @@ const SingleProductPage = () => {
 
 	const userCartId = user?.userInfo?.cart?.id;
 	const addItem = useAddItemToCartMutation(
-		userCartId!,
+		userCartId ?? "",
 		() => {
 			toast.success(`${product.data?.title} added to cart!`, {
 				position: "bottom-right",
@@ -117,13 +117,13 @@ const SingleProductPage = () => {
 								Case: ${parseFloat(product.data?.casePrice ?? "0").toFixed(2)}
 							</h2>
 							{authState === "authenticated" ? (
-								product.data?.inStock ? (
+								product.data?.inStock && userCartId ? (
 									<button
 										className="btn lg:btn-wide btn-secondary"
 										onClick={() =>
 											addItem.mutate({
 												productId: productId,
-												cartId: userCartId!,
+												cartId: userCartId,
 												isUnit: false,
 											})
 										}
@@ -151,13 +151,13 @@ const SingleProductPage = () => {
 							</h2>
 							{authState === "authenticated" ? (
 								product.data?.unitProduct ? (
-									product.data?.inStock ? (
+									product.data?.inStock && userCartId ? (
 										<button
 											className="btn lg:btn-wide btn-secondary"
 											onClick={() =>
 												addItem.mutate({
 													productId: product.data.id,
-													cartId: userCartId!,
+													cartId: userCartId,
 													isUnit: true,
 												})
 											}

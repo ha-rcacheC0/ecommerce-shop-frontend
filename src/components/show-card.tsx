@@ -14,7 +14,7 @@ export const ShowCard: React.FC<ShowCardProps> = ({ show }) => {
 	const { authState, user } = useAuth();
 	const userCartId = user?.userInfo?.cart?.id;
 	const addToCart = useAddItemToCartMutation(
-		userCartId!,
+		userCartId ?? "",
 		() => {
 			toast.success(`${show?.title} added to cart!`, {
 				position: "bottom-right",

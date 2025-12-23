@@ -111,7 +111,7 @@ const ShowForm: React.FC<ShowFormProps> = ({ showId, isEditing = false }) => {
 			setPrice(parseFloat(showData.casePrice.toString()).toFixed(2)); // Use casePrice for the price
 			setImage(showData.image);
 			setVideoURL(showData.videoURL || "");
-			setInStock(showData.inStock!);
+			setInStock(showData.inStock ?? true);
 			setShowTypeId(showData.showTypeId || "");
 			setSelectedBrandId(showData.brand?.id || "");
 			setSelectedCategoryId(showData.category?.id || "");

@@ -74,7 +74,7 @@ const VariantManager: React.FC<VariantManagerProps> = ({ productId }) => {
 								return null; // Remove new variants when cancelled
 							}
 							return {
-								...variant.originalData!,
+								...(variant.originalData ?? variant),
 								isEditing: false,
 								originalData: undefined,
 							};
@@ -89,7 +89,7 @@ const VariantManager: React.FC<VariantManagerProps> = ({ productId }) => {
 	const updateVariant = (
 		variantId: string,
 		field: keyof ProductVariant,
-		value: any,
+		value: ProductVariant[keyof ProductVariant],
 	) => {
 		setVariants((prev) =>
 			prev.map((variant) =>

@@ -1,6 +1,7 @@
 import {
 	createContext,
 	type ReactNode,
+	useCallback,
 	useContext,
 	useEffect,
 	useState,
@@ -76,11 +77,11 @@ const getThemeFromLocalStorage = (): ThemeType | null => {
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setTheme] = useState<ThemeType>("light");
 
-	const updateTheme = (newTheme: ThemeType) => {
+	const updateTheme = useCallback((newTheme: ThemeType) => {
 		localStorage.setItem("theme", newTheme);
 		document.documentElement.setAttribute("data-theme", newTheme);
 		setTheme(newTheme);
-	};
+	}, []);
 
 	useEffect(() => {
 		const storedTheme = getThemeFromLocalStorage();

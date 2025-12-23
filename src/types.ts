@@ -419,7 +419,7 @@ export interface Report {
 	status: ReportStatus;
 	createdAt: string;
 	completedAt?: string | null;
-	parameters?: Record<string, any>;
+	parameters?: Record<string, unknown>;
 	createdBy: string;
 	fileUrl?: string | null;
 	errorMessage?: string | null;

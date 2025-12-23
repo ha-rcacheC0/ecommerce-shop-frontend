@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
 	getPurchaseOrderReportQueryOptions,
 	useUpdatePurchaseOrderMutation,
@@ -139,7 +137,8 @@ const SalesReport: React.FC = () => {
 
 	const totalSales = salesReport
 		? salesReport.reduce(
-				(acc: number, item: any) => acc + parseFloat(item.grandTotal),
+				(acc: number, item: SalesReportItem) =>
+					acc + parseFloat(String(item.grandTotal)),
 				0,
 			)
 		: 0;
@@ -149,7 +148,7 @@ const SalesReport: React.FC = () => {
 		return `sales-report-${dateStr}.csv`;
 	};
 
-	const formatDataForCSV = (data: any[]) => {
+	const formatDataForCSV = (data: SalesReportItem[]) => {
 		return data.map((item) => ({
 			...item,
 			formattedDate: new Date(item.date).toLocaleDateString(),

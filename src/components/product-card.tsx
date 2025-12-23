@@ -19,7 +19,7 @@ export const ProductCard = ({
 	const userCartId = user?.userInfo?.cart?.id;
 
 	const addItem = useAddItemToCartMutation(
-		userCartId!,
+		userCartId ?? "",
 		() => {
 			toast.success(`${product.title} added to cart!`, {
 				position: "bottom-right",
@@ -91,13 +91,15 @@ export const ProductCard = ({
 								<>
 									<button
 										className="btn btn-secondary btn-outline"
-										onClick={() =>
+										disabled={!userCartId}
+										onClick={() => {
+											if (!userCartId) return;
 											addItem.mutate({
 												productId: product.id,
-												cartId: userCartId!,
+												cartId: userCartId,
 												isUnit: false,
-											})
-										}
+											});
+										}}
 									>
 										Add Case <FontAwesomeIcon icon={faCartPlus} />
 									</button>
@@ -105,13 +107,15 @@ export const ProductCard = ({
 									{product.unitProduct && (
 										<button
 											className="btn btn-secondary btn-outline"
-											onClick={() =>
+											disabled={!userCartId}
+											onClick={() => {
+												if (!userCartId) return;
 												addItem.mutate({
 													productId: product.id,
-													cartId: userCartId!,
+													cartId: userCartId,
 													isUnit: true,
-												})
-											}
+												});
+											}}
 										>
 											Add Unit <FontAwesomeIcon icon={faCartPlus} />
 										</button>
