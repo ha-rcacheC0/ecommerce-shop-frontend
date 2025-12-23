@@ -419,7 +419,7 @@ export interface Report {
 	status: ReportStatus;
 	createdAt: string;
 	completedAt?: string | null;
-	parameters?: Record<string, any>;
+	parameters?: Record<string, unknown>;
 	createdBy: string;
 	fileUrl?: string | null;
 	errorMessage?: string | null;
@@ -664,7 +664,7 @@ export const BrandSchema = z.string();
 const StateEnum = z.nativeEnum(States);
 
 const AddressSchema = z.object({
-	id: z.string().optional(),
+	id: z.string(),
 	street1: z.string(),
 	street2: z.string().nullable().optional(),
 	city: z.string(),
@@ -676,17 +676,13 @@ export const UserProfileSchema = z.object({
 	firstName: z.string().nullable().optional(),
 	lastName: z.string().nullable().optional(),
 	dateOfBirth: z
-		.union([z.string(), z.date()])
-		.transform((val) => {
-			if (val instanceof Date) return val;
-			return val ? new Date(val) : null;
-		})
-		.nullable()
+		.string()
+		.transform((str) => (str ? new Date(str) : null))
 		.optional(),
 	phoneNumber: z.string().nullable().optional(),
 	acceptedTerms: z.boolean(),
-	billingAddress: AddressSchema.nullable().optional(),
-	shippingAddress: AddressSchema.nullable().optional(),
+	billingAddress: AddressSchema.optional(),
+	shippingAddress: AddressSchema.optional(),
 	canContact: z.boolean().optional(),
 	userId: z.string(),
 });

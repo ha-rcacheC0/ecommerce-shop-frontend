@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
 	type faEdit,
 	faPlus,
@@ -33,7 +31,7 @@ export interface ActionButton<T> {
 	color: string; // e.g., "primary", "warning", "error"
 	onClick?: (item: T) => void;
 	to?: string;
-	getParams?: (item: T) => Record<string, any>;
+	getParams?: (item: T) => Record<string, string>;
 	isDisabled?: (item: T) => boolean;
 }
 

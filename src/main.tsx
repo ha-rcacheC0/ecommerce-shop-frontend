@@ -23,6 +23,7 @@ export const queryClient = new QueryClient();
 const router = createRouter({
 	routeTree,
 	defaultPreload: "intent",
+	// biome-ignore lint/style/noNonNullAssertion: TanStack Router pattern - context is provided at render time
 	context: { auth: undefined!, theme: undefined!, queryClient },
 	history:
 		typeof window !== "undefined"
@@ -75,6 +76,7 @@ function App() {
 	return <RouterProvider router={router} context={{ theme, auth }} />;
 }
 
+// biome-ignore lint/style/noNonNullAssertion: Standard React pattern - root element exists in index.html
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 		<Sentry.ErrorBoundary fallback={<p>Something went wrong</p>}>

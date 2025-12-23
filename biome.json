@@ -11,18 +11,18 @@
 		"rules": {
 			"recommended": true,
 			"correctness": {
-				"noUnusedVariables": "warn",
-				"useExhaustiveDependencies": "warn"
+				"noUnusedVariables": "error",
+				"useExhaustiveDependencies": "error"
 			},
 			"suspicious": {
 				"noConsole": {
 					"level": "warn",
 					"options": { "allow": ["warn", "error", "info"] }
 				},
-				"noExplicitAny": "warn"
+				"noExplicitAny": "error"
 			},
 			"style": {
-				"noNonNullAssertion": "warn"
+				"noNonNullAssertion": "error"
 			},
 			"a11y": {
 				"useButtonType": "warn",

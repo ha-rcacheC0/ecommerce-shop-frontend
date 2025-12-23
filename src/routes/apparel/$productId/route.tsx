@@ -384,16 +384,16 @@ const ApparelProductDetailPage = () => {
 							{authState === "authenticated" ? (
 								<button
 									className="btn btn-primary btn-wide w-full"
-									disabled={!selectedVariant || !isInStock}
-									onClick={() =>
-										selectedVariant &&
+									disabled={!selectedVariant || !isInStock || !userCartId}
+									onClick={() => {
+										if (!selectedVariant || !userCartId) return;
 										addItem.mutate({
 											productId: product.data?.id,
-											cartId: userCartId!,
+											cartId: userCartId,
 											isUnit: true,
 											variantId: selectedVariant.id,
-										})
-									}
+										});
+									}}
 								>
 									{!selectedVariant
 										? "Select Options First"

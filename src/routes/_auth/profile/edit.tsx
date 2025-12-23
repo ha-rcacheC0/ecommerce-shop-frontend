@@ -29,12 +29,8 @@ export const ProfileForm = () => {
 
 	const form = useForm({
 		validators: {
-			onChange: ({ value }) => {
-				const result = UserProfileSchema.safeParse(value);
-				if (!result.success) {
-					return result.error.issues.map((i) => i.message).join(", ");
-				}
-				return undefined;
+			onChange: (values) => {
+				UserProfileSchema.parse(values.value);
 			},
 		},
 		defaultValues: userProfile,

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // @components/apparelProductCard.tsx - Updated for variants
 
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
@@ -7,13 +6,14 @@ import { Link } from "@tanstack/react-router";
 import type React from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import type { ApparelFilter } from "@/types";
 import { BrandDisplay, type ProductVariant, type TProduct } from "@/types";
 import { useAddItemToCartMutation } from "../api/cart/cartQueries";
 import { useAuth } from "../providers/auth.provider";
 
 interface ApparelProductCardProps {
 	product: TProduct;
-	searchParams: any;
+	searchParams: ApparelFilter;
 }
 
 export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
@@ -29,7 +29,7 @@ export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
 	const userCartId = user?.userInfo?.cart?.id;
 
 	const addItem = useAddItemToCartMutation(
-		userCartId!,
+		userCartId ?? "",
 		() => {
 			toast.success(`${product.title} added to cart!`, {
 				position: "bottom-right",
@@ -258,13 +258,13 @@ export const ApparelProductCard: React.FC<ApparelProductCardProps> = ({
 					{/* Stock and Add to Cart */}
 					<div className="grid grid-cols-2 gap-2 mt-2">
 						{authState === "authenticated" ? (
-							isInStock && selectedVariant ? (
+							isInStock && selectedVariant && userCartId ? (
 								<button
 									className="btn btn-secondary btn-outline"
 									onClick={() =>
 										addItem.mutate({
 											productId: product.id,
-											cartId: userCartId!,
+											cartId: userCartId,
 											isUnit: true,
 											variantId: selectedVariant.id, // Pass variant ID
 										})
